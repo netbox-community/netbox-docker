@@ -1,20 +1,35 @@
-FROM python:2.7-wheezy
+FROM python:2.7-alpine
 
-WORKDIR /opt/netbox
+RUN apk add --no-cache \
+      bash \
+      build-base \
+      ca-certificates \
+      cyrus-sasl-dev \
+      graphviz \
+      jpeg-dev \
+      libffi-dev \
+      libxml2-dev \
+      libxslt-dev \
+      openldap-dev \
+      openssl-dev \
+      postgresql-dev \
+      wget \
+  && pip install gunicorn==17.5 django-auth-ldap
+
+WORKDIR /opt
 
 ARG BRANCH=v2-beta
-ARG URL=https://github.com/digitalocean/netbox.git
-RUN git clone --depth 1 $URL -b $BRANCH .  && \
-    apt-get update -qq && apt-get install -y libldap2-dev libsasl2-dev libssl-dev graphviz && \
-	pip install gunicorn==17.5 && \
-	pip install django-auth-ldap && \
-    pip install -r requirements.txt
+ARG URL=https://github.com/digitalocean/netbox/archive/$BRANCH.tar.gz
+RUN wget -q -O - "${URL}" | tar xz \
+  && ln -s netbox* netbox
 
-ADD docker/docker-entrypoint.sh /docker-entrypoint.sh
-ADD netbox/netbox/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
+WORKDIR /opt/netbox
+RUN pip install -r requirements.txt
 
+RUN ln -s configuration.docker.py netbox/netbox/configuration.py
+COPY docker/gunicorn_config.py /opt/netbox/
+
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
-ADD docker/gunicorn_config.py /opt/netbox/
-ADD docker/nginx.conf /etc/netbox-nginx/
 VOLUME ["/etc/netbox-nginx/"]
