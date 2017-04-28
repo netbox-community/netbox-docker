@@ -18,7 +18,7 @@ RUN apk add --no-cache \
 
 WORKDIR /opt
 
-ARG BRANCH=v2-beta
+ARG BRANCH=v2.0-beta3
 ARG URL=https://github.com/digitalocean/netbox/archive/$BRANCH.tar.gz
 RUN wget -q -O - "${URL}" | tar xz \
   && ln -s netbox* netbox
