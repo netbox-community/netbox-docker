@@ -28,6 +28,7 @@ RUN pip install -r requirements.txt
 
 RUN ln -s configuration.docker.py netbox/netbox/configuration.py
 COPY docker/gunicorn_config.py /opt/netbox/
+COPY docker/nginx.conf /etc/netbox-nginx/nginx.conf
 
 COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
