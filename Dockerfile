@@ -1,4 +1,4 @@
-FROM python:2.7-alpine
+FROM python:3.6-alpine
 
 RUN apk add --no-cache \
       bash \
@@ -14,7 +14,7 @@ RUN apk add --no-cache \
       openssl-dev \
       postgresql-dev \
       wget \
-  && pip install gunicorn==17.5 django-auth-ldap
+  && pip install gunicorn==17.5
 
 WORKDIR /opt
 
