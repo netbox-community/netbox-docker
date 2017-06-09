@@ -1,8 +1,11 @@
 version: '3'
 services:
     netbox:
-        build: .
-        image: digitalocean/netbox:v2.0-beta3
+        build:
+          context: .
+          args:
+            - BRANCH=${BRANCH-master}
+        image: digitalocean/netbox:${BRANCH-master}
         depends_on:
         - postgres
         env_file: netbox.env
