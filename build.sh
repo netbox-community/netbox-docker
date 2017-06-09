@@ -28,14 +28,20 @@ DOCKER_REPO="${DOCKER_REPO-ninech}"
 BRANCH="${1}"
 URL="${URL-https://github.com/${SRC_REPO}/netbox/archive/$BRANCH.tar.gz}"
 
-TAG="${TAG-latest}"
+if [ "${BRANCH}" == "master" ]; then
+  TAG="${TAG-latest}"
+elif [ "${BRANCH}" == "develop" ]; then
+  TAG="${TAG-snapshot}"
+else
+  TAG="${TAG-$BRANCH}"
+fi
 
-echo "🐳 Building the Docker images for the branch '${BRANCH}'"
-docker build -f Dockerfile -t "${DOCKER_REPO}/netbox:${BRANCH}" -t "${DOCKER_REPO}/netbox:${TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" .
-echo "✅ Finished building the Docker images '${DOCKER_REPO}/netbox:${BRANCH}'"
+echo "🐳 Building the Docker image '${DOCKER_REPO}/netbox:${TAG}' from the branch '${BRANCH}'."
+docker build -f Dockerfile -t "${DOCKER_REPO}/netbox:${TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull .
+echo "✅ Finished building the Docker images '${DOCKER_REPO}/netbox:${TAG}'"
 
 if [ "${2}" == "--push" ] ; then
-  echo "⏫ Pushing 'netbox:${BRANCH}' and 'netbox:${BRANCH}-ldap'"
-  docker push "${DOCKER_REPO}/netbox:${BRANCH}"
+  echo "⏫ Pushing 'netbox:${BRANCH}"
+  docker push "${DOCKER_REPO}/netbox:${TAG}"
   echo "✅ Finished pushing the Docker images."
 fi
