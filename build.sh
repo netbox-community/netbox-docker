@@ -41,7 +41,7 @@ docker build -f Dockerfile -t "${DOCKER_REPO}/netbox:${TAG}" --build-arg "BRANCH
 echo "✅ Finished building the Docker images '${DOCKER_REPO}/netbox:${TAG}'"
 
 if [ "${2}" == "--push" ] ; then
-  echo "⏫ Pushing 'netbox:${BRANCH}"
+  echo "⏫ Pushing '${DOCKER_REPO}/netbox:${BRANCH}"
   docker push "${DOCKER_REPO}/netbox:${TAG}"
-  echo "✅ Finished pushing the Docker images."
+  echo "✅ Finished pushing the Docker image '${DOCKER_REPO}/netbox:${TAG}'."
 fi
