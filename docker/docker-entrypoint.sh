@@ -24,4 +24,4 @@ END
 /opt/netbox/netbox/manage.py collectstatic --no-input
 
 # start unicorn
-gunicorn --log-level debug --debug --error-logfile /dev/stderr --log-file /dev/stdout -c /opt/netbox/gunicorn_config.py netbox.wsgi
+gunicorn --log-level debug --debug -c /opt/netbox/gunicorn_config.py netbox.wsgi
