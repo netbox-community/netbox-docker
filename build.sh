@@ -30,14 +30,17 @@ URL="${URL-https://github.com/${SRC_REPO}/netbox/archive/$BRANCH.tar.gz}"
 
 if [ "${BRANCH}" == "master" ]; then
   TAG="${TAG-latest}"
+  CACHE="--no-cache"
 elif [ "${BRANCH}" == "develop" ]; then
   TAG="${TAG-snapshot}"
+  CACHE="--no-cache"
 else
   TAG="${TAG-$BRANCH}"
+  CACHE=""
 fi
 
 echo "🐳 Building the Docker image '${DOCKER_REPO}/netbox:${TAG}' from the branch '${BRANCH}'."
-docker build -f Dockerfile -t "${DOCKER_REPO}/netbox:${TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull .
+docker build -t "${DOCKER_REPO}/netbox:${TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull ${CACHE} .
 echo "✅ Finished building the Docker images '${DOCKER_REPO}/netbox:${TAG}'"
 
 if [ "${2}" == "--push" ] ; then
