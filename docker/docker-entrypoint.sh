@@ -23,5 +23,8 @@ END
 # copy static files
 ./manage.py collectstatic --no-input
 
-# start unicorn
-gunicorn --log-level debug --debug -c /opt/netbox/gunicorn_config.py netbox.wsgi
+echo "✅ Initialisation is done. Launching CMD:"
+echo "exec ${@}"
+
+# launch whatever is passed by docker via RUN
+exec ${@}
