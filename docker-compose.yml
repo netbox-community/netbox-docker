@@ -5,7 +5,7 @@ services:
           context: .
           args:
             - BRANCH=${BRANCH-master}
-        image: ninech/netbox:${BRANCH-master}
+        image: ninech/netbox:${BRANCH-latest}
         depends_on:
         - postgres
         env_file: netbox.env
