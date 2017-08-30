@@ -24,10 +24,8 @@ services:
         - netbox-nginx-config:/etc/netbox-nginx/
     postgres:
         image: postgres:9.6-alpine
-        environment:
-            POSTGRES_USER: netbox
-            POSTGRES_PASSWORD: J5brHrAXFLQSif0K
-            POSTGRES_DB: netbox
+        env_file: postgres.env
+
 volumes:
     netbox-static-files:
         driver: local
