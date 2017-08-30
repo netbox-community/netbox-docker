@@ -13,8 +13,9 @@ RUN apk add --no-cache \
       openldap-dev \
       openssl-dev \
       postgresql-dev \
-      wget \
-  && pip install gunicorn==17.5
+      wget
+
+RUN pip install gunicorn
 
 WORKDIR /opt
 
