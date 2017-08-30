@@ -2,7 +2,7 @@
 set -e
 
 # run db migrations (retry on error)
-while ! /opt/netbox/netbox/manage.py migrate 2>&1; do
+while ! ./manage.py migrate 2>&1; do
     sleep 5
 done
 
@@ -14,14 +14,17 @@ if [[ -z ${SUPERUSER_NAME} || -z ${SUPERUSER_EMAIL} || -z ${SUPERUSER_PASSWORD} 
         echo "Using defaults: Username: ${SUPERUSER_NAME}, E-Mail: ${SUPERUSER_EMAIL}, Password: ${SUPERUSER_PASSWORD}"
 fi
 
-python netbox/manage.py shell --plain << END
+./manage.py shell --plain << END
 from django.contrib.auth.models import User
 if not User.objects.filter(username='${SUPERUSER_NAME}'):
     User.objects.create_superuser('${SUPERUSER_NAME}', '${SUPERUSER_EMAIL}', '${SUPERUSER_PASSWORD}')
 END
 
 # copy static files
-/opt/netbox/netbox/manage.py collectstatic --no-input
+./manage.py collectstatic --no-input
 
-# start unicorn
-gunicorn --log-level debug --debug -c /opt/netbox/gunicorn_config.py netbox.wsgi
+echo "✅ Initialisation is done. Launching CMD:"
+echo "exec ${@}"
+
+# launch whatever is passed by docker via RUN
+exec ${@}

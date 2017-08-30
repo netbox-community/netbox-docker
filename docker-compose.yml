@@ -5,7 +5,7 @@ services:
           context: .
           args:
             - BRANCH=${BRANCH-master}
-        image: ninech/netbox:${BRANCH-master}
+        image: ninech/netbox:${BRANCH-latest}
         depends_on:
         - postgres
         env_file: netbox.env
@@ -24,10 +24,8 @@ services:
         - netbox-nginx-config:/etc/netbox-nginx/
     postgres:
         image: postgres:9.6-alpine
-        environment:
-            POSTGRES_USER: netbox
-            POSTGRES_PASSWORD: J5brHrAXFLQSif0K
-            POSTGRES_DB: netbox
+        env_file: postgres.env
+
 volumes:
     netbox-static-files:
         driver: local

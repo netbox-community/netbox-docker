@@ -51,3 +51,11 @@ You can configure the app at runtime using variables (see `docker-compose.yml`).
 * SHORT_TIME_FORMAT
 * DATETIME_FORMAT
 * SHORT_DATETIME_FORMAT
+
+## Tests
+
+To run the bundled test, use the `docker-compose.test.yml` file.
+
+```
+# docker-compose -f docker-compose.test.yml run --rm app
+```

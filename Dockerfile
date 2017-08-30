@@ -13,12 +13,13 @@ RUN apk add --no-cache \
       openldap-dev \
       openssl-dev \
       postgresql-dev \
-      wget \
-  && pip install gunicorn==17.5
+      wget
+
+RUN pip install gunicorn
 
 WORKDIR /opt
 
-ARG BRANCH=v2.0.7
+ARG BRANCH=master
 ARG URL=https://github.com/digitalocean/netbox/archive/$BRANCH.tar.gz
 RUN wget -q -O - "${URL}" | tar xz \
   && mv netbox* netbox
@@ -26,11 +27,15 @@ RUN wget -q -O - "${URL}" | tar xz \
 WORKDIR /opt/netbox
 RUN pip install -r requirements.txt
 
-RUN ln -s configuration.docker.py netbox/netbox/configuration.py
+RUN ln -s configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/gunicorn_config.py /opt/netbox/
 COPY docker/nginx.conf /etc/netbox-nginx/nginx.conf
+
+WORKDIR /opt/netbox/netbox
 
 COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
 VOLUME ["/etc/netbox-nginx/"]
+
+CMD ["gunicorn", "--log-level debug", "-c /opt/netbox/gunicorn_config.py", "netbox.wsgi"]
