@@ -1,0 +1,25 @@
+version: '3'
+services:
+    app:
+        build:
+          context: .
+          args:
+            - BRANCH=${BRANCH-master}
+        image: ninech/netbox:${BRANCH-latest}
+        depends_on:
+        - postgres
+        env_file: netbox.env
+        command:
+        - ./manage.py
+        - test
+    postgres:
+        image: postgres:9.6-alpine
+        environment:
+            POSTGRES_USER: netbox
+            POSTGRES_PASSWORD: J5brHrAXFLQSif0K
+            POSTGRES_DB: netbox
+volumes:
+    netbox-static-files:
+        driver: local
+    netbox-nginx-config:
+        driver: local
