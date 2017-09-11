@@ -8,7 +8,7 @@ Images built using this code are released to [Docker Hub](https://hub.docker.com
 To get NetBox up and running:
 
 ```
-$ git clone -b master https://github.com/digitalocean/netbox-docker.git
+$ git clone -b master https://github.com/ninech/netbox-docker.git
 $ cd netbox-docker
 $ docker-compose up -d
 ```
