@@ -4,17 +4,20 @@ set -e
 
 if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "Usage: ${0} <branch> [--push]"
-  echo "  branch  The branch or tag to build"
-  echo "  --push  Push built Docker files to docker hub"
+  echo "  branch  The branch or tag to build. Required."
+  echo "  --push  Pushes built Docker image to docker hub."
   echo ""
   echo "You can use the following ENV variables to customize the build:"
-  echo "  SRC_REPO The Github repository (i.e. github.com/SRC_REPO/netbox) of netbox."
-  echo "  DOCKER_REPO The Docker repository (i.e. hub.docker.com/r/DOCKER_REPO/netbox) "
-  echo "           Also used for tagging the image."
   echo "  BRANCH   The branch to build."
   echo "           Also used for tagging the image."
+  echo "  DOCKER_REPO The Docker registry (i.e. hub.docker.com/r/DOCKER_REPO/netbox) "
+  echo "           Also used for tagging the image."
+  echo "           Default: ninech"
+  echo "  SRC_REPO Which fork of netbox to use (i.e. github.com/<SRC_REPO>/netbox)."
+  echo "           Default: digitalocean"
   echo "  URL      Where to fetch the package from."
   echo "           Must be a tar.gz file of the source code."
+  echo "           Default: https://github.com/\${SRC_REPO}/netbox/archive/\$BRANCH.tar.gz"
 
   if [ "${1}x" == "x" ]; then
     exit 1
