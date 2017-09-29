@@ -18,7 +18,7 @@ after_script:
   - docker-compose -f docker-compose.test.yml down
 
 before_deploy:
-  - docker login -u='$DOCKER_USERNAME' -p='$DOCKER_PASSWORD'
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 deploy:
   - provider: script
