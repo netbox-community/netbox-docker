@@ -1,5 +1,7 @@
 # netbox-docker
 
+[![Build Status](https://travis-ci.org/ninech/netbox-docker.svg?branch=master)](https://travis-ci.org/ninech/netbox-docker)
+
 This repository houses the components needed to build NetBox as a Docker container.
 Images built using this code are released to [Docker Hub](https://hub.docker.com/r/ninech/netbox) every night.
 
