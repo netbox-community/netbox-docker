@@ -1,0 +1,18 @@
+sudo: required
+language: python
+
+git:
+  depth: 5
+
+services:
+  - docker
+
+install:
+  - docker-compose -f docker-compose.test.yml pull --parallel
+  - docker-compose -f docker-compose.test.yml build
+
+script:
+  - docker-compose -f docker-compose.test.yml run app
+
+after_script:
+  - docker-compose -f docker-compose.test.yml down
