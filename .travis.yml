@@ -17,22 +17,13 @@ script:
 after_script:
   - docker-compose -f docker-compose.test.yml down
 
-before_deploy:
+after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-
-deploy:
-  - provider: script
-    script: build.sh master --push
-    on:
-      branch: master
-  - provider: script
-    script: build.sh develop-2.2 --push
-    on:
-      branch: master
-  - provider: script
-    script: build-latest.sh
-    on:
-      branch: master
+  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
+      build.sh master --push
+      build.sh develop-2.2 --push
+      build-latest.sh
+    fi
 
 notifications:
   slack:
