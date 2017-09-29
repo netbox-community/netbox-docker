@@ -20,9 +20,9 @@ after_script:
 after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
-      build.sh master --push
-      build.sh develop-2.2 --push
-      build-latest.sh
+      ./build.sh master --push;
+      ./build.sh develop-2.2 --push;
+      ./build-latest.sh;
     fi
 
 notifications:
