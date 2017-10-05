@@ -21,6 +21,7 @@ after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
       ./build.sh master --push;
+      ./build.sh develop --push;
       ./build-latest.sh --push;
       PRERELEASE=true ./build-latest.sh --push;
     fi
