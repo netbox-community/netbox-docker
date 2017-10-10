@@ -71,8 +71,6 @@ $ docker-compose -f docker-compose.test.yml run --rm app
 
 ## About
 
-This repository is currently maintained by [nine.ch](https://nine.ch).
+This repository is currently maintained and funded by [nine](https://nine.ch).
 
-[![nine.ch Logo](https://blog.nine.ch/assets/logo.png)](https://nine.ch)
-
-We run your Linux server infrastructure – without interruptions, around the clock.
+[![logo of the company 'nine'](https://logo.apps.at-nine.ch/Dmqied_eSaoBMQwk3vVgn4UIgDo=/trim/500x0/logo_claim.png)](https://www.nine.ch)
