@@ -33,6 +33,8 @@ COPY docker/nginx.conf /etc/netbox-nginx/nginx.conf
 
 WORKDIR /opt/netbox/netbox
 
+RUN pip3 install djangorestframework==3.6.4
+
 COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
