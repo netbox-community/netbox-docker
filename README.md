@@ -12,21 +12,23 @@ To get NetBox up and running:
 ```
 $ git clone -b master https://github.com/ninech/netbox-docker.git
 $ cd netbox-docker
-$ docker-compose up -d
+$ docker-compose up
 ```
 
 The application will be available after a few minutes.
-Use `docker-compose port nginx 80` to find out where to connect to.
+
+In another terminal:
 
 ```
-$ echo "http://$(docker-compose port nginx 80)/"
-http://0.0.0.0:32768/
+# Try the REST API:
+$ curl -L http://localhost:8080/api
+{"circuits":"http://localhost:8080/api/circuits/","dcim":"http://localhost:8080/api/dcim/","extras":"http://localhost:8080/api/extras/","ipam":"http://localhost:8080/api/ipam/","secrets":"http://localhost:8080/api/secrets/","tenancy":"http://localhost:8080/api/tenancy/"}
 
 # Open netbox in your default browser on macOS:
-$ open "http://$(docker-compose port nginx 80)/"
+$ open http://localhost:8080
 
 # Open netbox in your default browser on (most) linuxes:
-$ xdg-open "http://$(docker-compose port nginx 80)/" &>/dev/null &
+$ xdg-open http://localhost:8080 &>/dev/null &
 ```
 
 Default credentials:

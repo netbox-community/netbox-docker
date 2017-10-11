@@ -1,11 +1,7 @@
 version: '3'
 services:
     netbox:
-        build:
-          context: .
-          args:
-            - BRANCH=${BRANCH-master}
-        image: ninech/netbox:${BRANCH-latest}
+        image: ninech/netbox
         depends_on:
         - postgres
         env_file: netbox.env
@@ -18,7 +14,7 @@ services:
         depends_on:
         - netbox
         ports:
-        - 80
+        - 127.0.0.1:8080:80
         volumes:
         - netbox-static-files:/opt/netbox/netbox/static
         - netbox-nginx-config:/etc/netbox-nginx/
