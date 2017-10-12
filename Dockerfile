@@ -26,9 +26,6 @@ RUN wget -q -O - "${URL}" | tar xz \
 
 WORKDIR /opt/netbox
 RUN pip install -r requirements.txt
-# Netbox requires  v3.6.4 of django rest framework
-# https://github.com/digitalocean/netbox/issues/1564
-RUN pip install djangorestframework==3.6.4
 
 RUN ln -s configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/gunicorn_config.py /opt/netbox/
