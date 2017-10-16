@@ -4,8 +4,8 @@ services:
         build:
           context: .
           args:
-            - BRANCH=${BRANCH-master}
-        image: ninech/netbox:${BRANCH-latest}
+            - BRANCH=${VERSION-master}
+        image: ninech/netbox:${VERSION-latest}
         depends_on:
         - postgres
         env_file: netbox.env

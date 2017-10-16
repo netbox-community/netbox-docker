@@ -47,6 +47,33 @@ To ensure this, compare the output of `docker --version` and `docker-compose --v
 
 You can configure the app using environment variables. These are defined in `netbox.env`.
 
+## Version
+
+The `docker-compose.yml` file is prepared to run a specific version of Netbox.
+To use this feature, set the environment-variable `VERSION` before launching `docker-compose`, as shown below.
+`VERSION` may be set to the name of
+[any tag of the `ninech/netbox` Docker image](https://hub.docker.com/r/ninech/netbox/tags/).
+
+```
+$ export VERSION=v2.2.1
+$ docker-compose pull netbox
+$ docker-compose up -d
+```
+
+You can also build a specific version of the Netbox image. This time, `VERSION` indicates any valid
+[Git Reference](https://git-scm.com/book/en/v2/Git-Internals-Git-References) declared on
+[the Netbox Github repository](https://github.com/digitalocean/netbox/releases).
+Most commonly you will specify a tag name or a branch name.
+
+```
+$ export VERSION=develop
+$ docker-compose build --no-cache netbox
+$ docker-compose up -d
+```
+
+Hint: If you're building a specific version by tag name, the `--no-cache` argument is not strictly necessary.
+This can increase the build speed if you're just adjusting the config, for example.
+
 ## Rebuilding & Publishing images
 
 `./build.sh` is used to rebuild the Docker image:
