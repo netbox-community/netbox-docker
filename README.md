@@ -34,6 +34,15 @@ Default credentials:
 * Username: **admin**
 * Password: **admin**
 
+## Dependencies
+
+This project relies only on Docker and docker-compose. But we
+
+* The *Docker version* must be at least `1.13.0`.
+* The *docker-compose version* must be at least `1.10.0`.
+
+To ensure this, compare the output of `docker --version` and `docker-compose --version` with the requirements above.
+
 ## Configuration
 
 You can configure the app using environment variables. These are defined in `netbox.env`.
