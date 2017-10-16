@@ -5,6 +5,13 @@
 This repository houses the components needed to build NetBox as a Docker container.
 Images built using this code are released to [Docker Hub](https://hub.docker.com/r/ninech/netbox) every night.
 
+### Dependencies
+
+This project depends on:
+
+* [docker/docker-ce] >= 1.13.0
+* [docker/compose] >= 1.10.0
+
 ## Quickstart
 
 To get NetBox up and running:
@@ -74,3 +81,6 @@ $ docker-compose -f docker-compose.test.yml run --rm app
 This repository is currently maintained and funded by [nine](https://nine.ch).
 
 [![logo of the company 'nine'](https://logo.apps.at-nine.ch/Dmqied_eSaoBMQwk3vVgn4UIgDo=/trim/500x0/logo_claim.png)](https://www.nine.ch)
+
+[docker/docker-ce]: https://github.com/docker/docker-ce
+[docker/compose]: https://github.com/docker/compose
