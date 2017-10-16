@@ -36,7 +36,7 @@ Default credentials:
 
 ## Dependencies
 
-This project relies only on Docker and docker-compose. But we
+This project relies only on *Docker* and *docker-compose* meeting this requirements:
 
 * The *Docker version* must be at least `1.13.0`.
 * The *docker-compose version* must be at least `1.10.0`.
