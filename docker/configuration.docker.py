@@ -77,3 +77,9 @@ TIME_FORMAT = os.environ.get('TIME_FORMAT', 'g:i a')
 SHORT_TIME_FORMAT = os.environ.get('SHORT_TIME_FORMAT', 'H:i:s')
 DATETIME_FORMAT = os.environ.get('DATETIME_FORMAT', 'N j, Y g:i a')
 SHORT_DATETIME_FORMAT = os.environ.get('SHORT_DATETIME_FORMAT', 'Y-m-d H:i')
+
+# Enforcement of unique IP space can be toggled on a per-VRF basis.
+# To enforce unique IP space within the global table (all prefixes and IP addresses not assigned to a VRF),
+# set ENFORCE_GLOBAL_UNIQUE to True.
+ENFORCE_GLOBAL_UNIQUE = os.environ.get('ENFORCE_GLOBAL_UNIQUE')
+
