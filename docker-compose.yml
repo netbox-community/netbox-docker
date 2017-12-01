@@ -10,24 +10,19 @@ services:
         - postgres
         env_file: netbox.env
         volumes:
-        - netbox-nginx-config:/etc/netbox-nginx/
         - netbox-static-files:/opt/netbox/netbox/static
     nginx:
         image: nginx:1.11-alpine
         command: nginx -g 'daemon off;' -c /etc/netbox-nginx/nginx.conf
-        depends_on:
-        - netbox
         ports:
         - 80
         volumes:
         - netbox-static-files:/opt/netbox/netbox/static
-        - netbox-nginx-config:/etc/netbox-nginx/
+        - ./docker/nginx.conf:/etc/netbox-nginx/nginx.conf
     postgres:
         image: postgres:9.6-alpine
         env_file: postgres.env
 
 volumes:
     netbox-static-files:
-        driver: local
-    netbox-nginx-config:
         driver: local
