@@ -12,6 +12,7 @@ To get NetBox up and running:
 ```
 $ git clone -b master https://github.com/ninech/netbox-docker.git
 $ cd netbox-docker
+$ docker-compose pull
 $ docker-compose up -d
 ```
 
@@ -29,10 +30,14 @@ $ open "http://$(docker-compose port nginx 80)/"
 $ xdg-open "http://$(docker-compose port nginx 80)/" &>/dev/null &
 ```
 
+Alternatively, use something like [Reception](https://github.com/ninech/reception) to
+connect to _docker-compose_ projects.
+
 Default credentials:
 
 * Username: **admin**
 * Password: **admin**
+* API Token: **0123456789abcdef0123456789abcdef01234567**
 
 ## Dependencies
 
@@ -55,7 +60,7 @@ To use this feature, set the environment-variable `VERSION` before launching `do
 [any tag of the `ninech/netbox` Docker image](https://hub.docker.com/r/ninech/netbox/tags/).
 
 ```
-$ export VERSION=v2.2.1
+$ export VERSION=v2.2.6
 $ docker-compose pull netbox
 $ docker-compose up -d
 ```
