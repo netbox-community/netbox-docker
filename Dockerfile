@@ -6,6 +6,7 @@ RUN apk add --no-cache \
       ca-certificates \
       cyrus-sasl-dev \
       graphviz \
+      ttf-ubuntu-font-family \
       jpeg-dev \
       libffi-dev \
       libxml2-dev \
