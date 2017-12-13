@@ -8,17 +8,25 @@ while ! ./manage.py migrate 2>&1; do
 done
 
 # create superuser silently
-if [[ -z ${SUPERUSER_NAME} ]]; then
+if [ -z ${SUPERUSER_NAME+x} ]; then
   SUPERUSER_NAME='admin'
 fi
-if [[ -z ${SUPERUSER_EMAIL} ]]; then
+if [ -z ${SUPERUSER_EMAIL+x} ]; then
   SUPERUSER_EMAIL='admin@example.com'
 fi
-if [[ -z ${SUPERUSER_PASSWORD} ]]; then
-  SUPERUSER_PASSWORD='admin'
+if [ -z ${SUPERUSER_PASSWORD+x} ]; then
+  if [ -f "/run/secrets/superuser_password" ]; then
+    SUPERUSER_PASSWORD="$(< /run/secrets/superuser_password)"
+  else
+    SUPERUSER_PASSWORD='admin'
+  fi
 fi
-if [[ -z ${SUPERUSER_API_TOKEN} ]]; then
-  SUPERUSER_API_TOKEN='0123456789abcdef0123456789abcdef01234567'
+if [ -z ${SUPERUSER_API_TOKEN+x} ]; then
+  if [ -f "/run/secrets/superuser_api_token" ]; then
+    SUPERUSER_API_TOKEN="$(< /run/secrets/superuser_api_token)"
+  else
+    SUPERUSER_API_TOKEN='0123456789abcdef0123456789abcdef01234567'
+  fi
 fi
 
 echo "💡 Username: ${SUPERUSER_NAME}, E-Mail: ${SUPERUSER_EMAIL}, Password: ${SUPERUSER_PASSWORD}, Token: ${SUPERUSER_API_TOKEN}"

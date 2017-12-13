@@ -12,13 +12,15 @@ services:
         volumes:
         - netbox-nginx-config:/etc/netbox-nginx/
         - netbox-static-files:/opt/netbox/netbox/static
+        - netbox-media-files:/opt/netbox/netbox/media
+        - netbox-report-files:/opt/netbox/netbox/reports
     nginx:
         image: nginx:1.11-alpine
         command: nginx -g 'daemon off;' -c /etc/netbox-nginx/nginx.conf
         depends_on:
         - netbox
         ports:
-        - 80
+        - 8080
         volumes:
         - netbox-static-files:/opt/netbox/netbox/static
         - netbox-nginx-config:/etc/netbox-nginx/
@@ -30,4 +32,8 @@ volumes:
     netbox-static-files:
         driver: local
     netbox-nginx-config:
+        driver: local
+    netbox-media-files:
+        driver: local
+    netbox-report-files:
         driver: local
