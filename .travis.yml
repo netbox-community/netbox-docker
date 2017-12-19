@@ -22,6 +22,7 @@ after_success:
   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
       ./build.sh master --push;
       ./build.sh develop --push;
+      ./build.sh develop-2.3 --push;
       ./build-latest.sh --push;
       PRERELEASE=true ./build-latest.sh --push;
     fi
