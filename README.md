@@ -62,7 +62,7 @@ Read [Environment Variables in Compose][compose-env] to understand about the var
 To find all possible variables, have a look at the [configuration.docker.py][docker-config] and [docker-entrypoint.sh][entrypoint] files.
 Generally, the environment variables are called the same as their respective Netbox configuration variables.
 Variables which are arrays are usually composed by putting all the values into the same environment variables with the values separated by a whitespace ("` `").
-For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access to Netbox through `http://localhost`, `http://[::1]` and `http://127.0.0.1`.
+For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access to Netbox through `http://localhost:8080`, `http://[::1]:8080` and `http://127.0.0.1:8080`.
 
 [compose-env]: https://docs.docker.com/compose/environment-variables/
 
