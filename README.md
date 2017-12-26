@@ -20,17 +20,17 @@ $ docker-compose up -d
 ```
 
 The application will be available after a few minutes.
-Use `docker-compose port nginx 80` to find out where to connect to.
+Use `docker-compose port nginx 8080` to find out where to connect to.
 
 ```
-$ echo "http://$(docker-compose port nginx 80)/"
+$ echo "http://$(docker-compose port nginx 8080)/"
 http://0.0.0.0:32768/
 
 # Open netbox in your default browser on macOS:
-$ open "http://$(docker-compose port nginx 80)/"
+$ open "http://$(docker-compose port nginx 8080)/"
 
 # Open netbox in your default browser on (most) linuxes:
-$ xdg-open "http://$(docker-compose port nginx 80)/" &>/dev/null &
+$ xdg-open "http://$(docker-compose port nginx 8080)/" &>/dev/null &
 ```
 
 Alternatively, use something like [Reception][docker-reception] to
