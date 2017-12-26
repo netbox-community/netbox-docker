@@ -219,6 +219,6 @@ $ docker-compose -f docker-compose.test.yml run --rm app
 
 ## About
 
-This repository is currently maintained and funded by [nine](https://nine.ch), your cloud navigators.
+This repository is currently maintained and funded by [nine](https://nine.ch), your cloud navigator.
 
 [![logo of the company 'nine'](https://logo.apps.at-nine.ch/Dmqied_eSaoBMQwk3vVgn4UIgDo=/trim/500x0/logo_claim.png)](https://www.nine.ch)
