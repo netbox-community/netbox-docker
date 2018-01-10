@@ -41,4 +41,3 @@ volumes:
         driver: local
     netbox-postgres-data:
         driver: local
-
