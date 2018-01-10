@@ -27,6 +27,8 @@ services:
     postgres:
         image: postgres:9.6-alpine
         env_file: postgres.env
+        volumes:
+        - netbox-postgres-data:/var/lib/postgresql/data
 
 volumes:
     netbox-static-files:
@@ -37,3 +39,6 @@ volumes:
         driver: local
     netbox-report-files:
         driver: local
+    netbox-postgres-data:
+        driver: local
+
