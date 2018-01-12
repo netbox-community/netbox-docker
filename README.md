@@ -165,7 +165,7 @@ If your issue is not here, look through [the existing issues][issues] and eventu
 * You can enter the shell of the running Netbox container using `docker-compose exec netbox /bin/bash`. Now you have access to `./manage.py`, e.g. to reset a password.
 * To access the database run `docker-compose exec postgres sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`
 * To create a database backup run `docker-compose exec postgres sh -c 'pg_dump -U $POSTGRES_USER $POSTGRES_DB' | gzip > db_dump.sql.gz`
-* To restore that database backup run `gunzip -c db_dump.sql.gz | docker exec -i $(docker-compose ps -q postgres) sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`.
+* To restore that database backup run `docker-compose exec postgres sh -c "su postgres -c 'dropdb $POSTGRES_DB --if-exists; createdb $POSTGRES_DB'"; gunzip -c db_dump.sql.gz | docker exec -i $(docker-compose ps -q postgres) sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`.
 
 ### Getting a "Bad Request (400)"
 
