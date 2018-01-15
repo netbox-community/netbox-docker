@@ -85,10 +85,10 @@ DEBUG = os.environ.get('DEBUG', False)
 # Email settings
 EMAIL = {
     'SERVER': os.environ.get('EMAIL_SERVER', 'localhost'),
-    'PORT': os.environ.get('EMAIL_PORT', 25),
+    'PORT': int(os.environ.get('EMAIL_PORT', 25)),
     'USERNAME': os.environ.get('EMAIL_USERNAME', ''),
     'PASSWORD': os.environ.get('EMAIL_PASSWORD', read_secret('email_password')),
-    'TIMEOUT': os.environ.get('EMAIL_TIMEOUT', 10),  # seconds
+    'TIMEOUT': int(os.environ.get('EMAIL_TIMEOUT', 10)),  # seconds
     'FROM_EMAIL': os.environ.get('EMAIL_FROM', ''),
 }
 
@@ -126,14 +126,14 @@ NAPALM_USERNAME = os.environ.get('NAPALM_USERNAME', '')
 NAPALM_PASSWORD = os.environ.get('NAPALM_PASSWORD', read_secret('napalm_password'))
 
 # NAPALM timeout (in seconds). (Default: 30)
-NAPALM_TIMEOUT = os.environ.get('NAPALM_TIMEOUT', 30)
+NAPALM_TIMEOUT = int(os.environ.get('NAPALM_TIMEOUT', 30))
 
 # NAPALM optional arguments (see http://napalm.readthedocs.io/en/latest/support/#optional-arguments). Arguments must
 # be provided as a dictionary.
 NAPALM_ARGS = {}
 
 # Determine how many objects to display per page within a list. (Default: 50)
-PAGINATE_COUNT = os.environ.get('PAGINATE_COUNT', 50)
+PAGINATE_COUNT = int(os.environ.get('PAGINATE_COUNT', 50))
 
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
 # prefer IPv4 instead.
