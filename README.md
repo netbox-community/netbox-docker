@@ -66,6 +66,34 @@ For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access
 
 [compose-env]: https://docs.docker.com/compose/environment-variables/
 
+## Adding Netbox Custom Fields
+
+When using `docker-compose`, all the python scripts present in `docker/startup_scripts` will automatically be executed after the application boots.
+
+That mechanism can be used for many things, and in particular to load Netbox custom fields:
+
+```python
+# docker/startup_scripts/load_custom_fields.py
+from django.contrib.contenttypes.models import ContentType
+from extras.models import CF_TYPE_TEXT, CustomField
+
+from dcim.models import Device
+from dcim.models import DeviceType
+
+device      = ContentType.objects.get_for_model(Device)
+device_type = ContentType.objects.get_for_model(DeviceType)
+
+my_custom_field, created = CustomField.objects.get_or_create(
+    type=CF_TYPE_TEXT,
+    name='my_custom_field',
+    description='My own custom field'
+)
+
+if created:
+  my_custom_field.obj_type.add(device)
+  my_custom_field.obj_type.add(device_type)
+```
+
 ### Production
 
 The default settings are optimized for (local) development environments.

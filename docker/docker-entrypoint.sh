@@ -39,6 +39,10 @@ if not User.objects.filter(username='${SUPERUSER_NAME}'):
     Token.objects.create(user=u, key='${SUPERUSER_API_TOKEN}')
 END
 
+for script in $(ls startup_scripts/*.py 2> /dev/null); do
+  ./manage.py shell --plain < "${script}"
+done
+
 # copy static files
 ./manage.py collectstatic --no-input
 
