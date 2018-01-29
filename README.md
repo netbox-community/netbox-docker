@@ -66,9 +66,9 @@ For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access
 
 [compose-env]: https://docs.docker.com/compose/environment-variables/
 
-## Adding Netbox Custom Fields
+### Custom Initialisation Code (e.g. Automatically Setting Up Custom Fields)
 
-When using `docker-compose`, all the python scripts present in `docker/startup_scripts` will automatically be executed after the application boots.
+When using `docker-compose`, all the python scripts present in `docker/startup_scripts` will automatically be executed after the application boots in the context of `./manage.py`.
 
 That mechanism can be used for many things, and in particular to load Netbox custom fields:
 
