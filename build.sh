@@ -43,7 +43,7 @@ else
 fi
 
 echo "🐳 Building the Docker image '${DOCKER_REPO}/netbox:${TAG}' from the branch '${BRANCH}'."
-docker build --squash -t "${DOCKER_REPO}/netbox:${TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull ${CACHE} .
+docker build -t "${DOCKER_REPO}/netbox:${TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull ${CACHE} .
 echo "✅ Finished building the Docker images '${DOCKER_REPO}/netbox:${TAG}'"
 
 if [ "${2}" == "--push" ] ; then
