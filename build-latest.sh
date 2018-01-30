@@ -1,12 +1,15 @@
 #!/bin/bash
 
-URL_RELEASES=https://api.github.com/repos/digitalocean/netbox/releases
+ORIGINAL_GITHUB_REPO="digitalocean/netbox"
+GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
+URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/releases"
 
 JQ_LATEST="group_by(.prerelease) | .[] | sort_by(.published_at) | reverse | .[0] | select(.prerelease==${PRERELEASE-false}) | .tag_name"
 
 CURL_OPTS="-s"
+CURL="curl ${CURL_OPTS}"
 
-VERSION=$(curl $CURL_OPTS "${URL_RELEASES}" | jq -r "${JQ_LATEST}")
+VERSION=$($CURL "${URL_RELEASES}" | jq -r "${JQ_LATEST}")
 
 # Check if the prerelease version is actually higher than stable version
 if [ "${PRERELEASE}" == "true" ]; then
@@ -25,4 +28,18 @@ if [ "${PRERELEASE}" == "true" ]; then
   fi
 fi
 
-./build.sh "${VERSION}" $@
+# Check if that version is not already available on docker hub:
+ORIGINAL_DOCKERHUB_REPO="ninech/netbox"
+DOCKERHUB_REPO="${DOCKERHUB_REPO-$ORIGINAL_DOCKERHUB_REPO}"
+URL_DOCKERHUB_TOKEN="https://auth.docker.io/token?service=registry.docker.io&scope=repository:${DOCKERHUB_REPO}:pull"
+BEARER_TOKEN="$($CURL "${URL_DOCKERHUB_TOKEN}" | jq -r .token)"
+
+URL_DOCKERHUB_TAG="https://registry.hub.docker.com/v2/${DOCKERHUB_REPO}/tags/list"
+AUTHORIZATION_HEADER="Authorization: Bearer ${BEARER_TOKEN}"
+ALREADY_BUILT="$($CURL -H "${AUTHORIZATION_HEADER}" "${URL_DOCKERHUB_TAG}" | jq -e ".tags | any(.==\"${VERSION}\")")"
+
+if [ "$ALREADY_BUILT" == "false" ]; then
+  ./build.sh "${VERSION}" $@
+else
+  echo "✅ ${VERSION} already exists on https://hub.docker.com/r/${DOCKERHUB_REPO}"
+fi
