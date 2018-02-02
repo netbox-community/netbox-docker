@@ -40,3 +40,5 @@ ENTRYPOINT [ "/docker-entrypoint.sh" ]
 VOLUME ["/etc/netbox-nginx/"]
 
 CMD ["gunicorn", "--log-level debug", "-c /opt/netbox/gunicorn_config.py", "netbox.wsgi"]
+
+LABEL SRC_URL="$URL"
