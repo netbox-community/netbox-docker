@@ -6,6 +6,7 @@ RUN apk add --no-cache \
       ca-certificates \
       cyrus-sasl-dev \
       graphviz \
+      ttf-ubuntu-font-family \
       jpeg-dev \
       libffi-dev \
       libxml2-dev \
@@ -39,3 +40,5 @@ ENTRYPOINT [ "/docker-entrypoint.sh" ]
 VOLUME ["/etc/netbox-nginx/"]
 
 CMD ["gunicorn", "--log-level debug", "-c /opt/netbox/gunicorn_config.py", "netbox.wsgi"]
+
+LABEL SRC_URL="$URL"
