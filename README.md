@@ -135,7 +135,7 @@ Please also consider [the advice about running Netbox in production](#production
 [openshift-config]: https://docs.openshift.org/latest/dev_guide/configmaps.html
 [openshift-secrets]: https://docs.openshift.org/latest/dev_guide/secrets.html
 [k8s-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
-[k8s-config]: https://kubernetes.io/docs/tasks/configure-pod-container/configmap/
+[k8s-config]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
 
 #### A Note On OpenShift
 
