@@ -36,8 +36,8 @@ COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/gunicorn_config.py /opt/netbox/
 COPY docker/nginx.conf /etc/netbox-nginx/nginx.conf
 COPY docker/docker-entrypoint.sh docker-entrypoint.sh
-COPY startup_scripts/ ./
-COPY initializers/ ./
+COPY startup_scripts/ /opt/netbox/startup_scripts/
+COPY initializers/ /opt/netbox/initializers/
 
 WORKDIR /opt/netbox/netbox
 
