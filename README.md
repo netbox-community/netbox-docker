@@ -66,11 +66,11 @@ For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access
 
 [compose-env]: https://docs.docker.com/compose/environment-variables/
 
-### Custom Initialisation Code (e.g. Automatically Setting Up Custom Fields)
+### Custom Initialization Code (e.g. Automatically Setting Up Custom Fields)
 
-When using `docker-compose`, all the python scripts present in `docker/startup_scripts` will automatically be executed after the application boots in the context of `./manage.py`.
+When using `docker-compose`, all the python scripts present in `/opt/netbox/startup_scripts` will automatically be executed after the application boots in the context of `./manage.py`.
 
-That mechanism can be used for many things, and in particular to load Netbox custom fields:
+That mechanism can be used for many things, e.g. to create Netbox custom fields:
 
 ```python
 # docker/startup_scripts/load_custom_fields.py
@@ -94,12 +94,54 @@ if created:
   my_custom_field.obj_type.add(device_type)
 ```
 
+#### Initializers
+
+Initializers are built-in startup scripts for defining Netbox custom fields, groups and users.
+All you need to do is to mount you own `initializers` folder ([see `docker-compose.yml`][netbox-docker-compose]).
+Look at the [`initializers` folder][netbox-docker-initializers] to learn how the files must look like.
+
+Here's an example for defining a custom field:
+
+```yaml
+# initializers/custom_fields.yml
+text_field:
+  type: text
+  label: Custom Text
+  description: Enter text in a text field.
+  required: false
+  filterable: true
+  weight: 0
+  on_objects:
+  - dcim.models.Device
+  - dcim.models.Rack
+  - ipam.models.IPAddress
+  - ipam.models.Prefix
+  - tenancy.models.Tenant
+  - virtualization.models.VirtualMachine
+```
+
+[netbox-docker-initializers]: https://github.com/ninech/netbox-docker/tree/master/initializers
+[netbox-docker-compose]: https://github.com/ninech/netbox-docker/blob/master/docker-compose.yml
+
+#### Custom Docker Image
+
+You can also build your own Netbox Docker image containing your own startup scripts, custom fields, users and groups
+like this:
+
+```
+ARG VERSION=latest
+FROM ninech/netbox:$VERSION
+
+COPY startup_scripts/ /opt/netbox/startup_scripts/
+COPY initializers/ /opt/netbox/initializers/
+```
+
 ### Production
 
 The default settings are optimized for (local) development environments.
 You should therefore adjust the configuration for production setups, at least the following variables:
 
-* `ALLOWED_HOSTS`: Add all URLs that lead to your netbox instance.
+* `ALLOWED_HOSTS`: Add all URLs that lead to your Netbox instance.
 * `DB_*`: Use a persistent database.
 * `EMAIL_*`: Use your own mailserver.
 * `MAX_PAGE_SIZE`: Use the recommended default of 1000.

@@ -1,0 +1,9 @@
+# applications:
+#   users:
+#   - technical_user
+# readers:
+#   users:
+#   - reader
+# writers:
+#   users:
+#   - writer
