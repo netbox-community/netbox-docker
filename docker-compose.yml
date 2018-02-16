@@ -10,8 +10,8 @@ services:
         - postgres
         env_file: netbox.env
         volumes:
-        - ./startup_scripts:/opt/netbox/startup_scripts
-        - ./initializers:/opt/netbox/initializers
+        - ./startup_scripts:/opt/netbox/startup_scripts:ro
+        - ./initializers:/opt/netbox/initializers:ro
         - netbox-nginx-config:/etc/netbox-nginx/
         - netbox-static-files:/opt/netbox/netbox/static
         - netbox-media-files:/opt/netbox/netbox/media
@@ -24,8 +24,8 @@ services:
         ports:
         - 8080
         volumes:
-        - netbox-static-files:/opt/netbox/netbox/static
-        - netbox-nginx-config:/etc/netbox-nginx/
+        - netbox-static-files:/opt/netbox/netbox/static:ro
+        - netbox-nginx-config:/etc/netbox-nginx/:ro
     postgres:
         image: postgres:9.6-alpine
         env_file: postgres.env
