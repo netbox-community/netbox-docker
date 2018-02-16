@@ -1,0 +1,66 @@
+# text_field:
+#   type: text
+#   label: Custom Text
+#   description: Enter text in a text field.
+#   required: false
+#   filterable: true
+#   weight: 0
+#   on_objects:
+#   - dcim.models.Device
+#   - dcim.models.Rack
+#   - ipam.models.IPAddress
+#   - ipam.models.Prefix
+#   - tenancy.models.Tenant
+#   - virtualization.models.VirtualMachine
+# integer_field:
+#   type: integer
+#   label: Custom Number
+#   description: Enter numbers into an integer field.
+#   required: true
+#   filterable: true
+#   weight: 10
+#   on_objects:
+#   - tenancy.models.Tenant
+# selection_field:
+#   type: selection
+#   label: Choose between items
+#   required: false
+#   filterable: true
+#   weight: 30
+#   on_objects:
+#   - dcim.models.Device
+#   choices:
+#   - value: First Item
+#     weight: 10
+#   - value: Second Item
+#     weight: 20
+#   - value: Third Item
+#     weight: 30
+#   - value: Fifth Item
+#     weight: 50
+#   - value: Fourth Item
+#     weight: 40
+# boolean_field:
+#   type: boolean
+#   label: Yes Or No?
+#   required: true
+#   filterable: true
+#   default: "false" # important: but "false" in quotes!
+#   weight: 90
+#   on_objects:
+#   - dcim.models.Device
+# url_field:
+#   type: url
+#   label: Hyperlink
+#   description: Link to something nice.
+#   required: true
+#   filterable: false
+#   on_objects:
+#   - tenancy.models.Tenant
+# date_field:
+#   type: date
+#   label: Important Date
+#   required: false
+#   filterable: false
+#   on_objects:
+#   - dcim.models.Device

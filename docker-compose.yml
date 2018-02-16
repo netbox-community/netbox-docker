@@ -10,7 +10,8 @@ services:
         - postgres
         env_file: netbox.env
         volumes:
-        - ./docker/startup_scripts:/opt/netbox/netbox/startup_scripts
+        - ./startup_scripts:/opt/netbox/startup_scripts
+        - ./initializers:/opt/netbox/initializers
         - netbox-nginx-config:/etc/netbox-nginx/
         - netbox-static-files:/opt/netbox/netbox/static
         - netbox-media-files:/opt/netbox/netbox/media
