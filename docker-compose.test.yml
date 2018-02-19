@@ -9,6 +9,8 @@ services:
       depends_on:
       - postgres
       env_file: netbox.env
+      volumes:
+      - ./configuration:/etc/netbox:ro
       command:
       - ./manage.py
       - test
