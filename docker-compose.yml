@@ -12,6 +12,7 @@ services:
         volumes:
         - ./startup_scripts:/opt/netbox/startup_scripts:ro
         - ./initializers:/opt/netbox/initializers:ro
+        - ./configuration:/etc/netbox:ro
         - netbox-nginx-config:/etc/netbox-nginx/
         - netbox-static-files:/opt/netbox/netbox/static
         - netbox-media-files:/opt/netbox/netbox/media
