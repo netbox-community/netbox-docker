@@ -38,8 +38,13 @@ URL_DOCKERHUB_TAG="https://registry.hub.docker.com/v2/${DOCKERHUB_REPO}/tags/lis
 AUTHORIZATION_HEADER="Authorization: Bearer ${BEARER_TOKEN}"
 ALREADY_BUILT="$($CURL -H "${AUTHORIZATION_HEADER}" "${URL_DOCKERHUB_TAG}" | jq -e ".tags | any(.==\"${VERSION}\")")"
 
+VARIANTS=( "ldap" )
+
 if [ "$ALREADY_BUILT" == "false" ]; then
   ./build.sh "${VERSION}" $@
+  for var in "${VARIANTS[@]}" ; do
+    VARIANT=$var ./build.sh "${VERSION}" $@
+  done
 else
   echo "✅ ${VERSION} already exists on https://hub.docker.com/r/${DOCKERHUB_REPO}"
 fi

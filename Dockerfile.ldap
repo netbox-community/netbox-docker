@@ -1,0 +1,7 @@
+ARG FROM_TAG=latest
+FROM ninech/netbox:$FROM_TAG
+
+RUN pip install django_auth_ldap
+
+COPY docker/ldap_config.docker.py /opt/netbox/netbox/netbox/ldap_config.py
+COPY configuration/ldap_config.py /etc/netbox/ldap_config.py

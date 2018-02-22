@@ -35,6 +35,15 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  URL      Where to fetch the package from."
   echo "           Must be a tar.gz file of the source code."
   echo "           Default: https://github.com/<SRC_ORG>/<SRC_REPO>/archive/\$BRANCH.tar.gz"
+  echo "  VARIANT  The variant to build."
+  echo "           When set the value will be used as a TAG suffix and for Dockerfile selection."
+  echo "           The TAG being build must exist for the base variant and the variant Dockerfile"
+  echo "           must start with the following two lines:"
+  echo "             ARG FROM_TAG=latest"
+  echo "             FROM ninech/netbox:$FROM_TAG"
+  echo "           Example: VARIANT=ldap will result in the tag 'latest-ldap' and the Dockerfile"
+  echo "           'Dockerfile.ldap' being used."
+  echo "           Default: empty"
 
   if [ "${1}x" == "x" ]; then
     exit 1
@@ -62,6 +71,18 @@ case "${BRANCH}" in
 esac
 DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
 
+# Checking which VARIANT to build
+if [ -z "$VARIANT" ]; then
+  DOCKERFILE="Dockerfile"
+else
+  DOCKERFILE="Dockerfile.${VARIANT}"
+  DOCKER_TAG="${DOCKER_TAG}-${VARIANT}"
+  if [ ! -f ${DOCKERFILE} ]; then
+    echo "The Dockerfile ${DOCKERFILE} for variant '${VARIANT}' doesn't exist. Exiting"
+    exit 1
+  fi
+fi
+
 # caching is only ok for version tags
 case "${TAG}" in
   v*)
@@ -74,7 +95,7 @@ esac
 DOCKER_OPTS="${DOCKER_OPTS-$CACHE}"
 
 echo "🐳 Building the Docker image '${DOCKER_TAG}' from the url '${URL}'."
-docker build -t "${DOCKER_TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull ${DOCKER_OPTS} .
+docker build -t "${DOCKER_TAG}" --build-arg "FROM_TAG=${TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull ${DOCKER_OPTS} -f ${DOCKERFILE} .
 echo "✅ Finished building the Docker images '${DOCKER_TAG}'"
 
 if [ "${2}" == "--push" ] ; then
