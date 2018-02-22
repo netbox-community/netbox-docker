@@ -179,16 +179,6 @@ Please also consider [the advice about running Netbox in production](#production
 [k8s-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
 [k8s-config]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
 
-#### A Note On OpenShift
-
-OpenShift usually is configured with specific restrictions regarding root users.
-[Special care][openshift-root] has to be taken when building images for OpenShift.
-The Docker Image that may be built using this project (and which is available on Docker Hub) might not yet run without further customization on OpenShift.
-If you have this running on OpenShift, it would be nice if you could open a PR with the changes you needed to make.
-Or if you didn't do any changes and it just worked, that you could confirm this so that we can remove this notice.
-
-[openshift-root]: https://docs.openshift.org/latest/creating_images/guidelines.html#openshift-specific-guidelines
-
 ## Version
 
 The `docker-compose.yml` file is prepared to run a specific version of Netbox.
