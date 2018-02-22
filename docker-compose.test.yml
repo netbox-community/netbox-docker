@@ -9,11 +9,13 @@ services:
       depends_on:
       - postgres
       env_file: netbox.env
+      volumes:
+      - ./configuration:/etc/netbox:ro
       command:
       - ./manage.py
       - test
     postgres:
-      image: postgres:9.6-alpine
+      image: postgres:10.2-alpine
       env_file: postgres.env
 volumes:
   netbox-static-files:

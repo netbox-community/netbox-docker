@@ -16,7 +16,11 @@ RUN apk add --no-cache \
       postgresql-dev \
       wget
 
-RUN pip install gunicorn
+RUN pip install \
+# gunicorn is used for launching netbox
+      gunicorn \
+# ruamel is used in startup_scripts
+      ruamel.yaml
 
 WORKDIR /opt
 
@@ -31,11 +35,14 @@ RUN pip install -r requirements.txt
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/gunicorn_config.py /opt/netbox/
 COPY docker/nginx.conf /etc/netbox-nginx/nginx.conf
+COPY docker/docker-entrypoint.sh docker-entrypoint.sh
+COPY startup_scripts/ /opt/netbox/startup_scripts/
+COPY initializers/ /opt/netbox/initializers/
+COPY configuration/configuration.py /etc/netbox/configuration.py
 
 WORKDIR /opt/netbox/netbox
 
-COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
-ENTRYPOINT [ "/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
 VOLUME ["/etc/netbox-nginx/"]
 

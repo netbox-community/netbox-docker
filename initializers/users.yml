@@ -1,0 +1,6 @@
+# technical_user:
+#   api_token: 0123456789technicaluser789abcdef01234567 # must be looooong!
+# reader:
+#   password: reader
+# writer:
+#   password: writer

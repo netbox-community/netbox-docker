@@ -39,7 +39,8 @@ if not User.objects.filter(username='${SUPERUSER_NAME}'):
     Token.objects.create(user=u, key='${SUPERUSER_API_TOKEN}')
 END
 
-for script in $(ls startup_scripts/*.py 2> /dev/null); do
+for script in /opt/netbox/startup_scripts/*.py; do
+  echo "⚙️ Executing '$script'"
   ./manage.py shell --plain < "${script}"
 done
 
@@ -48,5 +49,6 @@ done
 
 echo "✅ Initialisation is done."
 
-# launch whatever is passed by docker via RUN
+# launch whatever is passed by docker
+# (i.e. the RUN instruction in the Dockerfile)
 exec ${@}
