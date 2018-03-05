@@ -1,4 +1,5 @@
 #!/bin/bash
+# Builds the Dockerfile[.variant] and injects tgz'ed Netbox code from Github
 
 set -e
 
@@ -8,6 +9,8 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  --push  Pushes built Docker image to docker hub."
   echo ""
   echo "You can use the following ENV variables to customize the build:"
+  echo "  DEBUG    If defined, the script does not stop when certain checks are unsatisfied."
+  echo "  DRY_RUN  Prints all build statements instead of running them."
   echo "  DOCKER_OPTS Add parameters to Docker."
   echo "           Default:"
   echo "             When <TAG> starts with 'v':  \"\""
@@ -35,6 +38,17 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  URL      Where to fetch the package from."
   echo "           Must be a tar.gz file of the source code."
   echo "           Default: https://github.com/<SRC_ORG>/<SRC_REPO>/archive/\$BRANCH.tar.gz"
+  echo "  VARIANT  The variant to build."
+  echo "           The value will be used as a suffix to the \$TAG and for the Dockerfile"
+  echo "           selection. The TAG being build must exist for the base variant and"
+  echo "           corresponding Dockerfile must start with the following lines:"
+  echo "             ARG DOCKER_ORG=ninech"
+  echo "             ARG DOCKER_REPOT=netbox"
+  echo "             ARG FROM_TAG=latest"
+  echo "             FROM \$DOCKER_ORG/\$DOCKER_REPO:\$FROM_TAG"
+  echo "           Example: VARIANT=ldap will result in the tag 'latest-ldap' and the"
+  echo "            Dockerfile 'Dockerfile.ldap' being used."
+  echo "           Default: empty"
 
   if [ "${1}x" == "x" ]; then
     exit 1
@@ -70,15 +84,53 @@ case "${TAG}" in
     CACHE="${CACHE---no-cache}";;
 esac
 
+# Checking which VARIANT to build
+if [ -z "$VARIANT" ]; then
+  DOCKERFILE="Dockerfile"
+else
+  DOCKERFILE="Dockerfile.${VARIANT}"
+  DOCKER_TAG="${DOCKER_TAG}-${VARIANT}"
+
+  # Fail fast
+  if [ ! -f "${DOCKERFILE}" ]; then
+    echo "🚨 The Dockerfile ${DOCKERFILE} for variant '${VARIANT}' doesn't exist."
+
+    if [ -z "$DEBUG" ]; then
+      exit 1
+    else
+      echo "⚠️ Would exit here with code '1', but DEBUG is enabled."
+    fi
+  fi
+fi
+
 # Docker options
-DOCKER_OPTS="${DOCKER_OPTS-$CACHE}"
+DOCKER_OPTS=(
+  "$CACHE"
+  --pull
+)
+
+# Build args
+DOCKER_BUILD_ARGS=(
+  --build-arg "FROM_TAG=${TAG}"
+  --build-arg "BRANCH=${BRANCH}"
+  --build-arg "URL=${URL}"
+  --build-arg "DOCKER_ORG=${DOCKER_ORG}"
+  --build-arg "DOCKER_REPO=${DOCKER_REPO}"
+)
+
+if [ -z "$DRY_RUN" ]; then
+  DOCKER_CMD="docker"
+else
+  echo "⚠️ DRY_RUN MODE ON ⚠️"
+  DOCKER_CMD="echo docker"
+fi
 
 echo "🐳 Building the Docker image '${DOCKER_TAG}' from the url '${URL}'."
-docker build -t "${DOCKER_TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull ${DOCKER_OPTS} .
+$DOCKER_CMD build -t "${DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
 echo "✅ Finished building the Docker images '${DOCKER_TAG}'"
 
 if [ "${2}" == "--push" ] ; then
   echo "⏫ Pushing '${DOCKER_TAG}"
-  docker push "${DOCKER_TAG}"
+  $DOCKER_CMD push "${DOCKER_TAG}"
   echo "✅ Finished pushing the Docker image '${DOCKER_TAG}'."
 fi

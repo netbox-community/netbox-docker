@@ -136,6 +136,10 @@ COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
 ```
 
+#### LDAP enabled variant
+
+In the images tagged with "-ldap" you can authenticate netbox against an LDAP / AD server. The included ldap_config.py is configured to use an AD domain controller. The custom values can be injected with environment variables like those in the main configuration file.
+
 ### Production
 
 The default settings are optimized for (local) development environments.
