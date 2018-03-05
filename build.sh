@@ -9,6 +9,8 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  --push  Pushes built Docker image to docker hub."
   echo ""
   echo "You can use the following ENV variables to customize the build:"
+  echo "  DEBUG    If defined, the script does not stop when certain checks are unsatisfied."
+  echo "  DRY_RUN  Prints all build statements instead of running them."
   echo "  DOCKER_OPTS Add parameters to Docker."
   echo "           Default:"
   echo "             When <TAG> starts with 'v':  \"\""
@@ -86,9 +88,16 @@ if [ -z "$VARIANT" ]; then
 else
   DOCKERFILE="Dockerfile.${VARIANT}"
   DOCKER_TAG="${DOCKER_TAG}-${VARIANT}"
-  if [ ! -f ${DOCKERFILE} ]; then
-    echo "The Dockerfile ${DOCKERFILE} for variant '${VARIANT}' doesn't exist. Exiting"
-    exit 1
+
+  # Fail fast
+  if [ ! -f "${DOCKERFILE}" ]; then
+    echo "🚨 The Dockerfile ${DOCKERFILE} for variant '${VARIANT}' doesn't exist."
+
+    if [ -z "$DEBUG" ]; then
+      exit 1
+    else
+      echo "⚠️ Would exit here with code '1', but DEBUG is enabled."
+    fi
   fi
 fi
 

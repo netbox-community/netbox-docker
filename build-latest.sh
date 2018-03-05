@@ -27,8 +27,12 @@ if [ "${PRERELEASE}" == "true" ]; then
 
   if ( [ "$MAJOR_STABLE" -eq "$MAJOR_UNSTABLE" ] && [ "$MINOR_STABLE" -ge "$MINOR_UNSTABLE" ] ) \
      || [ "$MAJOR_STABLE" -gt "$MAJOR_UNSTABLE" ]; then
-    exit 0
     echo "❎ Latest unstable version ('$VERSION') is not higher than the latest stable version ('$STABLE_VERSION')."
+    if [ -z "$DEBUG" ]; then
+      exit 0
+    else
+      echo "⚠️ Would exit here with code '0', but DEBUG is enabled."
+    fi
   fi
 fi
 
