@@ -1,4 +1,5 @@
 #!/bin/bash
+# Builds the latest released version
 
 ORIGINAL_GITHUB_REPO="digitalocean/netbox"
 GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
@@ -6,25 +7,28 @@ URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/releases"
 
 JQ_LATEST="group_by(.prerelease) | .[] | sort_by(.published_at) | reverse | .[0] | select(.prerelease==${PRERELEASE-false}) | .tag_name"
 
-CURL_OPTS="-s"
-CURL="curl ${CURL_OPTS}"
+CURL="curl -sS"
 
 VERSION=$($CURL "${URL_RELEASES}" | jq -r "${JQ_LATEST}")
 
 # Check if the prerelease version is actually higher than stable version
 if [ "${PRERELEASE}" == "true" ]; then
   JQ_STABLE="group_by(.prerelease) | .[] | sort_by(.published_at) | reverse | .[0] | select(.prerelease==false) | .tag_name"
-  STABLE_VERSION=$(curl $CURL_OPTS "${URL_RELEASES}" | jq -r "${JQ_STABLE}")
+  STABLE_VERSION=$($CURL "${URL_RELEASES}" | jq -r "${JQ_STABLE}")
 
+  # shellcheck disable=SC2003
   MAJOR_STABLE=$(expr match "${STABLE_VERSION}" 'v\([0-9]\+\)')
+  # shellcheck disable=SC2003
   MINOR_STABLE=$(expr match "${STABLE_VERSION}" 'v[0-9]\+\.\([0-9]\+\)')
+  # shellcheck disable=SC2003
   MAJOR_UNSTABLE=$(expr match "${VERSION}" 'v\([0-9]\+\)')
+  # shellcheck disable=SC2003
   MINOR_UNSTABLE=$(expr match "${VERSION}" 'v[0-9]\+\.\([0-9]\+\)')
 
   if ( [ "$MAJOR_STABLE" -eq "$MAJOR_UNSTABLE" ] && [ "$MINOR_STABLE" -ge "$MINOR_UNSTABLE" ] ) \
      || [ "$MAJOR_STABLE" -gt "$MAJOR_UNSTABLE" ]; then
-    echo "Latest unstable version ('$VERSION') is not higher than the latest stable version ('$STABLE_VERSION')."
     exit 0
+    echo "❎ Latest unstable version ('$VERSION') is not higher than the latest stable version ('$STABLE_VERSION')."
   fi
 fi
 
@@ -41,6 +45,7 @@ ALREADY_BUILT="$($CURL -H "${AUTHORIZATION_HEADER}" "${URL_DOCKERHUB_TAG}" | jq 
 VARIANTS=( "ldap" )
 
 if [ "$ALREADY_BUILT" == "false" ]; then
+  # shellcheck disable=SC2068
   ./build.sh "${VERSION}" $@
   for var in "${VARIANTS[@]}" ; do
     VARIANT=$var ./build.sh "${VERSION}" $@

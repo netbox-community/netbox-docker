@@ -1,4 +1,5 @@
 #!/bin/bash
+# Builds the Dockerfile[.variant] and injects tgz'ed Netbox code from Github
 
 set -e
 
@@ -71,6 +72,14 @@ case "${BRANCH}" in
 esac
 DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
 
+# caching is only ok for version tags
+case "${TAG}" in
+  v*)
+    CACHE="${CACHE-}";;
+  *)
+    CACHE="${CACHE---no-cache}";;
+esac
+
 # Checking which VARIANT to build
 if [ -z "$VARIANT" ]; then
   DOCKERFILE="Dockerfile"
@@ -83,23 +92,32 @@ else
   fi
 fi
 
-# caching is only ok for version tags
-case "${TAG}" in
-  v*)
-    CACHE="${CACHE-}";;
-  *)
-    CACHE="${CACHE---no-cache}";;
-esac
-
 # Docker options
-DOCKER_OPTS="${DOCKER_OPTS-$CACHE}"
+DOCKER_OPTS=(
+  "$CACHE"
+  --pull
+)
+
+# Build args
+DOCKER_BUILD_ARGS=(
+  --build-arg "FROM_TAG=${TAG}"
+  --build-arg "BRANCH=${BRANCH}"
+  --build-arg "URL=${URL}"
+)
+
+if [ -z "$DRY_RUN" ]; then
+  DOCKER_CMD="docker"
+else
+  echo "⚠️ DRY_RUN MODE ON ⚠️"
+  DOCKER_CMD="echo docker"
+fi
 
 echo "🐳 Building the Docker image '${DOCKER_TAG}' from the url '${URL}'."
-docker build -t "${DOCKER_TAG}" --build-arg "FROM_TAG=${TAG}" --build-arg "BRANCH=${BRANCH}" --build-arg "URL=${URL}" --pull ${DOCKER_OPTS} -f ${DOCKERFILE} .
+$DOCKER_CMD build -t "${DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
 echo "✅ Finished building the Docker images '${DOCKER_TAG}'"
 
 if [ "${2}" == "--push" ] ; then
   echo "⏫ Pushing '${DOCKER_TAG}"
-  docker push "${DOCKER_TAG}"
+  $DOCKER_CMD push "${DOCKER_TAG}"
   echo "✅ Finished pushing the Docker image '${DOCKER_TAG}'."
 fi
