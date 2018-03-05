@@ -76,14 +76,6 @@ case "${BRANCH}" in
 esac
 DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
 
-# caching is only ok for version tags
-case "${TAG}" in
-  v*)
-    CACHE="${CACHE-}";;
-  *)
-    CACHE="${CACHE---no-cache}";;
-esac
-
 # Checking which VARIANT to build
 if [ -z "$VARIANT" ]; then
   DOCKERFILE="Dockerfile"
@@ -103,11 +95,15 @@ else
   fi
 fi
 
-# Docker options
-DOCKER_OPTS=(
-  "$CACHE"
-  --pull
-)
+DOCKER_OPTS=("${DOCKER_OPTS[@]}")
+
+# caching is only ok for version tags
+case "${TAG}" in
+  v*) ;;
+  *)  DOCKER_OPTS+=( "--no-cache" ) ;;
+esac
+
+DOCKER_OPTS+=( "--pull" )
 
 # Build args
 DOCKER_BUILD_ARGS=(
