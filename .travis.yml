@@ -19,12 +19,7 @@ after_script:
 
 after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
-      ./build-branches.sh --push;
-      ./build-latest.sh --push;
-      PRERELEASE=true ./build-latest.sh --push;
-      SRC_ORG=lampwins TAG=webhooks-backend ./build.sh "feature/webhooks-backend" --push;
-    fi
+  - ./build-all.sh --push
 
 notifications:
   slack:

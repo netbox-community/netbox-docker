@@ -9,12 +9,7 @@ CURL="curl -sS"
 
 BRANCHES=$($CURL "${URL_RELEASES}" | jq -r 'map(.name) | .[] | scan("^[^v].+")')
 
-VARIANTS=( "ldap" )
-
 for BRANCH in $BRANCHES; do
   # shellcheck disable=SC2068
   ./build.sh "${BRANCH}" $@
-  for var in "${VARIANTS[@]}" ; do
-    VARIANT=$var ./build.sh "${BRANCH}" $@
-  done
 done
