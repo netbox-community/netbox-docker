@@ -12,4 +12,5 @@ BRANCHES=$($CURL "${URL_RELEASES}" | jq -r 'map(.name) | .[] | scan("^[^v].+")')
 for BRANCH in $BRANCHES; do
   # shellcheck disable=SC2068
   ./build.sh "${BRANCH}" $@
+  exit $?
 done

@@ -39,19 +39,19 @@ if [ ! -z "${DEBUG}" ] || \
 
     # build the latest release
     # shellcheck disable=SC2068
-    ./build-latest.sh $@
+    ./build-latest.sh $@ || ERROR=1
 
     # build the latest pre-release
     # shellcheck disable=SC2068
-		PRERELEASE=true ./build-latest.sh $@
+		PRERELEASE=true ./build-latest.sh $@ || ERROR=1
 
     # build all branches
     # shellcheck disable=SC2068
-		./build-branches.sh $@
+		./build-branches.sh $@ || ERROR=1
 
     # special build
     # shellcheck disable=SC2068
-		SRC_ORG=lampwins TAG=webhooks-backend ./build.sh "feature/webhooks-backend" $@
+		SRC_ORG=lampwins TAG=webhooks-backend ./build.sh "feature/webhooks-backend" $@ || ERROR=1
   done
 else
   echo "❎ Not building anything."

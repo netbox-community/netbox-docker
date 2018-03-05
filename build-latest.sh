@@ -56,6 +56,8 @@ ALREADY_BUILT="$($CURL -H "${AUTHORIZATION_HEADER}" "${URL_DOCKERHUB_TAG}" | jq 
 if [ "$ALREADY_BUILT" == "false" ]; then
   # shellcheck disable=SC2068
   ./build.sh "${VERSION}" $@
+  exit $?
 else
   echo "✅ ${DOCKER_TAG} already exists on https://hub.docker.com/r/${DOCKERHUB_REPO}"
+  exit 0
 fi
