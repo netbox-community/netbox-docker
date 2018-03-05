@@ -44,11 +44,18 @@ BEARER_TOKEN="$($CURL "${URL_DOCKERHUB_TOKEN}" | jq -r .token)"
 
 URL_DOCKERHUB_TAG="https://registry.hub.docker.com/v2/${DOCKERHUB_REPO}/tags/list"
 AUTHORIZATION_HEADER="Authorization: Bearer ${BEARER_TOKEN}"
-ALREADY_BUILT="$($CURL -H "${AUTHORIZATION_HEADER}" "${URL_DOCKERHUB_TAG}" | jq -e ".tags | any(.==\"${VERSION}\")")"
+
+if [ -z "$VARIANT" ]; then
+  DOCKER_TAG="${VERSION}"
+else
+  DOCKER_TAG="${VERSION}-${VARIANT}"
+fi
+
+ALREADY_BUILT="$($CURL -H "${AUTHORIZATION_HEADER}" "${URL_DOCKERHUB_TAG}" | jq -e ".tags | any(.==\"${DOCKER_TAG}\")")"
 
 if [ "$ALREADY_BUILT" == "false" ]; then
   # shellcheck disable=SC2068
   ./build.sh "${VERSION}" $@
 else
-  echo "✅ ${VERSION} already exists on https://hub.docker.com/r/${DOCKERHUB_REPO}"
+  echo "✅ ${DOCKER_TAG} already exists on https://hub.docker.com/r/${DOCKERHUB_REPO}"
 fi
