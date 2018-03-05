@@ -43,7 +43,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "           selection. The TAG being build must exist for the base variant and"
   echo "           corresponding Dockerfile must start with the following lines:"
   echo "             ARG DOCKER_ORG=ninech"
-  echo "             ARG DOCKER_REPOT=netbox"
+  echo "             ARG DOCKER_REPO=netbox"
   echo "             ARG FROM_TAG=latest"
   echo "             FROM \$DOCKER_ORG/\$DOCKER_REPO:\$FROM_TAG"
   echo "           Example: VARIANT=ldap will result in the tag 'latest-ldap' and the"
