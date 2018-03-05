@@ -1,5 +1,7 @@
+ARG DOCKER_ORG=ninech
+ARG DOCKER_REPO=netbox
 ARG FROM_TAG=latest
-FROM ninech/netbox:$FROM_TAG
+FROM $DOCKER_ORG/$DOCKER_REPO:$FROM_TAG
 
 RUN pip install django_auth_ldap
 
