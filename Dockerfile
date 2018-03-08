@@ -19,6 +19,8 @@ RUN apk add --no-cache \
 RUN pip install \
 # gunicorn is used for launching netbox
       gunicorn \
+# napalm is used for gathering information from network devices
+      napalm \
 # ruamel is used in startup_scripts
       ruamel.yaml
 
