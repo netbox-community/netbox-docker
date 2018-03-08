@@ -33,7 +33,7 @@ WORKDIR /opt/netbox
 RUN pip install -r requirements.txt
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
-COPY docker/gunicorn_config.py /opt/netbox/
+COPY configuration/gunicorn_config.py /etc/netbox/
 COPY docker/nginx.conf /etc/netbox-nginx/nginx.conf
 COPY docker/docker-entrypoint.sh docker-entrypoint.sh
 COPY startup_scripts/ /opt/netbox/startup_scripts/
@@ -46,6 +46,6 @@ ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
 VOLUME ["/etc/netbox-nginx/"]
 
-CMD ["gunicorn", "--log-level debug", "-c /opt/netbox/gunicorn_config.py", "netbox.wsgi"]
+CMD ["gunicorn", "-c /etc/netbox/gunicorn_config.py", "netbox.wsgi"]
 
 LABEL SRC_URL="$URL"
