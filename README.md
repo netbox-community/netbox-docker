@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ninech/netbox-docker.svg?branch=master)][travis]
 
-This repository houses the components needed to build Netbox as a Docker container.
+This repository houses the components needed to build NetBox as a Docker container.
 Images built using this code are released to [Docker Hub][netbox-dockerhub] every night.
 
 [travis]: https://travis-ci.org/ninech/netbox-docker
@@ -10,7 +10,7 @@ Images built using this code are released to [Docker Hub][netbox-dockerhub] ever
 
 ## Quickstart
 
-To get Netbox up and running:
+To get NetBox up and running:
 
 ```
 $ git clone -b master https://github.com/ninech/netbox-docker.git
@@ -33,8 +33,7 @@ $ open "http://$(docker-compose port nginx 8080)/"
 $ xdg-open "http://$(docker-compose port nginx 8080)/" &>/dev/null &
 ```
 
-Alternatively, use something like [Reception][docker-reception] to
-connect to _docker-compose_ projects.
+Alternatively, use something like [Reception][docker-reception] to connect to _docker-compose_ projects.
 
 Default credentials:
 
@@ -60,9 +59,9 @@ Read [Environment Variables in Compose][compose-env] to understand about the var
 (The easiest solution being simply adjusting that file.)
 
 To find all possible variables, have a look at the [configuration.docker.py][docker-config] and [docker-entrypoint.sh][entrypoint] files.
-Generally, the environment variables are called the same as their respective Netbox configuration variables.
+Generally, the environment variables are called the same as their respective NetBox configuration variables.
 Variables which are arrays are usually composed by putting all the values into the same environment variables with the values separated by a whitespace ("` `").
-For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access to Netbox through `http://localhost:8080`, `http://[::1]:8080` and `http://127.0.0.1:8080`.
+For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access to NetBox through `http://localhost:8080`, `http://[::1]:8080` and `http://127.0.0.1:8080`.
 
 [compose-env]: https://docs.docker.com/compose/environment-variables/
 
@@ -70,7 +69,7 @@ For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access
 
 When using `docker-compose`, all the python scripts present in `/opt/netbox/startup_scripts` will automatically be executed after the application boots in the context of `./manage.py`.
 
-That mechanism can be used for many things, e.g. to create Netbox custom fields:
+That mechanism can be used for many things, e.g. to create NetBox custom fields:
 
 ```python
 # docker/startup_scripts/load_custom_fields.py
@@ -96,7 +95,7 @@ if created:
 
 #### Initializers
 
-Initializers are built-in startup scripts for defining Netbox custom fields, groups and users.
+Initializers are built-in startup scripts for defining NetBox custom fields, groups and users.
 All you need to do is to mount you own `initializers` folder ([see `docker-compose.yml`][netbox-docker-compose]).
 Look at the [`initializers` folder][netbox-docker-initializers] to learn how the files must look like.
 
@@ -125,7 +124,7 @@ text_field:
 
 #### Custom Docker Image
 
-You can also build your own Netbox Docker image containing your own startup scripts, custom fields, users and groups
+You can also build your own NetBox Docker image containing your own startup scripts, custom fields, users and groups
 like this:
 
 ```
@@ -195,7 +194,7 @@ Please also consider [the advice about running Netbox in production](#production
 
 ## Version
 
-The `docker-compose.yml` file is prepared to run a specific version of Netbox.
+The `docker-compose.yml` file is prepared to run a specific version of NetBox.
 To use this feature, set the environment-variable `VERSION` before launching `docker-compose`, as shown below.
 `VERSION` may be set to the name of
 [any tag of the `ninech/netbox` Docker image on Docker Hub][netbox-dockerhub].
@@ -206,7 +205,7 @@ $ docker-compose pull netbox
 $ docker-compose up -d
 ```
 
-You can also build a specific version of the Netbox image. This time, `VERSION` indicates any valid
+You can also build a specific version of the NetBox image. This time, `VERSION` indicates any valid
 [Git Reference][git-ref] declared on [the 'digitalocean/netbox' Github repository][netbox-github].
 Most commonly you will specify a tag or branch name.
 
@@ -236,14 +235,14 @@ If your issue is not here, look through [the existing issues][issues] and eventu
   Running `docker-compose logs -f netbox` will just show the logs for netbox.
 * You can stop everything using `docker-compose stop`.
 * You can clean up everything using `docker-compose down -v --remove-orphans`. **This will also remove any related data.**
-* You can enter the shell of the running Netbox container using `docker-compose exec netbox /bin/bash`. Now you have access to `./manage.py`, e.g. to reset a password.
+* You can enter the shell of the running NetBox container using `docker-compose exec netbox /bin/bash`. Now you have access to `./manage.py`, e.g. to reset a password.
 * To access the database run `docker-compose exec postgres sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`
 * To create a database backup run `docker-compose exec postgres sh -c 'pg_dump -cU $POSTGRES_USER $POSTGRES_DB' | gzip > db_dump.sql.gz`
 * To restore that database backup run `gunzip -c db_dump.sql.gz | docker exec -i $(docker-compose ps -q postgres) sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`.
 
 ### Getting a "Bad Request (400)"
 
-> When connecting to the Netbox instance, I get a "Bad Request (400)" error.
+> When connecting to the NetBox instance, I get a "Bad Request (400)" error.
 
 This usually happens when the `ALLOWED_HOSTS` variable is not set correctly.
 
@@ -285,7 +284,7 @@ You can use the following ENV variables to customize the build:
 
 ## Tests
 
-To run the test coming with Netbox, use the `docker-compose.test.yml` file as such:
+To run the test coming with NetBox, use the `docker-compose.test.yml` file as such:
 
 ```
 $ docker-compose -f docker-compose.test.yml run --rm app
