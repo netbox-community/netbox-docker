@@ -65,6 +65,49 @@ For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access
 
 [compose-env]: https://docs.docker.com/compose/environment-variables/
 
+### Production
+
+The default settings are optimized for (local) development environments.
+You should therefore adjust the configuration for production setups, at least the following variables:
+
+* `ALLOWED_HOSTS`: Add all URLs that lead to your NetBox instance.
+* `DB_*`: Use a persistent database.
+* `EMAIL_*`: Use your own mailserver.
+* `MAX_PAGE_SIZE`: Use the recommended default of 1000.
+* `SUPERUSER_*`: Only define those variables during the initial setup, and drop them once the DB is set up.
+
+### Running on Docker Swarm / Kubernetes / OpenShift
+
+You may run this image in a cluster such as Docker Swarm, Kubernetes or OpenShift, but this is advanced level.
+
+In this case, we encourage you to statically configure NetBox by starting from [NetBox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
+
+But if you rather continue to configure your application through environment variables, you may continue to use [the built-in configuration file][docker-config].
+We discourage storing secrets in environment variables, as environment variable are passed on to all sub-processes and may leak easily into other systems, e.g. error collecting tools that often collect all environment variables whenever an error occurs.
+
+Therefore we *strongly advise* to make use of the secrets mechanism provided by your container platform (i.e. [Docker Swarm secrets][swarm-secrets], [Kubernetes secrets][k8s-secrets], [OpenShift secrets][openshift-secrets]).
+[The configuration file][docker-config] and [the entrypoint script][entrypoint] try to load the following secrets from the respective files.
+If a secret is defined by an environment variable and in the respective file at the same time, then the value from the environment variable is used.
+
+* `SUPERUSER_PASSWORD`: `/run/secrets/superuser_password`
+* `SUPERUSER_API_TOKEN`: `/run/secrets/superuser_api_token`
+* `DB_PASSWORD`: `/run/secrets/db_password`
+* `SECRET_KEY`: `/run/secrets/secret_key`
+* `EMAIL_PASSWORD`: `/run/secrets/email_password`
+* `NAPALM_PASSWORD`: `/run/secrets/napalm_password`
+
+Please also consider [the advice about running NetBox in production](#production) above!
+
+[docker-config]: https://github.com/ninech/netbox-docker/blob/master/docker/configuration.docker.py
+[default-config]: https://github.com/digitalocean/netbox/blob/develop/netbox/netbox/configuration.example.py
+[entrypoint]: https://github.com/ninech/netbox-docker/blob/master/docker/docker-entrypoint.sh
+[swarm-config]: https://docs.docker.com/engine/swarm/configs/
+[swarm-secrets]: https://docs.docker.com/engine/swarm/secrets/
+[openshift-config]: https://docs.openshift.org/latest/dev_guide/configmaps.html
+[openshift-secrets]: https://docs.openshift.org/latest/dev_guide/secrets.html
+[k8s-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
+[k8s-config]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+
 ### Custom Initialization Code (e.g. Automatically Setting Up Custom Fields)
 
 When using `docker-compose`, all the python scripts present in `/opt/netbox/startup_scripts` will automatically be executed after the application boots in the context of `./manage.py`.
@@ -149,48 +192,6 @@ However, if you have no need for this functionality, leaving them blank will not
 
 In the images tagged with "-ldap" you can authenticate netbox against an LDAP / AD server. The included ldap_config.py is configured to use an AD domain controller. The custom values can be injected with environment variables like those in the main configuration file.
 
-### Production
-
-The default settings are optimized for (local) development environments.
-You should therefore adjust the configuration for production setups, at least the following variables:
-
-* `ALLOWED_HOSTS`: Add all URLs that lead to your Netbox instance.
-* `DB_*`: Use a persistent database.
-* `EMAIL_*`: Use your own mailserver.
-* `MAX_PAGE_SIZE`: Use the recommended default of 1000.
-* `SUPERUSER_*`: Only define those variables during the initial setup, and drop them once the DB is set up.
-
-### Running on Docker Swarm / Kubernetes / OpenShift
-
-You may run this image in a cluster such as Docker Swarm, Kubernetes or OpenShift, but this is advanced level.
-
-In this case, we encourage you to statically configure Netbox by starting from [Netbox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
-
-But if you rather continue to configure your application through environment variables, you may continue to use [the built-in configuration file][docker-config].
-We discourage storing secrets in environment variables, as environment variable are passed on to all sub-processes and may leak easily into other systems, e.g. error collecting tools that often collect all environment variables whenever an error occurs.
-
-Therefore we *strongly advise* to make use of the secrets mechanism provided by your container platform (i.e. [Docker Swarm secrets][swarm-secrets], [Kubernetes secrets][k8s-secrets], [OpenShift secrets][openshift-secrets]).
-[The configuration file][docker-config] and [the entrypoint script][entrypoint] try to load the following secrets from the respective files.
-If a secret is defined by an environment variable and in the respective file at the same time, then the value from the environment variable is used.
-
-* `SUPERUSER_PASSWORD`: `/run/secrets/superuser_password`
-* `SUPERUSER_API_TOKEN`: `/run/secrets/superuser_api_token`
-* `DB_PASSWORD`: `/run/secrets/db_password`
-* `SECRET_KEY`: `/run/secrets/secret_key`
-* `EMAIL_PASSWORD`: `/run/secrets/email_password`
-* `NAPALM_PASSWORD`: `/run/secrets/napalm_password`
-
-Please also consider [the advice about running Netbox in production](#production) above!
-
-[docker-config]: https://github.com/ninech/netbox-docker/blob/master/docker/configuration.docker.py
-[default-config]: https://github.com/digitalocean/netbox/blob/develop/netbox/netbox/configuration.example.py
-[entrypoint]: https://github.com/ninech/netbox-docker/blob/master/docker/docker-entrypoint.sh
-[swarm-config]: https://docs.docker.com/engine/swarm/configs/
-[swarm-secrets]: https://docs.docker.com/engine/swarm/secrets/
-[openshift-config]: https://docs.openshift.org/latest/dev_guide/configmaps.html
-[openshift-secrets]: https://docs.openshift.org/latest/dev_guide/secrets.html
-[k8s-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
-[k8s-config]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
 
 ## Version
 
