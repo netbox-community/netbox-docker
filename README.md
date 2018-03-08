@@ -194,6 +194,16 @@ FROM ninech/netbox:$VERSION
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
 ```
+#### NAPALM Settings
+Since v2.1.0, NAPALM has been tightly integrated into NetBox.  To learn more about what NAPALM is and how it works, please see the documentation from the [libary itself](http://napalm.readthedocs.io/en/latest/index.html) or the documentation from [NetBox](https://netbox.readthedocs.io/en/latest/configuration/optional-settings/#napalm_username) on how it is integrated.
+
+To enable this functionality, simply complete the following lines in `netbox.env` (or appropriate secrets mechanism) :
+
+* `NAPALM_USERNAME`: A common username that can be utilized for connecting to network devices in your environment.
+* `NAPALM_PASSWORD`: The password to use in combintation with the username to connect to network devices.
+* `NAPALM_TIMEOUT`: A value to use for when an attempt to connect to a device will timeout if no response has been recieved.
+
+However, if you have no need for this functionality, leaving them blank will not hinder the performance of NetBox at all.
 
 ## Version
 
