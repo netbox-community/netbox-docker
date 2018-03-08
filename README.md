@@ -188,10 +188,6 @@ To enable this functionality, simply complete the following lines in `netbox.env
 
 However, if you have no need for this functionality, leaving them blank will not hinder the performance of NetBox at all.
 
-#### LDAP enabled variant
-
-In the images tagged with "-ldap" you can authenticate netbox against an LDAP / AD server. The included ldap_config.py is configured to use an AD domain controller. The custom values can be injected with environment variables like those in the main configuration file.
-
 
 ## Version
 
@@ -221,6 +217,12 @@ This can increase the build speed if you're just adjusting the config, for examp
 
 [git-ref]: https://git-scm.com/book/en/v2/Git-Internals-Git-References
 [netbox-github]: https://github.com/digitalocean/netbox/releases
+
+### LDAP enabled variant
+
+The images tagged with "-ldap" contain anything necessary to authenticate against an LDAP or Active Directory server.
+The default configuration `ldap_config.py` is prepared for use with an Active Directory server.
+Custom values can be injected using environment variables, similar to the main configuration mechanisms.
 
 ## Troubleshooting
 
