@@ -108,6 +108,23 @@ Please also consider [the advice about running NetBox in production](#production
 [k8s-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
 [k8s-config]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
 
+### NAPALM Configuration
+
+Since v2.1.0 NAPALM has been tightly integrated into NetBox.
+NAPALM allows NetBox to fetch live data from devices and return it to a requester via its REST API.
+To learn more about what NAPALM is and how it works, please see the documentation from the [libary itself][napalm-doc] or the documentation from [NetBox][netbox-napalm-doc] on how it is integrated.
+
+To enable this functionality, simply complete the following lines in `netbox.env` (or appropriate secrets mechanism) :
+
+* `NAPALM_USERNAME`: A common username that can be utilized for connecting to network devices in your environment.
+* `NAPALM_PASSWORD`: The password to use in combintation with the username to connect to network devices.
+* `NAPALM_TIMEOUT`: A value to use for when an attempt to connect to a device will timeout if no response has been recieved.
+
+However, if you don't need this functionality, leave these blank.
+
+[napalm-doc]: http://napalm.readthedocs.io/en/latest/index.html
+[netbox-napalm-doc]: https://netbox.readthedocs.io/en/latest/configuration/optional-settings/#napalm_username
+
 ### Custom Initialization Code (e.g. Automatically Setting Up Custom Fields)
 
 When using `docker-compose`, all the python scripts present in `/opt/netbox/startup_scripts` will automatically be executed after the application boots in the context of `./manage.py`.
@@ -177,17 +194,6 @@ FROM ninech/netbox:$VERSION
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
 ```
-#### NAPALM Settings
-Since v2.1.0, NAPALM has been tightly integrated into NetBox.  To learn more about what NAPALM is and how it works, please see the documentation from the [libary itself](http://napalm.readthedocs.io/en/latest/index.html) or the documentation from [NetBox](https://netbox.readthedocs.io/en/latest/configuration/optional-settings/#napalm_username) on how it is integrated.
-
-To enable this functionality, simply complete the following lines in `netbox.env` (or appropriate secrets mechanism) :
-
-* `NAPALM_USERNAME`: A common username that can be utilized for connecting to network devices in your environment.
-* `NAPALM_PASSWORD`: The password to use in combintation with the username to connect to network devices.
-* `NAPALM_TIMEOUT`: A value to use for when an attempt to connect to a device will timeout if no response has been recieved.
-
-However, if you have no need for this functionality, leaving them blank will not hinder the performance of NetBox at all.
-
 
 ## Version
 
