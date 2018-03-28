@@ -26,8 +26,8 @@ RUN pip install \
 
 WORKDIR /opt
 
-ARG BRANCH=master
-ARG URL=https://github.com/digitalocean/netbox/archive/$BRANCH.tar.gz
+ARG RELEASE=v2.3.2
+ARG URL=https://github.com/digitalocean/netbox/archive/$RELEASE.tar.gz
 RUN wget -q -O - "${URL}" | tar xz \
   && mv netbox* netbox
 
