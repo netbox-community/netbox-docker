@@ -71,7 +71,7 @@ BASE_PATH = os.environ.get('BASE_PATH', '')
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
 # allowed. Otherwise, define a list of allowed origins using either CORS_ORIGIN_WHITELIST or
 # CORS_ORIGIN_REGEX_WHITELIST. For more information, see https://github.com/ottoyiu/django-cors-headers
-CORS_ORIGIN_ALLOW_ALL = os.environ.get('CORS_ORIGIN_ALLOW_ALL', False)
+CORS_ORIGIN_ALLOW_ALL = os.environ.get('CORS_ORIGIN_ALLOW_ALL', 'False').lower() == 'true'
 CORS_ORIGIN_WHITELIST = os.environ.get('CORS_ORIGIN_WHITELIST', '').split(' ')
 CORS_ORIGIN_REGEX_WHITELIST = [
     # r'^(https?://)?(\w+\.)?example\.com$',
@@ -80,7 +80,7 @@ CORS_ORIGIN_REGEX_WHITELIST = [
 # Set to True to enable server debugging. WARNING: Debugging introduces a substantial performance penalty and may reveal
 # sensitive information about your installation. Only enable debugging while performing testing. Never enable debugging
 # on a production system.
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 # Email settings
 EMAIL = {
@@ -95,7 +95,7 @@ EMAIL = {
 # Enforcement of unique IP space can be toggled on a per-VRF basis.
 # To enforce unique IP space within the global table (all prefixes and IP addresses not assigned to a VRF),
 # set ENFORCE_GLOBAL_UNIQUE to True.
-ENFORCE_GLOBAL_UNIQUE = os.environ.get('ENFORCE_GLOBAL_UNIQUE', False)
+ENFORCE_GLOBAL_UNIQUE = os.environ.get('ENFORCE_GLOBAL_UNIQUE', 'False').lower() == 'true'
 
 # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
 #   https://docs.djangoproject.com/en/1.11/topics/logging/
@@ -103,14 +103,14 @@ LOGGING = {}
 
 # Setting this to True will permit only authenticated users to access any part of NetBox. By default, anonymous users
 # are permitted to access most data in NetBox (excluding secrets) but not make any changes.
-LOGIN_REQUIRED = os.environ.get('LOGIN_REQUIRED', False)
+LOGIN_REQUIRED = os.environ.get('LOGIN_REQUIRED', 'False').lower() == 'true'
 
 # Base URL path if accessing NetBox within a directory. For example, if installed at http://example.com/netbox/, set:
 # BASE_PATH = 'netbox/'
 BASE_PATH = os.environ.get('BASE_PATH', '')
 
 # Setting this to True will display a "maintenance mode" banner at the top of every page.
-MAINTENANCE_MODE = os.environ.get('MAINTENANCE_MODE', False)
+MAINTENANCE_MODE = os.environ.get('MAINTENANCE_MODE', 'False').lower() == 'true'
 
 # An API consumer can request an arbitrary number of objects =by appending the "limit" parameter to the URL (e.g.
 # "?limit=1000"). This setting defines the maximum limit. Setting it to 0 or None will allow an API consumer to request
@@ -137,7 +137,7 @@ PAGINATE_COUNT = int(os.environ.get('PAGINATE_COUNT', 50))
 
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
 # prefer IPv4 instead.
-PREFER_IPV4 = os.environ.get('PREFER_IPV4', False)
+PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
 
 # The file path where custom reports will be stored. A trailing slash is not needed. Note that the default value of
 # this setting is derived from the installed location.

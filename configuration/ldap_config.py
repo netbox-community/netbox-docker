@@ -18,7 +18,7 @@ AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', '')
 # Include this setting if you want to ignore certificate errors. This might be needed to accept a self-signed cert.
 # Note that this is a NetBox-specific setting which sets:
 #     ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
-LDAP_IGNORE_CERT_ERRORS = True
+LDAP_IGNORE_CERT_ERRORS = os.environ.get('LDAP_IGNORE_CERT_ERRORS', 'False').lower() == 'true'
 
 AUTH_LDAP_USER_SEARCH = LDAPSearch(os.environ.get('AUTH_LDAP_USER_SEARCH_BASEDN', ''),
                                     ldap.SCOPE_SUBTREE,
@@ -41,11 +41,11 @@ AUTH_LDAP_USER_FLAGS_BY_GROUP = {
 }
 
 # For more granular permissions, we can map LDAP groups to Django groups.
-AUTH_LDAP_FIND_GROUP_PERMS = True
+AUTH_LDAP_FIND_GROUP_PERMS = os.environ.get('AUTH_LDAP_FIND_GROUP_PERMS', 'True').lower() == 'true'
 
 # Cache groups for one hour to reduce LDAP traffic
-AUTH_LDAP_CACHE_GROUPS = True
-AUTH_LDAP_GROUP_CACHE_TIMEOUT = 3600
+AUTH_LDAP_CACHE_GROUPS = os.environ.get('AUTH_LDAP_CACHE_GROUPS', 'True').lower() == 'true'
+AUTH_LDAP_GROUP_CACHE_TIMEOUT = int(os.environ.get('AUTH_LDAP_CACHE_GROUPS', 3600))
 
 # Populate the Django user from the LDAP directory.
 AUTH_LDAP_USER_ATTR_MAP = {
