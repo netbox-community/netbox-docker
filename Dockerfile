@@ -32,7 +32,8 @@ RUN wget -q -O - "${URL}" | tar xz \
   && mv netbox* netbox
 
 WORKDIR /opt/netbox
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt \
+    && pip install django_auth_ldap
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY configuration/gunicorn_config.py /etc/netbox/
@@ -41,6 +42,9 @@ COPY docker/docker-entrypoint.sh docker-entrypoint.sh
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
 COPY configuration/configuration.py /etc/netbox/configuration.py
+
+COPY docker/ldap_config.docker.py /opt/netbox/netbox/netbox/ldap_config.py
+COPY configuration/ldap_config.py /etc/netbox/ldap_config.py
 
 WORKDIR /opt/netbox/netbox
 
@@ -51,3 +55,8 @@ VOLUME ["/etc/netbox-nginx/"]
 CMD ["gunicorn", "-c /etc/netbox/gunicorn_config.py", "netbox.wsgi"]
 
 LABEL SRC_URL="$URL"
+
+
+
+
+
