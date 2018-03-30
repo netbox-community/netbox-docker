@@ -6,11 +6,6 @@ from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 # Server URI
 AUTH_LDAP_SERVER_URI = os.environ.get('AUTH_LDAP_SERVER_URI', '')
 
-# The following may be needed if you are binding to Active Directory.
-AUTH_LDAP_CONNECTION_OPTIONS = {
-    ldap.OPT_REFERRALS: 0
-}
-
 # Set the DN and password for the NetBox service account.
 AUTH_LDAP_BIND_DN = os.environ.get('AUTH_LDAP_BIND_DN', '')
 AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', '')
@@ -27,7 +22,7 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(os.environ.get('AUTH_LDAP_USER_SEARCH_BASEDN'
 # This search ought to return all groups to which the user belongs. django_auth_ldap uses this to determine group
 # heirarchy.
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(os.environ.get('AUTH_LDAP_GROUP_SEARCH_BASEDN', ''), ldap.SCOPE_SUBTREE,
-                                    "(objectClass=group)")
+                                    "(objectClass=groupOfNames)")
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
 
 # Define a group required to login.
@@ -54,4 +49,5 @@ AUTH_LDAP_USER_ATTR_MAP = {
     "email": os.environ.get('AUTH_LDAP_ATTR_MAIL', 'mail')
 }
 
-AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,%s" % os.environ.get('AUTH_LDAP_USER_SEARCH_BASEDN')
+AUTH_LDAP_USER_DN_TEMPLATE = os.environ.get('AUTH_LDAP_USER_DN_TEMPLATE')
+
