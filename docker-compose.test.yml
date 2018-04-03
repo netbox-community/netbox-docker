@@ -10,7 +10,7 @@ services:
       - postgres
       env_file: netbox.env
       volumes:
-      - ./configuration:/etc/netbox:ro
+      - ./configuration:/etc/netbox/config:ro
       command:
       - ./manage.py
       - test

@@ -141,7 +141,7 @@ PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
 
 # The file path where custom reports will be stored. A trailing slash is not needed. Note that the default value of
 # this setting is derived from the installed location.
-REPORTS_ROOT = os.environ.get('REPORTS_ROOT', os.path.join(BASE_DIR, 'reports'))
+REPORTS_ROOT = os.environ.get('REPORTS_ROOT', '/etc/netbox/reports')
 
 # Time zone (default: UTC)
 TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')

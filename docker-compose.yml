@@ -12,11 +12,11 @@ services:
         volumes:
         - ./startup_scripts:/opt/netbox/startup_scripts:ro
         - ./initializers:/opt/netbox/initializers:ro
-        - ./configuration:/etc/netbox:ro
+        - ./configuration:/etc/netbox/config:ro
         - netbox-nginx-config:/etc/netbox-nginx/
         - netbox-static-files:/opt/netbox/netbox/static
         - netbox-media-files:/opt/netbox/netbox/media
-        - netbox-report-files:/opt/netbox/netbox/reports
+        - netbox-report-files:/etc/netbox/reports:ro
     nginx:
         image: nginx:1.13-alpine
         command: nginx -g 'daemon off;' -c /etc/netbox-nginx/nginx.conf
