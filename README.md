@@ -277,6 +277,7 @@ You can check the label of your local image by running `docker inspect ninech/ne
 
 The following is a list of braking changes:
 
+* 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54](https://github.com/ninech/netbox-docker/issues/54).
 * 0.1.0: Introduction of the `NETBOX_DOCKER_PROJECT_VERSION`. (Not a braking change per se.)
 
 ## Rebuilding & Publishing images
