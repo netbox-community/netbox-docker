@@ -51,3 +51,6 @@ VOLUME ["/etc/netbox-nginx/"]
 CMD ["gunicorn", "-c /etc/netbox/gunicorn_config.py", "netbox.wsgi"]
 
 LABEL SRC_URL="$URL"
+
+ARG NETBOX_DOCKER_PROJECT_VERSION=snapshot
+LABEL NETBOX_DOCKER_PROJECT_VERSION="$NETBOX_DOCKER_PROJECT_VERSION"

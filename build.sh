@@ -57,6 +57,10 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   fi
 fi
 
+# read the project version and trim it
+# see https://stackoverflow.com/a/3232433/172132
+NETBOX_DOCKER_PROJECT_VERSION="${NETBOX_DOCKER_PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' VERSION)}"
+
 # variables for fetching the source
 SRC_ORG="${SRC_ORG-digitalocean}"
 SRC_REPO="${SRC_REPO-netbox}"
@@ -107,6 +111,7 @@ DOCKER_OPTS+=( "--pull" )
 
 # Build args
 DOCKER_BUILD_ARGS=(
+  --build-arg "NETBOX_DOCKER_PROJECT_VERSION=${NETBOX_DOCKER_PROJECT_VERSION}"
   --build-arg "FROM_TAG=${TAG}"
   --build-arg "BRANCH=${BRANCH}"
   --build-arg "URL=${URL}"
