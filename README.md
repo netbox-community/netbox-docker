@@ -195,7 +195,7 @@ COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
 ```
 
-## Version
+## Netbox Version
 
 The `docker-compose.yml` file is prepared to run a specific version of NetBox.
 To use this feature, set the environment-variable `VERSION` before launching `docker-compose`, as shown below.
