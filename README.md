@@ -268,6 +268,17 @@ docker-compose rm -f netbox
 docker-compose up -d netbox
 ```
 
+### Braking Changes
+
+From time to time it might become necessary to re-order the structure of the container.
+Things like the `docker-compose.yml` file or your Kubernets or OpenShift configurations have to be adjusted as a consequence.
+Since April 2018 each image built from this repo contains a `NETBOX_DOCKER_PROJECT_VERSION` label.
+You can check the label of your local image by running `docker inspect ninech/netbox:v2.3.1 --format "{{json .ContainerConfig.Labels}}"`.
+
+The following is a list of braking changes:
+
+* 0.1.0: Introduction of the `NETBOX_DOCKER_PROJECT_VERSION`. (Not a braking change per se.)
+
 ## Rebuilding & Publishing images
 
 `./build.sh` is used to rebuild the Docker image:
