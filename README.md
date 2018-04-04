@@ -80,7 +80,7 @@ You should therefore adjust the configuration for production setups, at least th
 
 You may run this image in a cluster such as Docker Swarm, Kubernetes or OpenShift, but this is advanced level.
 
-In this case, we encourage you to statically configure NetBox by starting from [NetBox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
+In this case, we encourage you to statically configure NetBox by starting from [NetBox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/config/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
 
 But if you rather continue to configure your application through environment variables, you may continue to use [the built-in configuration file][docker-config].
 We discourage storing secrets in environment variables, as environment variable are passed on to all sub-processes and may leak easily into other systems, e.g. error collecting tools that often collect all environment variables whenever an error occurs.
@@ -277,6 +277,7 @@ You can check the label of your local image by running `docker inspect ninech/ne
 
 The following is a list of braking changes:
 
+* 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54](https://github.com/ninech/netbox-docker/issues/54).
 * 0.1.0: Introduction of the `NETBOX_DOCKER_PROJECT_VERSION`. (Not a braking change per se.)
 
 ## Rebuilding & Publishing images
