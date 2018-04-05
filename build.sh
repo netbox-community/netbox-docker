@@ -49,6 +49,18 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "           Example: VARIANT=ldap will result in the tag 'latest-ldap' and the"
   echo "            Dockerfile 'Dockerfile.ldap' being used."
   echo "           Default: empty"
+  echo "  HTTP_PROXY The proxy to use for http requests."
+  echo "           Example: http://proxy.domain.tld:3128"
+  echo "           Default: empty"
+  echo "  HTTPS_PROXY The proxy to use for https requests."
+  echo "           Example: http://proxy.domain.tld:3128"
+  echo "           Default: empty"
+  echo "  FTP_PROXY The proxy to use for ftp requests."
+  echo "           Example: http://proxy.domain.tld:3128"
+  echo "           Default: empty"
+  echo "  NO_PROXY Comma-separated list of domain extensions proxy should not be used for."
+  echo "           Example: .domain1.tld,.domain2.tld"
+  echo "           Default: empty"
 
   if [ "${1}x" == "x" ]; then
     exit 1
@@ -118,6 +130,18 @@ DOCKER_BUILD_ARGS=(
   --build-arg "DOCKER_ORG=${DOCKER_ORG}"
   --build-arg "DOCKER_REPO=${DOCKER_REPO}"
 )
+if [ -n "$HTTP_PROXY" ]; then
+  DOCKER_BUILD_ARGS+=( --build-arg "http_proxy=${HTTP_PROXY}" )
+fi
+if [ -n "$HTTPS_PROXY" ]; then
+  DOCKER_BUILD_ARGS+=( --build-arg "https_proxy=${HTTPS_PROXY}" )
+fi
+if [ -n "$FTP_PROXY" ]; then
+  DOCKER_BUILD_ARGS+=( --build-arg "ftp_proxy=${FTP_PROXY}" )
+fi
+if [ -n "$NO_PROXY" ]; then
+  DOCKER_BUILD_ARGS+=( --build-arg "no_proxy=${NO_PROXY}" )
+fi
 
 if [ -z "$DRY_RUN" ]; then
   DOCKER_CMD="docker"
