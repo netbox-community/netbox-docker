@@ -9,8 +9,10 @@ CURL="curl -sS"
 
 BRANCHES=$($CURL "${URL_RELEASES}" | jq -r 'map(.name) | .[] | scan("^[^v].+")')
 
+ERROR=0
+
 for BRANCH in $BRANCHES; do
   # shellcheck disable=SC2068
-  ./build.sh "${BRANCH}" $@
-  exit $?
+  ./build.sh "${BRANCH}" $@ || ERROR=1
 done
+exit $ERROR
