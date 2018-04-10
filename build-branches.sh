@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds all published branches
+# Builds develop, develop-* and master branches
 
 ORIGINAL_GITHUB_REPO="digitalocean/netbox"
 GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
@@ -7,7 +7,7 @@ URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/branches"
 
 CURL="curl -sS"
 
-BRANCHES=$($CURL "${URL_RELEASES}" | jq -r 'map(.name) | .[] | scan("^[^v].+")')
+BRANCHES=$($CURL "${URL_RELEASES}" | jq -r 'map(.name) | .[] | scan("^[^v].+") | match("^(master|develop).*") | .string')
 
 ERROR=0
 
