@@ -1,6 +1,8 @@
 #!/bin/bash
 # Builds the Dockerfile[.variant] and injects tgz'ed Netbox code from Github
 
+echo "▶️ $0 $*"
+
 set -e
 
 if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
