@@ -1,6 +1,8 @@
 #!/bin/bash
 # Builds develop, develop-* and master branches
 
+echo "▶️ $0 $*"
+
 ORIGINAL_GITHUB_REPO="digitalocean/netbox"
 GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
 URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/branches"

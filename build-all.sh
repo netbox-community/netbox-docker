@@ -5,6 +5,8 @@
 #              Allowed: release, prerelease, branches, special
 #              Default: undefined
 
+echo "▶️ $0 $*"
+
 ALL_BUILDS=("release" "prerelease" "branches" "special")
 BUILDS=("${BUILD:-"${ALL_BUILDS[@]}"}")
 
