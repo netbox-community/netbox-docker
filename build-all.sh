@@ -6,6 +6,7 @@
 #              Default: undefined
 
 echo "▶️ $0 $*"
+set -x
 
 ALL_BUILDS=("release" "prerelease" "branches" "special")
 BUILDS=("${BUILD:-"${ALL_BUILDS[@]}"}")
