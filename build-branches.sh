@@ -2,7 +2,6 @@
 # Builds develop, develop-* and master branches
 
 echo "▶️ $0 $*"
-set -x
 
 ORIGINAL_GITHUB_REPO="digitalocean/netbox"
 GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
