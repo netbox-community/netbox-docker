@@ -1,6 +1,12 @@
 sudo: required
 language: python
 
+env:
+  - BUILD=release
+  - BUILD=prerelease
+  - BUILD=branches
+  - BUILD=special
+
 git:
   depth: 5
 
