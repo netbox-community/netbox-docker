@@ -108,6 +108,26 @@ Please also consider [the advice about running NetBox in production](#production
 [k8s-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
 [k8s-config]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
 
+#### Example Kubernetes Deployment
+
+Check out the project:
+```
+git clone https://github.com/ninech/netbox-docker.git
+cd netbox-docker/kubernetes
+```
+
+Fill in the configuration parameters:
+  * In `netbox.yaml`,
+    * Set environment variables in the `netbox-netbox-env` ConfigMap and the `netbox-netbox-secrets` Secret. Secrets must be base64 encoded first (see the inline comments).
+    * Change the `DB_HOST` environment parameter to be the DNS name (from inside the cluster) for the postgres db. This probably just involves adding the namespace.
+    * Set the `storageClassName` if required in your cluster.
+  * In `postgres,yaml`, set the `POSTGRES_PASSWORD` to match `netbox.yaml`.
+
+Deploy to kubernetes:
+```
+kubectl apply -f .
+```
+
 ### NAPALM Configuration
 
 Since v2.1.0 NAPALM has been tightly integrated into NetBox.

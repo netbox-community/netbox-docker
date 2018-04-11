@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netbox-nginx-conf
+data:
+  nginx.conf: |
+    worker_processes 1;
+    events {
+      worker_connections  1024;
+    }
+    http {
+      include       /etc/nginx/mime.types;
+      default_type  application/octet-stream;
+      sendfile        on;
+      tcp_nopush     on;
+      keepalive_timeout  65;
+      gzip  on;
+      server_tokens off;
+      server {
+          listen 80;
+          server_name localhost;
+          access_log off;
+          location /static/ {
+            alias /opt/netbox/netbox/static/;
+          }
+          location / {
+            # default should be changed to deploymenent namespace
+            proxy_pass http://netbox.dev.svc.cluster.local:8001;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
+          }
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbox-nginx
+  labels:
+    frontend: nginx
+    app: netbox
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      frontend: nginx
+      app: netbox
+  template:
+    metadata:
+      labels:
+        frontend: nginx
+        app: netbox
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.12-alpine
+        ports:
+        - containerPort: 80
+        command: ["nginx"]
+        args: ["-c", "/etc/netbox-nginx/nginx.conf","-g", "daemon off;"]
+        volumeMounts:
+        - name: netbox-static-files
+          mountPath: /opt/netbox/netbox/static
+        - name: netbox-nginx-config
+          mountPath: /etc/netbox-nginx
+      restartPolicy: Always
+      volumes:
+      - name: netbox-static-files
+        persistentVolumeClaim:
+          claimName: netbox-static-files
+      - name: netbox-nginx-config
+        configMap:
+          name: netbox-nginx-conf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbox-nginx
+  labels:
+    frontend: nginx
+    app: netbox
+spec:
+  type: ClusterIP
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  selector:
+    frontend: nginx
