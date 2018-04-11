@@ -1,0 +1,115 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netbox-netbox-env
+data:
+  ALLOWED_HOSTS: '*'
+  DB_HOST: netbox-postgres.default.svc.cluster.local # default should be changed to deploymenent namespace
+  DB_NAME: netbox
+  DB_USER: netbox
+  EMAIL_FROM: netbox@bar.com
+  EMAIL_PORT: "25"
+  EMAIL_SERVER: localhost
+  EMAIL_TIMEOUT: "10"
+  EMAIL_USERNAME: foo
+  NETBOX_USERNAME: guest
+  SUPERUSER_EMAIL: admin@example.com
+  SUPERUSER_NAME: admin
+  NAPALM_USERNAME: rancid
+  NAPALM_TIMEOUT: '30'
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: netbox-netbox-secrets
+type: Opaque
+data:
+  SUPERUSER_PASSWORD: YWRtaW4= # echo -n 'admin' | base64
+  SUPERUSER_API_TOKEN: MDEyZWU4NzY4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWYwMTIzNDU2Nw== # echo -n '012ee87689abcdef0123456789abcdef01234567' | base64
+  DB_PASSWORD: SjVickhyb2RqZHU0aWYwSw== # echo -n 'J5brHrodjdu4if0K' | base64
+  SECRET_KEY: cjhPd0QkJWohRkdjaQ== # echo -n 'r8OwD$%j!FGci' | base64
+  EMAIL_PASSWORD: YWRtaW4= # echo -n 'admin' | base64
+  NETBOX_PASSWORD: YWRtaW4= # echo -n 'admin' | base64
+  NAPALM_PASSWORD: YWRtaW4= # echo -n 'admin' | base64
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: netbox-static-files
+  labels:
+    pvcname: netbox-static-files
+spec:
+  accessModes:
+  - ReadWriteMany
+#  storageClassName: gluster-storage # May neet to be removed/changed
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbox
+  labels:
+    backend: netbox
+    app: netbox
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      backend: netbox
+      app: netbox
+  template:
+    metadata:
+      labels:
+        backend: netbox
+        app: netbox
+    spec:
+      containers:
+      - name: netbox
+        image: ninech/netbox:latest-ldap
+        ports:
+        - containerPort: 8001
+        envFrom:
+        - secretRef:
+            name: netbox-netbox-secrets
+        - configMapRef:
+            name: netbox-netbox-env
+        volumeMounts:
+        - name: netbox-nginx-config
+          mountPath: /etc/netbox-nginx/
+        - name: netbox-static-files
+          mountPath: /opt/netbox/netbox/static
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      volumes:
+      - name: netbox-nginx-config
+        configMap:
+          name: netbox-nginx-conf
+      - name: netbox-static-files
+        persistentVolumeClaim:
+          claimName: netbox-static-files
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbox
+  labels:
+    backend: netbox
+    app: netbox
+spec:
+  ports:
+  - name: nbox
+    port: 8001
+    targetPort: 8001
+  selector:
+    app: netbox
+    backend: netbox
