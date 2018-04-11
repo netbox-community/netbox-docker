@@ -128,6 +128,13 @@ Deploy to kubernetes:
 kubectl apply -f .
 ```
 
+Connect to the web gui:
+```
+kubectl proxy
+```
+http://localhost:8001/api/v1/namespaces/default/services/netbox-nginx:80/proxy/
+
+
 ### NAPALM Configuration
 
 Since v2.1.0 NAPALM has been tightly integrated into NetBox.
