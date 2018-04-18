@@ -29,7 +29,6 @@ if [ -z ${SUPERUSER_API_TOKEN+x} ]; then
   fi
 fi
 
-echo "💡 Username: ${SUPERUSER_NAME}, E-Mail: ${SUPERUSER_EMAIL}, Password: ${SUPERUSER_PASSWORD}, Token: ${SUPERUSER_API_TOKEN}"
 
 ./manage.py shell --plain << END
 from django.contrib.auth.models import User
