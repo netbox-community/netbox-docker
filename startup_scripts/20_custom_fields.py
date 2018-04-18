@@ -36,8 +36,11 @@ with open('/opt/netbox/initializers/custom_fields.yml', 'r') as stream:
         if cf_details.get('description', 0):
           custom_field.description = cf_details['description']
 
-        if cf_details.get('filterable', 0):
-          custom_field.is_filterables = cf_details['filterable']
+        # If no filter_logic is specified then it will default to 'Loose'
+        if cf_details.get('filter_logic', 0):
+          for choice_id, choice_text in CF_FILTER_CHOICES:
+            if choice_text.lower() == cf_details['filter_logic']:
+              custom_field.filter_logic = choice_id
 
         if cf_details.get('label', 0):
           custom_field.label = cf_details['label']

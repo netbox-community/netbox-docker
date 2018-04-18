@@ -168,7 +168,7 @@ text_field:
   label: Custom Text
   description: Enter text in a text field.
   required: false
-  filterable: true
+  filter_logic: loose
   weight: 0
   on_objects:
   - dcim.models.Device
