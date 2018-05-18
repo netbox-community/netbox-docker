@@ -57,7 +57,7 @@ with open('/opt/netbox/initializers/custom_fields.yml', 'r') as stream:
         custom_field.save()
 
         for idx, choice_details in enumerate(cf_details.get('choices', [])):
-          choice, created = CustomFieldChoice.objects.get_or_create(
+          choice, _ = CustomFieldChoice.objects.get_or_create(
             field=custom_field,
             value=choice_details['value'],
           )
