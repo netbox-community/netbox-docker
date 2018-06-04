@@ -12,7 +12,7 @@ RUN apk add --no-cache \
       libxml2-dev \
       libxslt-dev \
       openldap-dev \
-      openssl-dev \
+      libressl-dev \
       postgresql-dev \
       wget
 
