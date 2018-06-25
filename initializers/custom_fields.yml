@@ -3,7 +3,6 @@
 #   label: Custom Text
 #   description: Enter text in a text field.
 #   required: false
-#   filterable: true
 #   weight: 0
 #   on_objects:
 #   - dcim.models.Device
@@ -17,7 +16,7 @@
 #   label: Custom Number
 #   description: Enter numbers into an integer field.
 #   required: true
-#   filterable: true
+#   filter_logic: loose
 #   weight: 10
 #   on_objects:
 #   - tenancy.models.Tenant
@@ -25,7 +24,7 @@
 #   type: selection
 #   label: Choose between items
 #   required: false
-#   filterable: true
+#   filter_logic: exact
 #   weight: 30
 #   on_objects:
 #   - dcim.models.Device
@@ -44,7 +43,7 @@
 #   type: boolean
 #   label: Yes Or No?
 #   required: true
-#   filterable: true
+#   filter_logic: loose
 #   default: "false" # important: but "false" in quotes!
 #   weight: 90
 #   on_objects:
@@ -54,13 +53,13 @@
 #   label: Hyperlink
 #   description: Link to something nice.
 #   required: true
-#   filterable: false
+#   filter_logic: disabled
 #   on_objects:
 #   - tenancy.models.Tenant
 # date_field:
 #   type: date
 #   label: Important Date
 #   required: false
-#   filterable: false
+#   filter_logic: disabled
 #   on_objects:
 #   - dcim.models.Device
