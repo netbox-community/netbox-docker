@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.6-alpine3.7
 
 RUN apk add --no-cache \
       bash \
@@ -12,7 +12,6 @@ RUN apk add --no-cache \
       libxml2-dev \
       libxslt-dev \
       openldap-dev \
-      openssl-dev \
       postgresql-dev \
       wget
 
