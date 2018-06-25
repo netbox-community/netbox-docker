@@ -168,7 +168,7 @@ text_field:
   label: Custom Text
   description: Enter text in a text field.
   required: false
-  filterable: true
+  filter_logic: loose
   weight: 0
   on_objects:
   - dcim.models.Device
@@ -277,6 +277,7 @@ You can check the label of your local image by running `docker inspect ninech/ne
 
 The following is a list of breaking changes:
 
+* 0.3.0: Field `filterable: <boolean` was replaced with field `filter_logic: loose/exact/disabled`. It will default to `CF_FILTER_LOOSE=loose` when not defined.
 * 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54](https://github.com/ninech/netbox-docker/issues/54).
 * 0.1.0: Introduction of the `NETBOX_DOCKER_PROJECT_VERSION`. (Not a breaking change per se.)
 
