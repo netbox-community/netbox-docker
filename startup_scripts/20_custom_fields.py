@@ -59,13 +59,11 @@ with open('/opt/netbox/initializers/custom_fields.yml', 'r') as stream:
 
         custom_field.save()
 
-        for choice_details in cf_details.get('choices', []):
-          choice = CustomFieldChoice.objects.create(
+        for idx, choice_details in enumerate(cf_details.get('choices', [])):
+          choice, _ = CustomFieldChoice.objects.get_or_create(
             field=custom_field,
-            value=choice_details['value'])
-
-          if choice_details.get('weight', 0):
-            choice.weight = choice_details['weight']
-            choice.save()
+            value=choice_details['value'],
+            defaults={'weight': idx * 10}
+          )
 
         print("🔧 Created custom field", cf_name)

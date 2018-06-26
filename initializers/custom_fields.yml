@@ -39,6 +39,21 @@
 #     weight: 50
 #   - value: Fourth Item
 #     weight: 40
+# selection_field_auto_weight:
+#    type: selection
+#    label: Choose between items
+#    required: false
+#    filterable: true
+#    weight: 30
+#    on_objects:
+#     - dcim.models.Device
+#    choices:
+#     - value: A
+#     - value: B
+#     - value: C
+#     - value: "D like deprecated"
+#       weight: 999
+#     - value: E
 # boolean_field:
 #   type: boolean
 #   label: Yes Or No?
