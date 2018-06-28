@@ -1,4 +1,4 @@
-from extras.constants import CF_TYPE_TEXT, CF_TYPE_INTEGER, CF_TYPE_BOOLEAN, CF_TYPE_DATE, CF_TYPE_URL, CF_TYPE_SELECT
+from extras.constants import CF_TYPE_TEXT, CF_TYPE_INTEGER, CF_TYPE_BOOLEAN, CF_TYPE_DATE, CF_TYPE_URL, CF_TYPE_SELECT, CF_FILTER_CHOICES
 from extras.models import CustomField, CustomFieldChoice
 
 from ruamel.yaml import YAML
