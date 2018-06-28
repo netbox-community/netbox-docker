@@ -10,6 +10,8 @@ services:
       - postgres
       env_file: netbox.env
       volumes:
+      - ./startup_scripts:/opt/netbox/startup_scripts:ro
+      - ./initializers:/opt/netbox/initializers:ro
       - ./configuration:/etc/netbox/config:ro
       command:
       - ./manage.py
