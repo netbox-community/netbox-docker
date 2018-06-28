@@ -43,7 +43,7 @@
 #    type: selection
 #    label: Choose between items
 #    required: false
-#    filterable: true
+#    filter_logic: loose
 #    weight: 30
 #    on_objects:
 #     - dcim.models.Device
