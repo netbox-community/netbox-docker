@@ -306,10 +306,10 @@ You can use the following ENV variables to customize the build:
 
 ## Tests
 
-To run the test coming with NetBox, use the `docker-compose.test.yml` file as such:
+To run the test coming with NetBox, use the `docker-compose.yml` file as such:
 
 ```
-$ docker-compose -f docker-compose.test.yml run --rm app
+$ docker-compose run netbox ./manage.py test
 ```
 
 ## About
