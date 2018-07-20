@@ -16,7 +16,7 @@ AUTH_LDAP_BIND_DN = os.environ.get('AUTH_LDAP_BIND_DN', '')
 AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', '')
 
 # Set AUTH_LDAP_USER_DN_TEMPLATE
-AUTH_LDAP_USER_DN_TEMPLATE = os.environ.get('AUTH_LDAP_USER_DN_TEMPLATE', '')
+AUTH_LDAP_USER_DN_TEMPLATE = os.environ.get('AUTH_LDAP_USER_DN_TEMPLATE', None)
 
 # Include this setting if you want to ignore certificate errors. This might be needed to accept a self-signed cert.
 # Note that this is a NetBox-specific setting which sets:
