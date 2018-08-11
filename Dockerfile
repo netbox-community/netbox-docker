@@ -13,7 +13,8 @@ RUN apk add --no-cache \
       libxslt-dev \
       openldap-dev \
       postgresql-dev \
-      wget
+      wget \
+      supervisor
 
 RUN pip install \
 # gunicorn is used for launching netbox
@@ -21,7 +22,14 @@ RUN pip install \
 # napalm is used for gathering information from network devices
       napalm \
 # ruamel is used in startup_scripts
-      ruamel.yaml
+      ruamel.yaml \
+# if the Django package is not installed here to this pinned version
+# django-rq will install the latest version (currently 2.1)
+# then, when the requirements.txt of netbox is run, it will be
+# uninstalled because it currently causes problems with netbox
+      Django==2.0.8 \
+# django-rq is used for webhooks
+      django-rq
 
 WORKDIR /opt
 
@@ -40,6 +48,7 @@ COPY docker/docker-entrypoint.sh docker-entrypoint.sh
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
 COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/supervisord.conf /etc/supervisord.conf
 
 WORKDIR /opt/netbox/netbox
 
@@ -47,7 +56,7 @@ ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
 VOLUME ["/etc/netbox-nginx/"]
 
-CMD ["gunicorn", "-c /etc/netbox/config/gunicorn_config.py", "netbox.wsgi"]
+CMD ["supervisord", "-c /etc/supervisord.conf"]
 
 LABEL SRC_URL="$URL"
 
