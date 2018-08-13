@@ -141,7 +141,7 @@ PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
 
 # The Webhook event backend is disabled by default. Set this to True to enable it. Note that this requires a Redis
 # database be configured and accessible by NetBox (see `REDIS` below).
-WEBHOOKS_ENABLED = os.environ.get('WEBHOOKS_ENABLED', 'True').lower() == 'true'
+WEBHOOKS_ENABLED = os.environ.get('WEBHOOKS_ENABLED', 'False').lower() == 'true'
 
 # Redis database settings (optional). A Redis database is required only if the webhooks backend is enabled.
 REDIS = {
