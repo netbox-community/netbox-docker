@@ -252,6 +252,32 @@ If your issue is not here, look through [the existing issues][issues] and eventu
 * To create a database backup run `docker-compose exec postgres sh -c 'pg_dump -cU $POSTGRES_USER $POSTGRES_DB' | gzip > db_dump.sql.gz`
 * To restore that database backup run `gunzip -c db_dump.sql.gz | docker exec -i $(docker-compose ps -q postgres) sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`.
 
+### Nginx doesn't start
+
+As a first step, stop your docker-compose setup.
+Then locate the `netbox-nginx-config` volume and remove it:
+
+```bash
+# Stop your local netbox-docker installation
+$ docker-compose down
+
+# Find the volume
+$ docker volume ls | grep netbox-nginx-config
+local               netbox-docker_netbox-nginx-config
+
+# Remove the volume
+$ docker volume rm netbox-docker_netbox-nginx-config
+netbox-docker_netbox-nginx-config
+```
+
+Now start everything up again.
+
+If this didn't help, try to see if there's anything in the logs indicating why nginx doesn't start:
+
+```bash
+$ docker-compose logs -f nginx
+```
+
 ### Getting a "Bad Request (400)"
 
 > When connecting to the NetBox instance, I get a "Bad Request (400)" error.
