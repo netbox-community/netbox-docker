@@ -29,8 +29,8 @@ services:
     command:
     - rqworker
   nginx:
-    image: nginx:1.13-alpine
     command: nginx -c /etc/netbox-nginx/nginx.conf
+    image: nginx:1.15-alpine
     depends_on:
     - netbox
     ports:
