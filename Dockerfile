@@ -6,15 +6,14 @@ RUN apk add --no-cache \
       ca-certificates \
       cyrus-sasl-dev \
       graphviz \
-      ttf-ubuntu-font-family \
       jpeg-dev \
       libffi-dev \
       libxml2-dev \
       libxslt-dev \
       openldap-dev \
       postgresql-dev \
-      wget \
-      supervisor
+      ttf-ubuntu-font-family \
+      wget
 
 RUN pip install \
 # gunicorn is used for launching netbox
@@ -48,15 +47,12 @@ COPY docker/docker-entrypoint.sh docker-entrypoint.sh
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
 COPY configuration/configuration.py /etc/netbox/config/configuration.py
-COPY configuration/supervisord.conf /etc/supervisord.conf
 
 WORKDIR /opt/netbox/netbox
 
 ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
-VOLUME ["/etc/netbox-nginx/"]
-
-CMD ["supervisord", "-c /etc/supervisord.conf"]
+CMD ["gunicorn", "-c /etc/netbox/config/gunicorn_config.py", "netbox.wsgi"]
 
 LABEL SRC_URL="$URL"
 
