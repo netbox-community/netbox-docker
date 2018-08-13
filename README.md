@@ -71,12 +71,12 @@ For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access
 The default settings are optimized for (local) development environments.
 You should therefore adjust the configuration for production setups, at least the following variables:
 
-* `ALLOWED_HOSTS`: Add all URLs that lead to your NetBox instance.
-* `DB_*`: Use a persistent database.
+* `ALLOWED_HOSTS`: Add all URLs that lead to your NetBox instance, space separated. E.g. `ALLOWED_HOSTS=netbox.mycorp.com server042.mycorp.com 2a02:123::42 10.0.0.42 localhost ::1 127.0.0.1` (It's good advice to always allow localhost connections for easy debugging, i.e. `localhost ::1 127.0.0.1`.)
+* `DB_*`: Use your own persistent database. Don't use the default passwords!
 * `EMAIL_*`: Use your own mailserver.
 * `MAX_PAGE_SIZE`: Use the recommended default of 1000.
-* `SUPERUSER_*`: Only define those variables during the initial setup, and drop them once the DB is set up.
-* `REDIS_*`: Use a persistent redis.
+* `SUPERUSER_*`: Only define those variables during the initial setup, and drop them once the DB is set up. Don't use the default passwords!
+* `REDIS_*`: Use your own persistent redis. Don't use the default passwords!
 
 ### Running on Docker Swarm / Kubernetes / OpenShift
 
@@ -284,6 +284,7 @@ REDIS_HOST=redis
 Then make sure that the `redis` container and at least one `netbox-worker` are running.
 
 ```
+# check the container status
 $ docker-compose ps
 
 Name                           Command               State                Ports             
@@ -293,11 +294,16 @@ netbox-docker_netbox_1          /opt/netbox/docker-entrypo ...   Up
 netbox-docker_nginx_1           nginx -c /etc/netbox-nginx ...   Up      80/tcp, 0.0.0.0:32776->8080/tcp
 netbox-docker_postgres_1        docker-entrypoint.sh postgres    Up      5432/tcp
 netbox-docker_redis_1           docker-entrypoint.sh redis ...   Up      6379/tcp
+
+# connect to redis and send PING command:
+$ docker-compose run --rm -T redis sh -c 'redis-cli -h redis -a $REDIS_PASSWORD ping'
+Warning: Using a password with '-a' option on the command line interface may not be safe.
+PONG
 ```
 
 If `redis` and the `netbox-worker` are not available, make sure you have updated your `docker-compose.yml` file!
 
-Everything's up and running? Then check the log of the `netbox-worker` and/or `redis`:
+Everything's up and running? Then check the log of `netbox-worker` and/or `redis`:
 
 ```bash
 docker-compose logs -f netbox-worker
@@ -307,7 +313,7 @@ docker-compose logs -f redis
 Still no clue? You can connect to the `redis` container and have it report any command that is currently executed on the server:
 
 ```bash
-docker-compose run --rm -T redis redis-cli -h redis monitor
+docker-compose run --rm -T redis sh -c 'redis-cli -h redis -a $REDIS_PASSWORD monitor'
 
 # Hit CTRL-C a few times to leave
 ```
