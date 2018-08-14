@@ -22,11 +22,10 @@ RUN pip install \
       napalm \
 # ruamel is used in startup_scripts
       ruamel.yaml \
-# if the Django package is not installed here to this pinned version
-# django-rq will install the latest version (currently 2.1)
-# then, when the requirements.txt of netbox is run, it will be
-# uninstalled because it currently causes problems with netbox
-      Django==2.0.8 \
+# pinning django to the version required by netbox
+# adding it here, to install the correct version of
+# django-rq
+      'Django>=1.11,<2.1' \
 # django-rq is used for webhooks
       django-rq
 
