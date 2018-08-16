@@ -54,7 +54,8 @@ To ensure this, compare the output of `docker --version` and `docker-compose --v
 
 ## Configuration
 
-You can configure the app using environment variables. These are defined in `netbox.env`.
+You can configure the app using environment variables.
+These are defined in `netbox.env`.
 Read [Environment Variables in Compose][compose-env] to understand about the various possibilities to overwrite these variables.
 (The easiest solution being simply adjusting that file.)
 
@@ -70,11 +71,12 @@ For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access
 The default settings are optimized for (local) development environments.
 You should therefore adjust the configuration for production setups, at least the following variables:
 
-* `ALLOWED_HOSTS`: Add all URLs that lead to your NetBox instance.
-* `DB_*`: Use a persistent database.
+* `ALLOWED_HOSTS`: Add all URLs that lead to your NetBox instance, space separated. E.g. `ALLOWED_HOSTS=netbox.mycorp.com server042.mycorp.com 2a02:123::42 10.0.0.42 localhost ::1 127.0.0.1` (It's good advice to always allow localhost connections for easy debugging, i.e. `localhost ::1 127.0.0.1`.)
+* `DB_*`: Use your own persistent database. Don't use the default passwords!
 * `EMAIL_*`: Use your own mailserver.
 * `MAX_PAGE_SIZE`: Use the recommended default of 1000.
-* `SUPERUSER_*`: Only define those variables during the initial setup, and drop them once the DB is set up.
+* `SUPERUSER_*`: Only define those variables during the initial setup, and drop them once the DB is set up. Don't use the default passwords!
+* `REDIS_*`: Use your own persistent redis. Don't use the default passwords!
 
 ### Running on Docker Swarm / Kubernetes / OpenShift
 
@@ -95,6 +97,7 @@ If a secret is defined by an environment variable and in the respective file at 
 * `SECRET_KEY`: `/run/secrets/secret_key`
 * `EMAIL_PASSWORD`: `/run/secrets/email_password`
 * `NAPALM_PASSWORD`: `/run/secrets/napalm_password`
+* `REDIS_PASSWORD`: `/run/secrets/redis_password`
 
 Please also consider [the advice about running NetBox in production](#production) above!
 
@@ -249,6 +252,32 @@ If your issue is not here, look through [the existing issues][issues] and eventu
 * To create a database backup run `docker-compose exec postgres sh -c 'pg_dump -cU $POSTGRES_USER $POSTGRES_DB' | gzip > db_dump.sql.gz`
 * To restore that database backup run `gunzip -c db_dump.sql.gz | docker exec -i $(docker-compose ps -q postgres) sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`.
 
+### Nginx doesn't start
+
+As a first step, stop your docker-compose setup.
+Then locate the `netbox-nginx-config` volume and remove it:
+
+```bash
+# Stop your local netbox-docker installation
+$ docker-compose down
+
+# Find the volume
+$ docker volume ls | grep netbox-nginx-config
+local               netbox-docker_netbox-nginx-config
+
+# Remove the volume
+$ docker volume rm netbox-docker_netbox-nginx-config
+netbox-docker_netbox-nginx-config
+```
+
+Now start everything up again.
+
+If this didn't help, try to see if there's anything in the logs indicating why nginx doesn't start:
+
+```bash
+$ docker-compose logs -f nginx
+```
+
 ### Getting a "Bad Request (400)"
 
 > When connecting to the NetBox instance, I get a "Bad Request (400)" error.
@@ -257,26 +286,77 @@ This usually happens when the `ALLOWED_HOSTS` variable is not set correctly.
 
 ### How to upgrade
 
-> How do I update to a newer version?
+> How do I update to a newer version of netbox?
 
 It should be sufficient to pull the latest image from Docker Hub, stopping the container and starting it up again:
 
 ```bash
 docker-compose pull netbox
-docker-compose stop netbox
-docker-compose rm -f netbox
-docker-compose up -d netbox
+docker-compose stop netbox netbox-worker
+docker-compose rm -f netbox netbox-worker
+docker-compose up -d netbox netbox-worker
 ```
+
+### Webhooks don't work
+
+First make sure that the webhooks feature is enabled in your Netbox configuration and that a redis host is defined.
+Check `netbox.env` if the following variables are defined:
+
+```
+WEBHOOKS_ENABLED=true
+REDIS_HOST=redis
+```
+
+Then make sure that the `redis` container and at least one `netbox-worker` are running.
+
+```
+# check the container status
+$ docker-compose ps
+
+Name                           Command               State                Ports             
+--------------------------------------------------------------------------------------------------------
+netbox-docker_netbox-worker_1   /opt/netbox/docker-entrypo ...   Up                                     
+netbox-docker_netbox_1          /opt/netbox/docker-entrypo ...   Up                                     
+netbox-docker_nginx_1           nginx -c /etc/netbox-nginx ...   Up      80/tcp, 0.0.0.0:32776->8080/tcp
+netbox-docker_postgres_1        docker-entrypoint.sh postgres    Up      5432/tcp
+netbox-docker_redis_1           docker-entrypoint.sh redis ...   Up      6379/tcp
+
+# connect to redis and send PING command:
+$ docker-compose run --rm -T redis sh -c 'redis-cli -h redis -a $REDIS_PASSWORD ping'
+Warning: Using a password with '-a' option on the command line interface may not be safe.
+PONG
+```
+
+If `redis` and the `netbox-worker` are not available, make sure you have updated your `docker-compose.yml` file!
+
+Everything's up and running? Then check the log of `netbox-worker` and/or `redis`:
+
+```bash
+docker-compose logs -f netbox-worker
+docker-compose logs -f redis
+```
+
+Still no clue? You can connect to the `redis` container and have it report any command that is currently executed on the server:
+
+```bash
+docker-compose run --rm -T redis sh -c 'redis-cli -h redis -a $REDIS_PASSWORD monitor'
+
+# Hit CTRL-C a few times to leave
+```
+
+If you don't see anything happening after you triggered a webhook, double-check the configuration of the `netbox` and the `netbox-worker` containers and also check the configuration of your webhook in the admin interface of Netbox.
 
 ### Breaking Changes
 
-From time to time it might become necessary to re-order the structure of the container.
-Things like the `docker-compose.yml` file or your Kubernets or OpenShift configurations have to be adjusted as a consequence.
+From time to time it might become necessary to re-engineer the structure of this setup.
+Things like the `docker-compose.yml` file or your Kubernetes or OpenShift configurations have to be adjusted as a consequence.
 Since April 2018 each image built from this repo contains a `NETBOX_DOCKER_PROJECT_VERSION` label.
 You can check the label of your local image by running `docker inspect ninech/netbox:v2.3.1 --format "{{json .ContainerConfig.Labels}}"`.
+Compare the version with the list below to check whether a breaking change was introduced with that version.
 
-The following is a list of breaking changes:
+The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.4.0: In order to use Netbox webhooks you need to add Redis and a netbox-worker to your docker-compose.yml.
 * 0.3.0: Field `filterable: <boolean` was replaced with field `filter_logic: loose/exact/disabled`. It will default to `CF_FILTER_LOOSE=loose` when not defined.
 * 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54](https://github.com/ninech/netbox-docker/issues/54).
 * 0.1.0: Introduction of the `NETBOX_DOCKER_PROJECT_VERSION`. (Not a breaking change per se.)
@@ -304,9 +384,15 @@ You can use the following ENV variables to customize the build:
            Default: https://github.com/${SRC_REPO}/netbox/archive/$BRANCH.tar.gz
 ```
 
+### Publishing Docker Images
+
+New Docker Images are built and published every 24h by using travis:
+
+[![Build Status](https://travis-ci.org/ninech/netbox-docker.svg?branch=master)][travis]
+
 ## Tests
 
-To run the test coming with NetBox, use the `docker-compose.yml` file as such:
+To run the tests coming with NetBox, use the `docker-compose.yml` file as such:
 
 ```
 $ docker-compose run netbox ./manage.py test

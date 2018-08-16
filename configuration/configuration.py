@@ -139,6 +139,19 @@ PAGINATE_COUNT = int(os.environ.get('PAGINATE_COUNT', 50))
 # prefer IPv4 instead.
 PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
 
+# The Webhook event backend is disabled by default. Set this to True to enable it. Note that this requires a Redis
+# database be configured and accessible by NetBox (see `REDIS` below).
+WEBHOOKS_ENABLED = os.environ.get('WEBHOOKS_ENABLED', 'False').lower() == 'true'
+
+# Redis database settings (optional). A Redis database is required only if the webhooks backend is enabled.
+REDIS = {
+    'HOST': os.environ.get('REDIS_HOST', 'localhost'),
+    'PORT': os.environ.get('REDIS_PORT', '6379'),
+    'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
+    'DATABASE': os.environ.get('REDIS_DATABASE', '0'),
+    'DEFAULT_TIMEOUT': os.environ.get('REDIS_TIMEOUT', '300'),
+}
+
 # The file path where custom reports will be stored. A trailing slash is not needed. Note that the default value of
 # this setting is derived from the installed location.
 REPORTS_ROOT = os.environ.get('REPORTS_ROOT', '/etc/netbox/reports')

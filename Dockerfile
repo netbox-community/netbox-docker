@@ -6,13 +6,13 @@ RUN apk add --no-cache \
       ca-certificates \
       cyrus-sasl-dev \
       graphviz \
-      ttf-ubuntu-font-family \
       jpeg-dev \
       libffi-dev \
       libxml2-dev \
       libxslt-dev \
       openldap-dev \
       postgresql-dev \
+      ttf-ubuntu-font-family \
       wget
 
 RUN pip install \
@@ -21,7 +21,13 @@ RUN pip install \
 # napalm is used for gathering information from network devices
       napalm \
 # ruamel is used in startup_scripts
-      ruamel.yaml
+      ruamel.yaml \
+# pinning django to the version required by netbox
+# adding it here, to install the correct version of
+# django-rq
+      'Django>=1.11,<2.1' \
+# django-rq is used for webhooks
+      django-rq
 
 WORKDIR /opt
 
@@ -44,8 +50,6 @@ COPY configuration/configuration.py /etc/netbox/config/configuration.py
 WORKDIR /opt/netbox/netbox
 
 ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
-
-VOLUME ["/etc/netbox-nginx/"]
 
 CMD ["gunicorn", "-c /etc/netbox/config/gunicorn_config.py", "netbox.wsgi"]
 
