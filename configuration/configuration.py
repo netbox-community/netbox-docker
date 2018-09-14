@@ -146,7 +146,7 @@ WEBHOOKS_ENABLED = os.environ.get('WEBHOOKS_ENABLED', 'False').lower() == 'true'
 # Redis database settings (optional). A Redis database is required only if the webhooks backend is enabled.
 REDIS = {
     'HOST': os.environ.get('REDIS_HOST', 'localhost'),
-    'PORT': os.environ.get('REDIS_PORT', '6379'),
+    'PORT': os.environ.get('REDIS_PORT', 6379),
     'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
     'DATABASE': os.environ.get('REDIS_DATABASE', '0'),
     'DEFAULT_TIMEOUT': os.environ.get('REDIS_TIMEOUT', '300'),
