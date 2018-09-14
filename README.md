@@ -356,6 +356,7 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.5.0: Alpine was updated to 3.8
 * 0.4.0: In order to use Netbox webhooks you need to add Redis and a netbox-worker to your docker-compose.yml.
 * 0.3.0: Field `filterable: <boolean` was replaced with field `filter_logic: loose/exact/disabled`. It will default to `CF_FILTER_LOOSE=loose` when not defined.
 * 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54](https://github.com/ninech/netbox-docker/issues/54).
