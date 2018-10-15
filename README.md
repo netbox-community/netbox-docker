@@ -161,7 +161,8 @@ if created:
 
 #### Initializers
 
-Initializers are built-in startup scripts for defining NetBox custom fields, groups and users.
+Initializers are built-in startup scripts for defining NetBox 
+custom fields, groups, users and many other resources.
 All you need to do is to mount you own `initializers` folder ([see `docker-compose.yml`][netbox-docker-compose]).
 Look at the [`initializers` folder][netbox-docker-initializers] to learn how the files must look like.
 
