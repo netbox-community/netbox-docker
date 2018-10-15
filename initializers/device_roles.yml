@@ -1,0 +1,15 @@
+# - name: switch
+#   slug: switch
+#   color: Grey
+# - name: router
+#   slug: router
+#   color: Cyan
+# - name: load-balancer
+#   slug: load-balancer
+#   color: Red
+# - name: server
+#   slug: server
+#   color: Blue
+# - name: patchpanel
+#   slug: patchpanel
+#   color: Black
