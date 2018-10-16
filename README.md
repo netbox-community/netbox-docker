@@ -189,6 +189,15 @@ text_field:
 [netbox-docker-initializers]: https://github.com/ninech/netbox-docker/tree/master/initializers
 [netbox-docker-compose]: https://github.com/ninech/netbox-docker/blob/master/docker-compose.yml
 
+##### Available Groups for User/Group initializers
+
+To get an up-to-date list about all the available permissions, run the following command.
+
+```bash
+# Make sure the 'netbox' container is already running! If unsure, run `docker-compose up -d`
+echo "from django.contrib.auth.models import Permission\nfor p in Permission.objects.all():\n  print(p.codename);" | docker-compose exec -T netbox ./manage.py shell
+```
+
 #### Custom Docker Image
 
 You can also build your own NetBox Docker image containing your own startup scripts, custom fields, users and groups

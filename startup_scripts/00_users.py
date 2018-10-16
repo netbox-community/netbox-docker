@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Permission, Group, User
 from users.models import Token
 
 from ruamel.yaml import YAML
@@ -18,3 +18,11 @@ with open('/opt/netbox/initializers/users.yml', 'r') as stream:
 
         if user_details.get('api_token', 0):
           Token.objects.create(user=user, key=user_details['api_token'])
+
+        user_permissions = user_details.get('permissions', [])
+        if user_permissions:
+          user.user_permissions.clear()
+          for permission_codename in user_details.get('permissions', []):
+            permission = Permission.objects.get(codename=permission_codename)
+            user.user_permissions.add(permission)
+          user.save()
