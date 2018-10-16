@@ -9,7 +9,7 @@ with open('/opt/netbox/initializers/sites.yml', 'r') as stream:
   if sites is not None:
     for site_params in sites:
       if "region" in site_params:
-        region = Region.objects.get(name=site_params.pop('region', None))
+        region = Region.objects.get(name=site_params.pop('region'))
         site_params['region'] = region
 
 
@@ -17,4 +17,3 @@ with open('/opt/netbox/initializers/sites.yml', 'r') as stream:
 
       if created:
         print("Created site", site.name)
-
