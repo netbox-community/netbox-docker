@@ -7,3 +7,10 @@
 # writers:
 #   users:
 #   - writer
+#   permissions:
+#   - add_device
+#   - change_device
+#   - delete_device
+#   - add_virtualmachine
+#   - change_virtualmachine
+#   - delete_virtualmachine

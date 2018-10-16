@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Permission, Group, User
 from ruamel.yaml import YAML
 
 with open('/opt/netbox/initializers/groups.yml', 'r') as stream:
@@ -12,8 +12,16 @@ with open('/opt/netbox/initializers/groups.yml', 'r') as stream:
       if created:
         print("👥 Created group", groupname)
 
-      for username in group_details['users']:
+      for username in group_details.get('users', []):
         user = User.objects.get(username=username)
 
         if user:
           user.groups.add(group)
+
+      group_permissions = group_details.get('permissions', [])
+      if group_permissions:
+        group.permissions.clear()
+        print("Permissions:", group.permissions.all())
+        for permission_codename in group_details.get('permissions', []):
+          permission = Permission.objects.get(codename=permission_codename)
+          group.permissions.add(permission)
