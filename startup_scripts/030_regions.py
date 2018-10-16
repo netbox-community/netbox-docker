@@ -15,7 +15,7 @@ with open('/opt/netbox/initializers/regions.yml', 'r') as stream:
       for assoc, details in optional_assocs.items():
         if assoc in params:
           model, field = details
-          query = dict(field=params.pop(assoc))
+          query = { field: params.pop(assoc) }
 
           params[assoc] = model.objects.get(**query)
 

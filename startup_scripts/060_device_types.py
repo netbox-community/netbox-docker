@@ -1,4 +1,5 @@
-from dcim.models import DeviceType, Manufacturer
+from dcim.models import DeviceType, Manufacturer, Region
+from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
@@ -19,16 +20,16 @@ with open('/opt/netbox/initializers/device_types.yml', 'r') as stream:
     for params in device_types:
       custom_fields = params.pop('custom_fields', None)
 
-      for assoc, details in required.items():
+      for assoc, details in required_assocs.items():
         model, field = details
-        query = dict(field=params.pop(assoc))
+        query = { field: params.pop(assoc) }
 
         params[assoc] = model.objects.get(**query)
 
       for assoc, details in optional_assocs.items():
         if assoc in params:
           model, field = details
-          query = dict(field=params.pop(assoc))
+          query = { field: params.pop(assoc) }
 
           params[assoc] = model.objects.get(**query)
 

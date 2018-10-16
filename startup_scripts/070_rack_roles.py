@@ -13,7 +13,7 @@ with open('/opt/netbox/initializers/rack_roles.yml', 'r') as stream:
 
         for color_tpl in COLOR_CHOICES:
           if color in color_tpl:
-          params['color'] = color_tpl[0]
+            params['color'] = color_tpl[0]
 
       rack_role, created = RackRole.objects.get_or_create(**params)
 

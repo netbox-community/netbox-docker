@@ -14,6 +14,7 @@ with open('/opt/netbox/initializers/sites.yml', 'r') as stream:
 
   if sites is not None:
     for params in sites:
+      custom_fields = params.pop('custom_fields', None)
 
       for assoc, details in optional_assocs.items():
         if assoc in params:
@@ -30,7 +31,7 @@ with open('/opt/netbox/initializers/sites.yml', 'r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=device_type,
+              obj=site,
               value=cf_value
             )
 

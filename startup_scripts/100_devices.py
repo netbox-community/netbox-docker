@@ -21,7 +21,7 @@ with open('/opt/netbox/initializers/devices.yml', 'r') as stream:
     'platform': (Platform, 'name'),
     'rack': (Rack, 'name'),
     'cluster': (Cluster, 'name'),
-    'primary_ip4': (IPAddress, 'address')
+    'primary_ip4': (IPAddress, 'address'),
     'primary_ip6': (IPAddress, 'address')
   }
 
@@ -29,16 +29,16 @@ with open('/opt/netbox/initializers/devices.yml', 'r') as stream:
     for params in devices:
       custom_fields = params.pop('custom_fields', None)
 
-      for assoc, details in required.items():
+      for assoc, details in required_assocs.items():
         model, field = details
-        query = dict(field=params.pop(assoc))
+        query = { field: params.pop(assoc) }
 
         params[assoc] = model.objects.get(**query)
 
       for assoc, details in optional_assocs.items():
         if assoc in params:
           model, field = details
-          query = dict(field=params.pop(assoc))
+          query = { field: params.pop(assoc) }
 
           params[assoc] = model.objects.get(**query)
 
@@ -55,7 +55,7 @@ with open('/opt/netbox/initializers/devices.yml', 'r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=device_type,
+              obj=device,
               value=cf_value
             )
 
