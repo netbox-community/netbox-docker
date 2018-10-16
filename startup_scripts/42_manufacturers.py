@@ -6,9 +6,9 @@ with open('/opt/netbox/initializers/manufacturers.yml', 'r') as stream:
   manufacturers = yaml.load(stream)
 
   if manufacturers is not None:
-    for manufacturer_params in manufacturers:
-      manufacturer, created = Manufacturer.objects.get_or_create(**manufacturer_params)
+    for params in manufacturers:
+      manufacturer, created = Manufacturer.objects.get_or_create(**params)
 
       if created:
-          print("Created Manufacturer", manufacturer.name)
+        print("Created Manufacturer", manufacturer.name)
 

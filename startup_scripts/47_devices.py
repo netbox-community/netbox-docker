@@ -1,6 +1,7 @@
 from dcim.models import Site, Rack, DeviceRole, DeviceType, Device, Platform
 from dcim.constants import RACK_FACE_CHOICES
 from ipam.models import IPAddress
+from virtualization.models import Cluster
 from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
@@ -9,37 +10,54 @@ with open('/opt/netbox/initializers/devices.yml', 'r') as stream:
   yaml = YAML(typ='safe')
   devices = yaml.load(stream)
 
+  required_assocs = {
+    'device_role': (DeviceRole, 'name'),
+    'device_type': (DeviceType, 'model'),
+    'site': (Site, 'name')
+  }
+
   optional_assocs = {
-    'platform': Platform,
-    'tenant': Tenant
-    'rack': Rack
-    'primary_ip4': IPAddress
-    'primary_ip6': IPAddress
+    'tenant': (Tenant, 'name'),
+    'platform': (Platform, 'name'),
+    'rack': (Rack, 'name'),
+    'cluster': (Cluster, 'name'),
+    'primary_ip4': (IPAddress, 'address')
+    'primary_ip6': (IPAddress, 'address')
   }
 
   if devices is not None:
-    for device_params in devices:
-      custom_fields = device_params.pop('custom_fields', None)
+    for params in devices:
+      custom_fields = params.pop('custom_fields', None)
 
-      device_params['device_role'] = DeviceRole.objects.get(name=device_params.pop('device_role'))
-      device_params['device_type'] = DeviceType.objects.get(model=device_params.pop('device_type'))
-      device_params['site'] = Site.objects.get(name=device_params.pop('site'))
+      for assoc, details in required.items():
+        model, field = details
+        query = dict(field=params.pop(assoc))
 
-      for param_name, model in optional_assoc.items():
-        if param_name in device_params:
-          device_params[param_name] = model.objects.get(name=device_params.pop(param_name))
+        params[assoc] = model.objects.get(**query)
 
-      for rack_face in RACK_FACE_CHOICES:
-        if device_params['face'] in rack_face:
-          device_params['face'] = rack_face[0]
+      for assoc, details in optional_assocs.items():
+        if assoc in params:
+          model, field = details
+          query = dict(field=params.pop(assoc))
 
-      device, created = Device.objects.get_or_create(**device_params)
+          params[assoc] = model.objects.get(**query)
+
+      if 'face' in params:
+        for rack_face in RACK_FACE_CHOICES:
+          if params['face'] in rack_face:
+            params['face'] = rack_face[0]
+
+      device, created = Device.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
           for cf_name, cf_value in custom_fields.items():
             custom_field = CustomField.objects.get(name=cf_name)
-            custom_field_value = CustomFieldValue.objects.create(field=custom_field, obj=device, value=cf_value)
+            custom_field_value = CustomFieldValue.objects.create(
+              field=custom_field,
+              obj=device_type,
+              value=cf_value
+            )
 
             device.custom_field_values.add(custom_field_value)
 

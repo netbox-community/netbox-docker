@@ -5,13 +5,21 @@ with open('/opt/netbox/initializers/regions.yml', 'r') as stream:
   yaml=YAML(typ='safe')
   regions = yaml.load(stream)
 
-  if regions is not None:
-    for region_params in regions:
-      if "parent" in region_params:
-        parent = Region.objects.get(name=region_params.pop('parent'))
-        region_params['parent'] = parent
+  optional_assocs = {
+    'parent': (Region, 'name')
+  }
 
-      region, created = Region.objects.get_or_create(**region_params)
+  if regions is not None:
+    for params in regions:
+
+      for assoc, details in optional_assocs.items():
+        if assoc in params:
+          model, field = details
+          query = dict(field=params.pop(assoc))
+
+          params[assoc] = model.objects.get(**query)
+
+      region, created = Region.objects.get_or_create(**params)
 
       if created:
         print("Created region", region.name)

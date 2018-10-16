@@ -7,14 +7,15 @@ with open('/opt/netbox/initializers/rack_roles.yml', 'r') as stream:
   rack_roles = yaml.load(stream)
 
   if rack_roles is not None:
-    for rack_role_params in rack_roles:
-      color = rack_role_params.pop('color', None)
+    for params in rack_roles:
+      if 'color' in params:
+        color = params.pop('color')
 
-      for color_tpl in COLOR_CHOICES:
-        if color in color_tpl:
-          rack_role_params['color'] = color_tpl[0]
+        for color_tpl in COLOR_CHOICES:
+          if color in color_tpl:
+          params['color'] = color_tpl[0]
 
-      rack_role, created = RackRole.objects.get_or_create(**rack_role_params)
+      rack_role, created = RackRole.objects.get_or_create(**params)
 
       if created:
         print("Created rack role", rack_role.name)

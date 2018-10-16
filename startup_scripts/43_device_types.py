@@ -6,20 +6,43 @@ with open('/opt/netbox/initializers/device_types.yml', 'r') as stream:
   yaml = YAML(typ='safe')
   device_types = yaml.load(stream)
 
+  required_assocs = {
+    'manufacturer': (Manufacturer, 'name')
+  }
+
+  optional_assocs = {
+    'region': (Region, 'name'),
+    'tenant': (Tenant, 'name')
+  }
+
   if device_types is not None:
-    for device_type_params in device_types:
-      custom_fields = device_type_params.pop('custom_fields', None)
+    for params in device_types:
+      custom_fields = params.pop('custom_fields', None)
 
-      manufacturer = Manufacturer.objects.get(name=device_type_params.pop('manufacturer'))
-      device_type_params['manufacturer'] = manufacturer
+      for assoc, details in required.items():
+        model, field = details
+        query = dict(field=params.pop(assoc))
 
-      device_type, created = DeviceType.objects.get_or_create(**device_type_params)
+        params[assoc] = model.objects.get(**query)
+
+      for assoc, details in optional_assocs.items():
+        if assoc in params:
+          model, field = details
+          query = dict(field=params.pop(assoc))
+
+          params[assoc] = model.objects.get(**query)
+
+      device_type, created = DeviceType.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
           for cf_name, cf_value in custom_fields.items():
             custom_field = CustomField.objects.get(name=cf_name)
-            custom_field_value = CustomFieldValue.objects.create(field=custom_field, obj=device_type, value=cf_value)
+            custom_field_value = CustomFieldValue.objects.create(
+              field=custom_field,
+              obj=device_type,
+              value=cf_value
+            )
 
             device_type.custom_field_values.add(custom_field_value)
 

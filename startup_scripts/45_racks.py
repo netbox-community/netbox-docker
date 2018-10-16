@@ -8,33 +8,52 @@ with open('/opt/netbox/initializers/racks.yml', 'r') as stream:
   yaml = YAML(typ='safe')
   racks = yaml.load(stream)
 
-  optional_assocs = dict(role=RackRole, tenant=Tenant, group=RackGroup)
+  required_assocs = {
+    'site': (Site, 'name')
+  }
+
+  optional_assocs = {
+    'role': (RackRole, 'name'),
+    'tenant': (Tenant, 'name'),
+    'group': (RackGroup, 'name')
+  }
 
   if racks is not None:
-    for rack_params in racks:
-      custom_fields = rack_params.pop('custom_fields', None)
+    for params in racks:
+      custom_fields = params.pop('custom_fields', None)
 
-      rack_params['site'] = Site.objects.get(name=rack_params.pop('site'))
+      for assoc, details in required.items():
+        model, field = details
+        query = dict(field=params.pop(assoc))
 
-      for param_name, model in optional_assoc.items():
-        if param_name in rack_params:
-          rack_params[param_name] = model.objects.get(name=rack_params.pop(param_name))
+        params[assoc] = model.objects.get(**query)
+
+      for assoc, details in optional_assocs.items():
+        if assoc in params:
+          model, field = details
+          query = dict(field=params.pop(assoc))
+
+          params[assoc] = model.objects.get(**query)
 
       for rack_type in RACK_TYPE_CHOICES:
-        if rack_params['type'] in rack_type:
-          rack_params['type'] = rack_type[0]
+        if params['type'] in rack_type:
+          params['type'] = rack_type[0]
 
       for rack_width in RACK_WIDTH_CHOICES:
-        if rack_params['width'] in rack_width:
-          rack_params['width'] = rack_width[0]
+        if params['width'] in rack_width:
+          params['width'] = rack_width[0]
 
-      rack, created = Rack.objects.get_or_create(**rack_params)
+      rack, created = Rack.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
           for cf_name, cf_value in custom_fields.items():
             custom_field = CustomField.objects.get(name=cf_name)
-            custom_field_value = CustomFieldValue.objects.create(field=custom_field, obj=rack, value=cf_value)
+            custom_field_value = CustomFieldValue.objects.create(
+              field=custom_field,
+              obj=device_type,
+              value=cf_value
+            )
 
             rack.custom_field_values.add(custom_field_value)
 
