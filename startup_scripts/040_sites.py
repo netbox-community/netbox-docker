@@ -37,4 +37,4 @@ with open('/opt/netbox/initializers/sites.yml', 'r') as stream:
 
             site.custom_field_values.add(custom_field_value)
 
-        print("Created site", site.name)
+        print("📍 Created site", site.name)

@@ -47,5 +47,5 @@ with open('/opt/netbox/initializers/device_types.yml', 'r') as stream:
 
             device_type.custom_field_values.add(custom_field_value)
 
-        print("Created device type", device_type.manufacturer, device_type.model)
+        print("🔡 Created device type", device_type.manufacturer, device_type.model)
 

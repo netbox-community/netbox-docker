@@ -22,4 +22,4 @@ with open('/opt/netbox/initializers/regions.yml', 'r') as stream:
       region, created = Region.objects.get_or_create(**params)
 
       if created:
-        print("Created region", region.name)
+        print("🌐 Created region", region.name)

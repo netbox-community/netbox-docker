@@ -19,4 +19,4 @@ with open('/opt/netbox/initializers/device_roles.yml', 'r') as stream:
       device_role, created = DeviceRole.objects.get_or_create(**params)
 
       if created:
-        print("Created device role", device_role.name)
+        print("🎨 Created device role", device_role.name)

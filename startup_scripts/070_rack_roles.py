@@ -18,4 +18,4 @@ with open('/opt/netbox/initializers/rack_roles.yml', 'r') as stream:
       rack_role, created = RackRole.objects.get_or_create(**params)
 
       if created:
-        print("Created rack role", rack_role.name)
+        print("🎨 Created rack role", rack_role.name)

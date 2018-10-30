@@ -10,5 +10,5 @@ with open('/opt/netbox/initializers/manufacturers.yml', 'r') as stream:
       manufacturer, created = Manufacturer.objects.get_or_create(**params)
 
       if created:
-        print("Created Manufacturer", manufacturer.name)
+        print("🏭 Created Manufacturer", manufacturer.name)
 

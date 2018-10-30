@@ -61,4 +61,4 @@ with open('/opt/netbox/initializers/devices.yml', 'r') as stream:
 
             device.custom_field_values.add(custom_field_value)
 
-        print("Created device", device.name)
+        print("🖥️  Created device", device.name)

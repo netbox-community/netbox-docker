@@ -57,4 +57,4 @@ with open('/opt/netbox/initializers/racks.yml', 'r') as stream:
 
             rack.custom_field_values.add(custom_field_value)
 
-        print("Created rack", rack.site, rack.name)
+        print("🔳 Created rack", rack.site, rack.name)
