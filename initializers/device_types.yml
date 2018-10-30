@@ -1,15 +1,15 @@
-# - manufacturer: Intel
+# - manufacturer: Manufacturer 1
 #   model: Model 1
 #   slug: model-1
 #   u_height: 2
 #   custom_fields:
 #     text_field: Description
-# - manufacturer: Intel
+# - manufacturer: Manufacturer 1
 #   model: Model 2
 #   slug: model-2
 #   custom_fields:
 #     text_field: Description
-# - manufacturer: Intel
+# - manufacturer: Manufacturer 1
 #   model: Model 3
 #   slug: model-3
 #   is_full_depth: false
