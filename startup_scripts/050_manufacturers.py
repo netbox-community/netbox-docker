@@ -11,4 +11,3 @@ with open('/opt/netbox/initializers/manufacturers.yml', 'r') as stream:
 
       if created:
         print("🏭 Created Manufacturer", manufacturer.name)
-

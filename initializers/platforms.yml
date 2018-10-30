@@ -1,0 +1,19 @@
+# # Allowed rpc clients are: juniper-junos, cisco-ios, opengear
+# - name: Platform 1
+#   slug: platform-1
+#   manufacturer: Manufacturer 1
+#   napalm_driver: driver1
+#   napalm_args: "{'arg1': 'value1', 'arg2': 'value2'}"
+#   rpc_client: juniper-junos
+# - name: Platform 2
+#   slug: platform-2
+#   manufacturer: Manufacturer 2
+#   napalm_driver: driver2
+#   napalm_args: "{'arg1': 'value1', 'arg2': 'value2'}"
+#   rpc_client: opengear
+# - name: Platform 3
+#   slug: platform-3
+#   manufacturer: NoName
+#   napalm_driver: driver3
+#   napalm_args: "{'arg1': 'value1', 'arg2': 'value2'}"
+#   rpc_client: juniper-junos
