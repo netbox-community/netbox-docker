@@ -1,0 +1,10 @@
+# - name: Singapore
+#   slug: singapore
+# - name: Amsterdam
+#   slug: amsterdam
+# - name: Downtown
+#   slug: downtown
+#   parent: Amsterdam
+# - name: Suburbs
+#   slug: suburbs
+#   parent: Amsterdam

@@ -1,0 +1,24 @@
+# - site: AMS 1
+#   name: rack-01
+#   role: Role 1
+#   type: 4-post cabinet
+#   width: 19 inches
+#   u_height: 47
+#   custom_fields:
+#     text_field: Description
+# - site: AMS 2
+#   name: rack-02
+#   role: Role 2
+#   type: 4-post cabinet
+#   width: 19 inches
+#   u_height: 47
+#   custom_fields:
+#     text_field: Description
+# - site: SING 1
+#   name: rack-03
+#   role: Role 3
+#   type: 4-post cabinet
+#   width: 19 inches
+#   u_height: 47
+#   custom_fields:
+#     text_field: Description

@@ -7,6 +7,8 @@
 #   on_objects:
 #   - dcim.models.Device
 #   - dcim.models.Rack
+#   - dcim.models.Site
+#   - dcim.models.DeviceType
 #   - ipam.models.IPAddress
 #   - ipam.models.Prefix
 #   - tenancy.models.Tenant

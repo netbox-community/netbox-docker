@@ -1,0 +1,27 @@
+# - name: server01
+#   device_role: server
+#   device_type: Other
+#   site: AMS 1
+#   rack: rack-01
+#   face: Front
+#   position: 1
+#   custom_fields:
+#     text_field: Description
+# - name: server02
+#   device_role: server
+#   device_type: Other
+#   site: AMS 2
+#   rack: rack-02
+#   face: Front
+#   position: 2
+#   custom_fields:
+#     text_field: Description
+# - name: server03
+#   device_role: server
+#   device_type: Other
+#   site: SING 1
+#   rack: rack-03
+#   face: Front
+#   position: 3
+#   custom_fields:
+#     text_field: Description

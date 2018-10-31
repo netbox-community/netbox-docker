@@ -1,0 +1,23 @@
+# - model: Model 1
+#   manufacturer: Manufacturer 1
+#   slug: model-1
+#   u_height: 2
+#   custom_fields:
+#     text_field: Description
+# - model: Model 2
+#   manufacturer: Manufacturer 1
+#   slug: model-2
+#   custom_fields:
+#     text_field: Description
+# - model: Model 3
+#   manufacturer: Manufacturer 1
+#   slug: model-3
+#   is_full_depth: false
+#   u_height: 0
+#   custom_fields:
+#     text_field: Description
+# - model: Other
+#   manufacturer: NoName
+#   slug: other
+#   custom_fields:
+#     text_field: Description

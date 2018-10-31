@@ -161,7 +161,7 @@ if created:
 
 #### Initializers
 
-Initializers are built-in startup scripts for defining NetBox custom fields, groups and users.
+Initializers are built-in startup scripts for defining NetBox custom fields, groups, users and many other resources.
 All you need to do is to mount you own `initializers` folder ([see `docker-compose.yml`][netbox-docker-compose]).
 Look at the [`initializers` folder][netbox-docker-initializers] to learn how the files must look like.
 
@@ -325,10 +325,10 @@ Then make sure that the `redis` container and at least one `netbox-worker` are r
 # check the container status
 $ docker-compose ps
 
-Name                           Command               State                Ports             
+Name                           Command               State                Ports
 --------------------------------------------------------------------------------------------------------
-netbox-docker_netbox-worker_1   /opt/netbox/docker-entrypo ...   Up                                     
-netbox-docker_netbox_1          /opt/netbox/docker-entrypo ...   Up                                     
+netbox-docker_netbox-worker_1   /opt/netbox/docker-entrypo ...   Up
+netbox-docker_netbox_1          /opt/netbox/docker-entrypo ...   Up
 netbox-docker_nginx_1           nginx -c /etc/netbox-nginx ...   Up      80/tcp, 0.0.0.0:32776->8080/tcp
 netbox-docker_postgres_1        docker-entrypoint.sh postgres    Up      5432/tcp
 netbox-docker_redis_1           docker-entrypoint.sh redis ...   Up      6379/tcp
