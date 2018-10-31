@@ -368,6 +368,8 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.6.0: The naming of the default startup_scripts were changed.
+  If you overwrite them, you may need to adjust these scripts.
 * 0.5.0: Alpine was updated to 3.8, `*.env` moved to `/env` folder
 * 0.4.0: In order to use Netbox webhooks you need to add Redis and a netbox-worker to your docker-compose.yml.
 * 0.3.0: Field `filterable: <boolean` was replaced with field `filter_logic: loose/exact/disabled`. It will default to `CF_FILTER_LOOSE=loose` when not defined.
