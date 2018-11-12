@@ -9,6 +9,12 @@ Before raising an issue here, answer the following questions for yourself, pleas
   (Otherwise ask on the Netbox mailing list, please: https://groups.google.com/d/forum/netbox-discuss)
 * Have you looked through the issues already resolved?
 
+Please try this means to get help before opening an issue here:
+
+* On the networktocode Slack in the #netbox-docker channel: http://slack.networktocode.com/
+* On the networktocode Slack in the #netbox channel: http://slack.networktocode.com/
+* On the Netbox mailing list: https://groups.google.com/d/forum/netbox-discuss
+
 -->
 
 ## Current Behavior
@@ -30,17 +36,19 @@ The output of `git rev-parse HEAD`: `XXXXX`
 The command you used to start the project: `XXXXX`
 
 The output of `docker-compose logs netbox`:
-<!-- if your log is very long, create a Gist instead: https://gist.github.com -->
+<!--
+If your log is very long, create a Gist instead (and post the link to it): https://gist.github.com
+-->
 
 ```
 LOG LOG LOG
 ```
 
-<!--
-If you have get any 5xx http error, else delete this section.
-If your log is very long, create a Gist instead: https://gist.github.com
--->
 The output of `docker-compose logs nginx`:
+<!--
+Only if you have gotten a 5xx http error, else delete this section.
+If your log is very long, create a Gist instead (and post the link to it): https://gist.github.com
+-->
 
 ```
 LOG LOG LOG
