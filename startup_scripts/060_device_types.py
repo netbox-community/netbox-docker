@@ -2,8 +2,14 @@ from dcim.models import DeviceType, Manufacturer, Region
 from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
+from pathlib import Path
+import sys
 
-with open('/opt/netbox/initializers/device_types.yml', 'r') as stream:
+file = Path('/opt/netbox/initializers/device_types.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml = YAML(typ='safe')
   device_types = yaml.load(stream)
 
@@ -48,4 +54,3 @@ with open('/opt/netbox/initializers/device_types.yml', 'r') as stream:
             device_type.custom_field_values.add(custom_field_value)
 
         print("🔡 Created device type", device_type.manufacturer, device_type.model)
-

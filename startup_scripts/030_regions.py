@@ -1,7 +1,13 @@
 from dcim.models import Region
 from ruamel.yaml import YAML
+from pathlib import Path
+import sys
 
-with open('/opt/netbox/initializers/regions.yml', 'r') as stream:
+file = Path('/opt/netbox/initializers/regions.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml=YAML(typ='safe')
   regions = yaml.load(stream)
 

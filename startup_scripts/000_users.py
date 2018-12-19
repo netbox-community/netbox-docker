@@ -2,8 +2,14 @@ from django.contrib.auth.models import Permission, Group, User
 from users.models import Token
 
 from ruamel.yaml import YAML
+from pathlib import Path
+import sys
 
-with open('/opt/netbox/initializers/users.yml', 'r') as stream:
+file = Path('/opt/netbox/initializers/users.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml=YAML(typ='safe')
   users = yaml.load(stream)
 

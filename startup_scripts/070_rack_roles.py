@@ -2,7 +2,14 @@ from dcim.models import RackRole
 from ruamel.yaml import YAML
 from utilities.forms import COLOR_CHOICES
 
-with open('/opt/netbox/initializers/rack_roles.yml', 'r') as stream:
+from pathlib import Path
+import sys
+
+file = Path('/opt/netbox/initializers/rack_roles.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml=YAML(typ='safe')
   rack_roles = yaml.load(stream)
 

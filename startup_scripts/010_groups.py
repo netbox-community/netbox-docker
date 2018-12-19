@@ -1,7 +1,13 @@
 from django.contrib.auth.models import Permission, Group, User
 from ruamel.yaml import YAML
+from pathlib import Path
+import sys
 
-with open('/opt/netbox/initializers/groups.yml', 'r') as stream:
+file = Path('/opt/netbox/initializers/groups.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml=YAML(typ='safe')
   groups = yaml.load(stream)
 

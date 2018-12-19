@@ -2,8 +2,14 @@ from dcim.models import Region, Site
 from extras.models import CustomField, CustomFieldValue
 from tenancy.models import Tenant
 from ruamel.yaml import YAML
+from pathlib import Path
+import sys
 
-with open('/opt/netbox/initializers/sites.yml', 'r') as stream:
+file = Path('/opt/netbox/initializers/sites.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml = YAML(typ='safe')
   sites = yaml.load(stream)
 

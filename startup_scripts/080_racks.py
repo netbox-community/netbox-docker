@@ -3,8 +3,14 @@ from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
 from dcim.constants import RACK_TYPE_CHOICES, RACK_WIDTH_CHOICES
 from ruamel.yaml import YAML
+from pathlib import Path
+import sys
 
-with open('/opt/netbox/initializers/racks.yml', 'r') as stream:
+file = Path('/opt/netbox/initializers/racks.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml = YAML(typ='safe')
   racks = yaml.load(stream)
 
