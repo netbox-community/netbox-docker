@@ -2,6 +2,8 @@ from extras.constants import CF_TYPE_TEXT, CF_TYPE_INTEGER, CF_TYPE_BOOLEAN, CF_
 from extras.models import CustomField, CustomFieldChoice
 
 from ruamel.yaml import YAML
+from pathlib import Path
+import sys
 
 text_to_fields = {
   'boolean': CF_TYPE_BOOLEAN,
@@ -21,7 +23,11 @@ def get_class_for_class_path(class_path):
   clazz = getattr(module, class_name)
   return ContentType.objects.get_for_model(clazz)
 
-with open('/opt/netbox/initializers/custom_fields.yml', 'r') as stream:
+file = Path('/opt/netbox/initializers/custom_fields.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml = YAML(typ='safe')
   customfields = yaml.load(stream)
 

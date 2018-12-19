@@ -2,7 +2,14 @@ from dcim.models import DeviceRole
 from ruamel.yaml import YAML
 from utilities.forms import COLOR_CHOICES
 
-with open('/opt/netbox/initializers/device_roles.yml', 'r') as stream:
+from pathlib import Path
+import sys
+
+file = Path('/opt/netbox/initializers/device_roles.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml=YAML(typ='safe')
   device_roles = yaml.load(stream)
 

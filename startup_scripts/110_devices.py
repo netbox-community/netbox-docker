@@ -6,7 +6,14 @@ from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
-with open('/opt/netbox/initializers/devices.yml', 'r') as stream:
+from pathlib import Path
+import sys
+
+file = Path('/opt/netbox/initializers/devices.yml')
+if not file.is_file():
+  sys.exit()
+
+with file.open('r') as stream:
   yaml = YAML(typ='safe')
   devices = yaml.load(stream)
 
