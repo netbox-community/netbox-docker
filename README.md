@@ -131,9 +131,12 @@ However, if you don't need this functionality, leave these blank.
 [napalm-doc]: http://napalm.readthedocs.io/en/latest/index.html
 [netbox-napalm-doc]: https://netbox.readthedocs.io/en/latest/configuration/optional-settings/#napalm_username
 
-### Customizable Reporting ###
+### Customizable Reporting
 
-NetBox includes [customized reporting][netbox-reports-doc] that allows the user to write Python code and determine the validity of the data within NetBox.  The `REPORTS_ROOT` variable is setup as a mapped directory within this Docker container to `/reports/` and includes the example directly from the documentation for `devices.py`.  However, it has been renamed to `devices.py.example` which prevents NetBox from recognizing it as a valid report.  This was done to avoid unnessary issues from being opened when the default does not work for someone's expectations.
+NetBox includes [customized reporting][netbox-reports-doc] that allows the user to write Python code and determine the validity of the data within NetBox.
+The `REPORTS_ROOT` variable is setup as a mapped directory within this Docker container to `/reports/` and includes the example directly from the documentation for `devices.py`.
+However, it has been renamed to `devices.py.example` which prevents NetBox from recognizing it as a valid report.
+This was done to avoid unnessary issues from being opened when the default does not work for someone's expectations.
 
 To re-enable this default report, simply rename `devices.py.example` to `devices.py` and browse within the WebUI to `/extras/reports/`.
 You can also dynamically add any other report to this same directory and NetBox will be able to see it without restarting the container.
