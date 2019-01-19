@@ -25,12 +25,12 @@ LDAP_IGNORE_CERT_ERRORS = os.environ.get('LDAP_IGNORE_CERT_ERRORS', 'False').low
 
 AUTH_LDAP_USER_SEARCH = LDAPSearch(os.environ.get('AUTH_LDAP_USER_SEARCH_BASEDN', ''),
                                     ldap.SCOPE_SUBTREE,
-                                    "(sAMAccountName=%(user)s)")
+                                    "(" + os.environ.get('AUTH_LDAP_USER_SEARCH_ATTR', 'sAMAccountName') + "=%(user)s)")
 
 # This search ought to return all groups to which the user belongs. django_auth_ldap uses this to determine group
 # heirarchy.
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(os.environ.get('AUTH_LDAP_GROUP_SEARCH_BASEDN', ''), ldap.SCOPE_SUBTREE,
-                                    "(objectClass=group)")
+                                    "(objectClass=" + os.environ.get('AUTH_LDAP_GROUP_SEARCH_CLASS', 'group') + ")")
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
 
 # Define a group required to login.
