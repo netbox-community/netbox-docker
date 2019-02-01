@@ -1,0 +1,82 @@
+#!/bin/bash
+
+ensure_jq() {
+  echo "🛠🛠🛠 Installing JQ via apt-get"
+  [ -x "$(command -v jq)" ] || ( apt-get update && apt-get install -y jq )
+}
+
+ensure_dockerfile_present() {
+  if [ "${VARIANT}" == "main" ]; then
+    DOCKERFILE="Dockerfile"
+  else
+    DOCKERFILE="Dockerfile.${VARIANT}"
+
+    # Fail fast
+    if [ ! -f "${DOCKERFILE}" ]; then
+      echo "🚨 The Dockerfile '${DOCKERFILE}' for variant '${VARIANT}' doesn't exist."
+
+      if [ -z "$DEBUG" ]; then
+        exit 1
+      else
+        echo "⚠️ Would skip this, but DEBUG is enabled."
+      fi
+    fi
+
+    if [ "${DOCKERFILE}" != "${DOCKERFILE_PATH}" ]; then
+      echo "⚠️ The specified Dockerfile '${DOCKERFILE_PATH}' does not match the expected Dockerfile '${DOCKERFILE}'."
+      echo "   This script will use '${DOCKERFILE}' and ignore '${DOCKERFILE_PATH}'."
+    fi
+  fi
+}
+
+# Passes args to the scripts
+run_build() {
+  echo "🐳🐳🐳 Building '${BUILD}' images, the '${VARIANT:-main}' variant"
+  case $BUILD in
+    release)
+      # build the latest release
+      # shellcheck disable=SC2068
+      ./build-latest.sh $@
+      ;;
+    prerelease)
+      # build the latest pre-release
+      # shellcheck disable=SC2068
+      PRERELEASE=true ./build-latest.sh $@
+      ;;
+    branches)
+      # build all branches
+      # shellcheck disable=SC2068
+      ./build-branches.sh $@
+      ;;
+    special)
+      # special build
+      # shellcheck disable=SC2068
+      #SRC_ORG=lampwins TAG=webhooks-backend ./build.sh "feature/webhooks-backend" $@
+      echo "✅ No special builds today."
+      ;;
+    *)
+      echo "🚨 Unrecognized build '$BUILD'."
+
+      if [ -z "$DEBUG" ]; then
+        exit 1
+      else
+        echo "⚠️ Would exit here with code '1', but DEBUG is enabled."
+      fi
+      ;;
+  esac
+}
+
+echo "🤖🤖🤖 Preparing build"
+export DOCKER_ORG="index.docker.io/cimnine"
+export DOCKER_REPO=netbox-test
+export DOCKERHUB_REPO=cimnine/netbox-test
+
+# mis-using the "${DOCKER_TAG}" variable as "branch to build"
+export BUILD="${DOCKER_TAG%-*}"
+export VARIANT="${DOCKER_TAG#*-}"
+
+unset DOCKER_TAG
+
+ensure_dockerfile_present
+
+ensure_jq
