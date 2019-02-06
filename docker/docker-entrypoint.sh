@@ -1,27 +1,6 @@
 #!/bin/bash
 set -e
 
-# inform about deprecation
-
-depraction_warning() {
-  echo ""
-  echo ""
-  echo ""
-  echo "⚠️ WARNING ⚠️ WARNING ⚠️ WARNING ⚠️"
-  echo ""
-  echo "📣️ The docker images for Netbox have moved to 'netboxcommunity/netbox'."
-  echo ""
-  echo "❌ Your setup will not get any updates anymore."
-  echo "❌ Your setup will break after 2019."
-  echo ""
-  echo "ℹ️ Just rename 'ninech/netbox' to 'netboxcommunity/netbox' and your good again."
-  echo ""
-  echo ""
-  echo ""
-}
-
-depraction_warning
-
 # wait shortly and then run db migrations (retry on error)
 while ! ./manage.py migrate 2>&1; do
   echo "⏳ Waiting on DB..."
@@ -69,8 +48,6 @@ done
 ./manage.py collectstatic --no-input
 
 echo "✅ Initialisation is done."
-
-depraction_warning
 
 # launch whatever is passed by docker
 # (i.e. the RUN instruction in the Dockerfile)
