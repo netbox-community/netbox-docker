@@ -1,22 +1,19 @@
 # netbox-docker
 
-[![Build Status](https://travis-ci.org/ninech/netbox-docker.svg?branch=master)][travis]
-
-This repository houses the components needed to build NetBox as a Docker container.
+This repository houses the components needed to build Netbox as a Docker container.
 Images built using this code are released to [Docker Hub][netbox-dockerhub] every night.
 
 Questions? Before opening an issue on Github, please join the [Network To Code][ntc-slack] and ask for help in our `#netbox-docker` channel.
 
-[travis]: https://travis-ci.org/ninech/netbox-docker
-[netbox-dockerhub]: https://hub.docker.com/r/ninech/netbox/tags/
+[netbox-dockerhub]: https://hub.docker.com/r/netboxcommunity/netbox/tags/
 [ntc-slack]: http://slack.networktocode.com/
 
 ## Quickstart
 
-To get NetBox up and running:
+To get Netbox up and running:
 
 ```
-$ git clone -b master https://github.com/ninech/netbox-docker.git
+$ git clone -b master https://github.com/netbox-community/netbox-docker.git
 $ cd netbox-docker
 $ docker-compose pull
 $ docker-compose up -d
@@ -44,7 +41,7 @@ Default credentials:
 * Password: **admin**
 * API Token: **0123456789abcdef0123456789abcdef01234567**
 
-[docker-reception]: https://github.com/ninech/reception
+[docker-reception]: https://github.com/nxt-engineering/reception
 
 ## Dependencies
 
@@ -63,9 +60,9 @@ Read [Environment Variables in Compose][compose-env] to understand about the var
 (The easiest solution being simply adjusting that file.)
 
 To find all possible variables, have a look at the [configuration.docker.py][docker-config] and [docker-entrypoint.sh][entrypoint] files.
-Generally, the environment variables are called the same as their respective NetBox configuration variables.
+Generally, the environment variables are called the same as their respective Netbox configuration variables.
 Variables which are arrays are usually composed by putting all the values into the same environment variables with the values separated by a whitespace ("` `").
-For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access to NetBox through `http://localhost:8080`, `http://[::1]:8080` and `http://127.0.0.1:8080`.
+For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access to Netbox through `http://localhost:8080`, `http://[::1]:8080` and `http://127.0.0.1:8080`.
 
 [compose-env]: https://docs.docker.com/compose/environment-variables/
 
@@ -74,7 +71,7 @@ For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access
 The default settings are optimized for (local) development environments.
 You should therefore adjust the configuration for production setups, at least the following variables:
 
-* `ALLOWED_HOSTS`: Add all URLs that lead to your NetBox instance, space separated. E.g. `ALLOWED_HOSTS=netbox.mycorp.com server042.mycorp.com 2a02:123::42 10.0.0.42 localhost ::1 127.0.0.1` (It's good advice to always allow localhost connections for easy debugging, i.e. `localhost ::1 127.0.0.1`.)
+* `ALLOWED_HOSTS`: Add all URLs that lead to your Netbox instance, space separated. E.g. `ALLOWED_HOSTS=netbox.mycorp.com server042.mycorp.com 2a02:123::42 10.0.0.42 localhost ::1 127.0.0.1` (It's good advice to always allow localhost connections for easy debugging, i.e. `localhost ::1 127.0.0.1`.)
 * `DB_*`: Use your own persistent database. Don't use the default passwords!
 * `EMAIL_*`: Use your own mailserver.
 * `MAX_PAGE_SIZE`: Use the recommended default of 1000.
@@ -85,7 +82,7 @@ You should therefore adjust the configuration for production setups, at least th
 
 You may run this image in a cluster such as Docker Swarm, Kubernetes or OpenShift, but this is advanced level.
 
-In this case, we encourage you to statically configure NetBox by starting from [NetBox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/config/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
+In this case, we encourage you to statically configure Netbox by starting from [Netbox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/config/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
 
 But if you rather continue to configure your application through environment variables, you may continue to use [the built-in configuration file][docker-config].
 We discourage storing secrets in environment variables, as environment variable are passed on to all sub-processes and may leak easily into other systems, e.g. error collecting tools that often collect all environment variables whenever an error occurs.
@@ -102,11 +99,11 @@ If a secret is defined by an environment variable and in the respective file at 
 * `NAPALM_PASSWORD`: `/run/secrets/napalm_password`
 * `REDIS_PASSWORD`: `/run/secrets/redis_password`
 
-Please also consider [the advice about running NetBox in production](#production) above!
+Please also consider [the advice about running Netbox in production](#production) above!
 
-[docker-config]: https://github.com/ninech/netbox-docker/blob/master/docker/configuration.docker.py
+[docker-config]: https://github.com/netbox-community/netbox-docker/blob/master/docker/configuration.docker.py
 [default-config]: https://github.com/digitalocean/netbox/blob/develop/netbox/netbox/configuration.example.py
-[entrypoint]: https://github.com/ninech/netbox-docker/blob/master/docker/docker-entrypoint.sh
+[entrypoint]: https://github.com/netbox-community/netbox-docker/blob/master/docker/docker-entrypoint.sh
 [swarm-config]: https://docs.docker.com/engine/swarm/configs/
 [swarm-secrets]: https://docs.docker.com/engine/swarm/secrets/
 [openshift-config]: https://docs.openshift.org/latest/dev_guide/configmaps.html
@@ -116,9 +113,9 @@ Please also consider [the advice about running NetBox in production](#production
 
 ### NAPALM Configuration
 
-Since v2.1.0 NAPALM has been tightly integrated into NetBox.
-NAPALM allows NetBox to fetch live data from devices and return it to a requester via its REST API.
-To learn more about what NAPALM is and how it works, please see the documentation from the [libary itself][napalm-doc] or the documentation from [NetBox][netbox-napalm-doc] on how it is integrated.
+Since v2.1.0 NAPALM has been tightly integrated into Netbox.
+NAPALM allows Netbox to fetch live data from devices and return it to a requester via its REST API.
+To learn more about what NAPALM is and how it works, please see the documentation from the [libary itself][napalm-doc] or the documentation from [Netbox][netbox-napalm-doc] on how it is integrated.
 
 To enable this functionality, simply complete the following lines in `netbox.env` (or appropriate secrets mechanism) :
 
@@ -133,13 +130,13 @@ However, if you don't need this functionality, leave these blank.
 
 ### Customizable Reporting
 
-NetBox includes [customized reporting][netbox-reports-doc] that allows the user to write Python code and determine the validity of the data within NetBox.
+Netbox includes [customized reporting][netbox-reports-doc] that allows the user to write Python code and determine the validity of the data within Netbox.
 The `REPORTS_ROOT` variable is setup as a mapped directory within this Docker container to `/reports/` and includes the example directly from the documentation for `devices.py`.
-However, it has been renamed to `devices.py.example` which prevents NetBox from recognizing it as a valid report.
+However, it has been renamed to `devices.py.example` which prevents Netbox from recognizing it as a valid report.
 This was done to avoid unnessary issues from being opened when the default does not work for someone's expectations.
 
 To re-enable this default report, simply rename `devices.py.example` to `devices.py` and browse within the WebUI to `/extras/reports/`.
-You can also dynamically add any other report to this same directory and NetBox will be able to see it without restarting the container.
+You can also dynamically add any other report to this same directory and Netbox will be able to see it without restarting the container.
 
 [netbox-reports-doc]: https://netbox.readthedocs.io/en/stable/additional-features/reports/
 
@@ -147,7 +144,7 @@ You can also dynamically add any other report to this same directory and NetBox 
 
 When using `docker-compose`, all the python scripts present in `/opt/netbox/startup_scripts` will automatically be executed after the application boots in the context of `./manage.py`.
 
-That mechanism can be used for many things, e.g. to create NetBox custom fields:
+That mechanism can be used for many things, e.g. to create Netbox custom fields:
 
 ```python
 # docker/startup_scripts/load_custom_fields.py
@@ -173,7 +170,7 @@ if created:
 
 #### Initializers
 
-Initializers are built-in startup scripts for defining NetBox custom fields, groups, users and many other resources.
+Initializers are built-in startup scripts for defining Netbox custom fields, groups, users and many other resources.
 All you need to do is to mount you own `initializers` folder ([see `docker-compose.yml`][netbox-docker-compose]).
 Look at the [`initializers` folder][netbox-docker-initializers] to learn how the files must look like.
 
@@ -197,8 +194,8 @@ text_field:
   - virtualization.models.VirtualMachine
 ```
 
-[netbox-docker-initializers]: https://github.com/ninech/netbox-docker/tree/master/initializers
-[netbox-docker-compose]: https://github.com/ninech/netbox-docker/blob/master/docker-compose.yml
+[netbox-docker-initializers]: https://github.com/netbox-community/netbox-docker/tree/master/initializers
+[netbox-docker-compose]: https://github.com/netbox-community/netbox-docker/blob/master/docker-compose.yml
 
 ##### Available Groups for User/Group initializers
 
@@ -211,12 +208,12 @@ echo "from django.contrib.auth.models import Permission\nfor p in Permission.obj
 
 #### Custom Docker Image
 
-You can also build your own NetBox Docker image containing your own startup scripts, custom fields, users and groups
+You can also build your own Netbox Docker image containing your own startup scripts, custom fields, users and groups
 like this:
 
 ```
 ARG VERSION=latest
-FROM ninech/netbox:$VERSION
+FROM netboxcommunity/netbox:$VERSION
 
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
@@ -224,10 +221,10 @@ COPY initializers/ /opt/netbox/initializers/
 
 ## Netbox Version
 
-The `docker-compose.yml` file is prepared to run a specific version of NetBox.
+The `docker-compose.yml` file is prepared to run a specific version of Netbox.
 To use this feature, set the environment-variable `VERSION` before launching `docker-compose`, as shown below.
 `VERSION` may be set to the name of
-[any tag of the `ninech/netbox` Docker image on Docker Hub][netbox-dockerhub].
+[any tag of the `netboxcommunity/netbox` Docker image on Docker Hub][netbox-dockerhub].
 
 ```
 $ export VERSION=v2.2.6
@@ -235,7 +232,7 @@ $ docker-compose pull netbox
 $ docker-compose up -d
 ```
 
-You can also build a specific version of the NetBox image. This time, `VERSION` indicates any valid
+You can also build a specific version of the Netbox image. This time, `VERSION` indicates any valid
 [Git Reference][git-ref] declared on [the 'digitalocean/netbox' Github repository][netbox-github].
 Most commonly you will specify a tag or branch name.
 
@@ -262,7 +259,7 @@ Custom values can be injected using environment variables, similar to the main c
 This section is a collection of some common issues and how to resolve them.
 If your issue is not here, look through [the existing issues][issues] and eventually create a new issue.
 
-[issues]: (https://github.com/ninech/netbox-docker/issues)
+[issues]: (https://github.com/netbox-community/netbox-docker/issues)
 
 ### Docker Compose basics
 
@@ -271,7 +268,7 @@ If your issue is not here, look through [the existing issues][issues] and eventu
   Running `docker-compose logs -f netbox` will just show the logs for netbox.
 * You can stop everything using `docker-compose stop`.
 * You can clean up everything using `docker-compose down -v --remove-orphans`. **This will also remove any related data.**
-* You can enter the shell of the running NetBox container using `docker-compose exec netbox /bin/bash`. Now you have access to `./manage.py`, e.g. to reset a password.
+* You can enter the shell of the running Netbox container using `docker-compose exec netbox /bin/bash`. Now you have access to `./manage.py`, e.g. to reset a password.
 * To access the database run `docker-compose exec postgres sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`
 * To create a database backup run `docker-compose exec postgres sh -c 'pg_dump -cU $POSTGRES_USER $POSTGRES_DB' | gzip > db_dump.sql.gz`
 * To restore that database backup run `gunzip -c db_dump.sql.gz | docker exec -i $(docker-compose ps -q postgres) sh -c 'psql -U $POSTGRES_USER $POSTGRES_DB'`.
@@ -304,7 +301,7 @@ $ docker-compose logs -f nginx
 
 ### Getting a "Bad Request (400)"
 
-> When connecting to the NetBox instance, I get a "Bad Request (400)" error.
+> When connecting to the Netbox instance, I get a "Bad Request (400)" error.
 
 This usually happens when the `ALLOWED_HOSTS` variable is not set correctly.
 
@@ -375,7 +372,7 @@ If you don't see anything happening after you triggered a webhook, double-check 
 From time to time it might become necessary to re-engineer the structure of this setup.
 Things like the `docker-compose.yml` file or your Kubernetes or OpenShift configurations have to be adjusted as a consequence.
 Since April 2018 each image built from this repo contains a `NETBOX_DOCKER_PROJECT_VERSION` label.
-You can check the label of your local image by running `docker inspect ninech/netbox:v2.3.1 --format "{{json .ContainerConfig.Labels}}"`.
+You can check the label of your local image by running `docker inspect netboxcommunity/netbox:v2.3.1 --format "{{json .ContainerConfig.Labels}}"`.
 Compare the version with the list below to check whether a breaking change was introduced with that version.
 
 The following is a list of breaking changes of the `netbox-docker` project:
@@ -386,41 +383,21 @@ The following is a list of breaking changes of the `netbox-docker` project:
 * 0.5.0: Alpine was updated to 3.8, `*.env` moved to `/env` folder
 * 0.4.0: In order to use Netbox webhooks you need to add Redis and a netbox-worker to your docker-compose.yml.
 * 0.3.0: Field `filterable: <boolean` was replaced with field `filter_logic: loose/exact/disabled`. It will default to `CF_FILTER_LOOSE=loose` when not defined.
-* 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54](https://github.com/ninech/netbox-docker/issues/54).
+* 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54](https://github.com/netbox-community/netbox-docker/issues/54).
 * 0.1.0: Introduction of the `NETBOX_DOCKER_PROJECT_VERSION`. (Not a breaking change per se.)
 
 ## Rebuilding & Publishing images
 
-`./build.sh` is used to rebuild the Docker image:
-
-```
-$ ./build.sh --help
-Usage: ./build.sh <branch> [--push]
-  branch  The branch or tag to build. Required.
-  --push  Pushes built Docker image to docker hub.
-
-You can use the following ENV variables to customize the build:
-  BRANCH   The branch to build.
-           Also used for tagging the image.
-  DOCKER_REPO The Docker registry (i.e. hub.docker.com/r/DOCKER_REPO/netbox)
-           Also used for tagging the image.
-           Default: ninech
-  SRC_REPO Which fork of netbox to use (i.e. github.com/<SRC_REPO>/netbox).
-           Default: digitalocean
-  URL      Where to fetch the package from.
-           Must be a tar.gz file of the source code.
-           Default: https://github.com/${SRC_REPO}/netbox/archive/$BRANCH.tar.gz
-```
+`./build.sh` can be used to rebuild the Docker image. See `./build.sh --help` for more information.
 
 ### Publishing Docker Images
 
-New Docker Images are built and published every 24h by using travis:
-
-[![Build Status](https://travis-ci.org/ninech/netbox-docker.svg?branch=master)][travis]
+New Docker Images are built and published every 24h on the [Docker Build Infrastructure](https://hub.docker.com/r/netboxcommunity/netbox/builds/).
+`DOCKER_HUB.md` contains more information about the build infrastructure.
 
 ## Tests
 
-To run the tests coming with NetBox, use the `docker-compose.yml` file as such:
+To run the tests coming with Netbox, use the `docker-compose.yml` file as such:
 
 ```
 $ docker-compose run netbox ./manage.py test
@@ -428,6 +405,4 @@ $ docker-compose run netbox ./manage.py test
 
 ## About
 
-This repository is currently maintained and funded by [nine](https://nine.ch), your cloud navigator.
-
-[![logo of the company 'nine'](https://logo.apps.at-nine.ch/Dmqied_eSaoBMQwk3vVgn4UIgDo=/trim/500x0/logo_claim.png)](https://www.nine.ch)
+This repository is currently maintained and funded by [nxt](https://nxt.engineering).
