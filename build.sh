@@ -97,6 +97,7 @@ esac
 DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
 
 # Checking which VARIANT to build
+VARIANT="${VARIANT-main}"
 if [ "$VARIANT" == "main" ]; then
   DOCKERFILE="Dockerfile"
 else
