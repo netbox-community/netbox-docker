@@ -5,7 +5,7 @@ services:
       context: .
       args:
         - BRANCH=${VERSION-master}
-    image: ninech/netbox:${VERSION-latest}
+    image: netboxcommunity/netbox:${VERSION-latest}
     depends_on:
     - postgres
     - redis

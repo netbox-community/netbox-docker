@@ -383,8 +383,10 @@ The following is a list of breaking changes of the `netbox-docker` project:
 * 0.5.0: Alpine was updated to 3.8, `*.env` moved to `/env` folder
 * 0.4.0: In order to use Netbox webhooks you need to add Redis and a netbox-worker to your docker-compose.yml.
 * 0.3.0: Field `filterable: <boolean` was replaced with field `filter_logic: loose/exact/disabled`. It will default to `CF_FILTER_LOOSE=loose` when not defined.
-* 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54](https://github.com/netbox-community/netbox-docker/issues/54).
+* 0.2.0: Re-organized paths: `/etc/netbox -> /etc/netbox/config` and `/etc/reports -> /etc/netbox/reports`. Fixes [#54][54].
 * 0.1.0: Introduction of the `NETBOX_DOCKER_PROJECT_VERSION`. (Not a breaking change per se.)
+
+[54]: https://github.com/netbox-community/netbox-docker/issues/54
 
 ## Rebuilding & Publishing images
 
@@ -392,8 +394,10 @@ The following is a list of breaking changes of the `netbox-docker` project:
 
 ### Publishing Docker Images
 
-New Docker Images are built and published every 24h on the [Docker Build Infrastructure](https://hub.docker.com/r/netboxcommunity/netbox/builds/).
+New Docker images are built and published every 24h on the [Docker Build Infrastructure][docker-build-infra].
 `DOCKER_HUB.md` contains more information about the build infrastructure.
+
+[docker-build-infra]: https://hub.docker.com/r/netboxcommunity/netbox/builds/
 
 ## Tests
 
@@ -405,4 +409,6 @@ $ docker-compose run netbox ./manage.py test
 
 ## About
 
-This repository is currently maintained and funded by [nxt](https://nxt.engineering).
+This repository is currently maintained and funded by [nxt][nxt].
+
+[nxt]: https://nxt.engineering/en/

@@ -27,7 +27,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "             Else:          same as <BRANCH>"
   echo "  DOCKER_ORG The Docker registry (i.e. hub.docker.com/r/<DOCKER_ORG>/<DOCKER_REPO>) "
   echo "           Also used for tagging the image."
-  echo "           Default: ninech"
+  echo "           Default: netboxcommunity"
   echo "  DOCKER_REPO The Docker registry (i.e. hub.docker.com/r/<DOCKER_ORG>/<DOCKER_REPO>) "
   echo "           Also used for tagging the image."
   echo "           Default: netbox"
@@ -45,7 +45,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "           The value will be used as a suffix to the \$TAG and for the Dockerfile"
   echo "           selection. The TAG being build must exist for the base variant and"
   echo "           corresponding Dockerfile must start with the following lines:"
-  echo "             ARG DOCKER_ORG=ninech"
+  echo "             ARG DOCKER_ORG=netboxcommunity"
   echo "             ARG DOCKER_REPO=netbox"
   echo "             ARG FROM_TAG=latest"
   echo "             FROM \$DOCKER_ORG/\$DOCKER_REPO:\$FROM_TAG"
@@ -84,7 +84,7 @@ BRANCH="${1}"
 URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}/archive/$BRANCH.tar.gz}"
 
 # variables for tagging the docker image
-DOCKER_ORG="${DOCKER_ORG-ninech}"
+DOCKER_ORG="${DOCKER_ORG-netboxcommunity}"
 DOCKER_REPO="${DOCKER_REPO-netbox}"
 case "${BRANCH}" in
   master)

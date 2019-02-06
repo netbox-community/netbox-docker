@@ -2,7 +2,7 @@
 
 Before raising an issue here, answer the following questions for yourself, please:
 
-* Did you read through the troubleshooting section? (https://github.com/ninech/netbox-docker/#troubleshooting)
+* Did you read through the troubleshooting section? (https://github.com/netbox-community/netbox-docker/#troubleshooting)
 * Have you updated to the latest version and tried again? (i.e. `git pull` and `docker-compose pull`)
 * Have you reset the project and tried again? (i.e. `docker-compose down -v`)
 * Are you confident that your problem is related to the Docker or Docker Compose setup this project provides?

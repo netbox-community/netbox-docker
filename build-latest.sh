@@ -47,7 +47,7 @@ if [ "${PRERELEASE}" == "true" ]; then
 fi
 
 # Check if that version is not already available on docker hub:
-ORIGINAL_DOCKERHUB_REPO="ninech/netbox"
+ORIGINAL_DOCKERHUB_REPO="netboxcommunity/netbox"
 DOCKERHUB_REPO="${DOCKERHUB_REPO-$ORIGINAL_DOCKERHUB_REPO}"
 URL_DOCKERHUB_TOKEN="https://auth.docker.io/token?service=registry.docker.io&scope=repository:${DOCKERHUB_REPO}:pull"
 BEARER_TOKEN="$($CURL "${URL_DOCKERHUB_TOKEN}" | jq -r .token)"
