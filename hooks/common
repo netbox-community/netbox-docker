@@ -67,9 +67,9 @@ run_build() {
 }
 
 echo "🤖🤖🤖 Preparing build"
-export DOCKER_ORG="index.docker.io/cimnine"
-export DOCKER_REPO=netbox-test
-export DOCKERHUB_REPO=cimnine/netbox-test
+export DOCKER_ORG="index.docker.io/netboxcommunity"
+export DOCKER_REPO=netbox
+export DOCKERHUB_REPO=netboxcommunity/netbox
 
 # mis-using the "${DOCKER_TAG}" variable as "branch to build"
 export BUILD="${DOCKER_TAG%-*}"
