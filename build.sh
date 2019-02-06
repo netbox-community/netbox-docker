@@ -6,9 +6,10 @@ echo "▶️ $0 $*"
 set -e
 
 if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
-  echo "Usage: ${0} <branch> [--push]"
-  echo "  branch  The branch or tag to build. Required."
-  echo "  --push  Pushes built Docker image to docker hub."
+  echo "Usage: ${0} <branch> [--push|--push-only]"
+  echo "  branch       The branch or tag to build. Required."
+  echo "  --push       Pushes built the Docker image to the registry."
+  echo "  --push-only  Does not build. Only pushes the Docker image to the registry."
   echo ""
   echo "You can use the following ENV variables to customize the build:"
   echo "  DEBUG    If defined, the script does not stop when certain checks are unsatisfied."
@@ -49,8 +50,9 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "             ARG FROM_TAG=latest"
   echo "             FROM \$DOCKER_ORG/\$DOCKER_REPO:\$FROM_TAG"
   echo "           Example: VARIANT=ldap will result in the tag 'latest-ldap' and the"
-  echo "            Dockerfile 'Dockerfile.ldap' being used."
-  echo "           Default: empty"
+  echo "           Dockerfile './Dockerfile.ldap' being used."
+  echo "           Exception: VARIANT=main will use the './Dockerfile' Dockerfile"
+  echo "           Default: main"
   echo "  HTTP_PROXY The proxy to use for http requests."
   echo "           Example: http://proxy.domain.tld:3128"
   echo "           Default: empty"
@@ -95,7 +97,7 @@ esac
 DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
 
 # Checking which VARIANT to build
-if [ -z "$VARIANT" ]; then
+if [ "$VARIANT" == "main" ]; then
   DOCKERFILE="Dockerfile"
 else
   DOCKERFILE="Dockerfile.${VARIANT}"
@@ -117,8 +119,8 @@ DOCKER_OPTS=("${DOCKER_OPTS[@]}")
 
 # caching is only ok for version tags
 case "${TAG}" in
-  v*) ;;
-  *)  DOCKER_OPTS+=( "--no-cache" ) ;;
+ v*) ;;
+ *)  DOCKER_OPTS+=( "--no-cache" ) ;;
 esac
 
 DOCKER_OPTS+=( "--pull" )
@@ -152,11 +154,13 @@ else
   DOCKER_CMD="echo docker"
 fi
 
-echo "🐳 Building the Docker image '${DOCKER_TAG}' from the url '${URL}'."
-$DOCKER_CMD build -t "${DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
-echo "✅ Finished building the Docker images '${DOCKER_TAG}'"
+if [ "${2}" != "--push-only" ] ; then
+  echo "🐳 Building the Docker image '${DOCKER_TAG}' from the url '${URL}'."
+  $DOCKER_CMD build -t "${DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
+  echo "✅ Finished building the Docker images '${DOCKER_TAG}'"
+fi
 
-if [ "${2}" == "--push" ] ; then
+if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ] ; then
   echo "⏫ Pushing '${DOCKER_TAG}"
   $DOCKER_CMD push "${DOCKER_TAG}"
   echo "✅ Finished pushing the Docker image '${DOCKER_TAG}'."

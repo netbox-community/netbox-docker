@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. hooks/common
+
+if [ "${VARIANT}" == "main" ] && [ "${BUILD}" == "BRANCHES" ]; then
+  echo "🐳🐳🐳 Testing"
+  docker-compose pull --parallel
+  docker-compose build
+  docker-compose run netbox ./manage.py test
+else
+  echo "🐳🐳🐳 No tests are implemented for build '${BUILD}' with variant '${VARIANT}'."
+fi

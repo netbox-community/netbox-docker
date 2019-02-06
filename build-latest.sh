@@ -3,7 +3,7 @@
 
 echo "▶️ $0 $*"
 
-if [ ! -z "${GITHUB_OAUTH_CLIENT_ID}" ] && [ ! -z "${GITHUB_OAUTH_CLIENT_SECRET}" ]; then
+if [ -n "${GITHUB_OAUTH_CLIENT_ID}" ] && [ -n "${GITHUB_OAUTH_CLIENT_SECRET}" ]; then
   echo "🗝 Performing authenticated Github API calls."
   GITHUB_OAUTH_PARAMS="client_id=${GITHUB_OAUTH_CLIENT_ID}&client_secret=${GITHUB_OAUTH_CLIENT_SECRET}"
 else
