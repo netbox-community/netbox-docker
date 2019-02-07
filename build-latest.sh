@@ -55,7 +55,7 @@ BEARER_TOKEN="$($CURL "${URL_DOCKERHUB_TOKEN}" | jq -r .token)"
 URL_DOCKERHUB_TAG="https://registry.hub.docker.com/v2/${DOCKERHUB_REPO}/tags/list"
 AUTHORIZATION_HEADER="Authorization: Bearer ${BEARER_TOKEN}"
 
-if [ -z "$VARIANT" ]; then
+if [ -z "$VARIANT" ] || [ "$VARIANT" == "main" ]; then
   DOCKER_TAG="${VERSION}"
 else
   DOCKER_TAG="${VERSION}-${VARIANT}"
@@ -63,7 +63,7 @@ fi
 
 ALREADY_BUILT="$($CURL -H "${AUTHORIZATION_HEADER}" "${URL_DOCKERHUB_TAG}" | jq -e ".tags | any(.==\"${DOCKER_TAG}\")")"
 
-if [ -n "$DEBUG" ] && [ "$ALREADY_BUILT" == "false" ]; then
+if [ -n "$DEBUG" ] || [ "$ALREADY_BUILT" == "false" ]; then
   if [ -n "$DEBUG" ]; then
     echo "⚠️ Would not build, because ${DOCKER_TAG} already exists on https://hub.docker.com/r/${DOCKERHUB_REPO}, but DEBUG is enabled."
   fi
