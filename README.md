@@ -1,11 +1,12 @@
 # netbox-docker
 
-This repository houses the components needed to build Netbox as a Docker container.
+[This repository](netbox-docker-github) houses the components needed to build Netbox as a Docker container.
 Images built using this code are released to [Docker Hub][netbox-dockerhub] every night.
 
-Questions? Before opening an issue on Github, please join the [Network To Code][ntc-slack] and ask for help in our `#netbox-docker` channel.
+Questions? Before opening an issue on Github, please join the [Network To Code][ntc-slack] Slack and ask for help in our `#netbox-docker` channel.
 
 [netbox-dockerhub]: https://hub.docker.com/r/netboxcommunity/netbox/tags/
+[netbox-docker-github]:  https://github.com/netbox-community/netbox-docker
 [ntc-slack]: http://slack.networktocode.com/
 
 ## Quickstart
