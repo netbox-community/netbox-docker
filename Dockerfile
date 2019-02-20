@@ -39,6 +39,8 @@ RUN wget -q -O - "${URL}" | tar xz \
 WORKDIR /opt/netbox
 RUN pip install -r requirements.txt
 
+VOLUME ["/opt/netbox/netbox/static"]
+
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY configuration/gunicorn_config.py /etc/netbox/config/
 COPY docker/nginx.conf /etc/netbox-nginx/nginx.conf
