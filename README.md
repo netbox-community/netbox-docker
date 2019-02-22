@@ -378,6 +378,7 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.8.0: Alpine linux was upgraded to 3.9 [#126][126]
 * 0.7.0: The value of the `MAX_PAGE_SIZE` environment variable was changed to `1000`, which is the default of Netbox.
 * 0.6.0: The naming of the default startup_scripts were changed.
   If you overwrite them, you may need to adjust these scripts.
@@ -388,6 +389,7 @@ The following is a list of breaking changes of the `netbox-docker` project:
 * 0.1.0: Introduction of the `NETBOX_DOCKER_PROJECT_VERSION`. (Not a breaking change per se.)
 
 [54]: https://github.com/netbox-community/netbox-docker/issues/54
+[126]: https://github.com/netbox-community/netbox-docker/pull/126
 
 ## Rebuilding & Publishing images
 
