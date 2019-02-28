@@ -144,6 +144,7 @@ You can also dynamically add any other report to this same directory and Netbox 
 ### Custom Initialization Code (e.g. Automatically Setting Up Custom Fields)
 
 When using `docker-compose`, all the python scripts present in `/opt/netbox/startup_scripts` will automatically be executed after the application boots in the context of `./manage.py`.
+The execution of the startup scripts can be prevented by setting the environment variable `SKIP_STARTUP_SCRIPTS` to `true`, e.g. in the file `env/netbox.env`.
 
 That mechanism can be used for many things, e.g. to create Netbox custom fields:
 
