@@ -39,10 +39,14 @@ if not User.objects.filter(username='${SUPERUSER_NAME}'):
     Token.objects.create(user=u, key='${SUPERUSER_API_TOKEN}')
 END
 
-for script in /opt/netbox/startup_scripts/*.py; do
-  echo "⚙️ Executing '$script'"
-  ./manage.py shell --interface python < "${script}"
-done
+if [ "$SKIP_STARTUP_SCRIPTS" == "true" ]; then
+  echo "☇ Skipping startup scripts"
+else
+  for script in /opt/netbox/startup_scripts/*.py; do
+    echo "⚙️ Executing '$script'"
+    ./manage.py shell --interface python < "${script}"
+  done
+fi
 
 # copy static files
 ./manage.py collectstatic --no-input
