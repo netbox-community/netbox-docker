@@ -146,6 +146,7 @@ REDIS = {
     'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
     'DATABASE': os.environ.get('REDIS_DATABASE', '0'),
     'DEFAULT_TIMEOUT': os.environ.get('REDIS_TIMEOUT', '300'),
+    'SSL': os.environ.get('REDIS_SSL', 'False').lower() == 'true',
 }
 
 # The file path where custom reports will be stored. A trailing slash is not needed. Note that the default value of
