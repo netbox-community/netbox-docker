@@ -60,7 +60,7 @@ These are defined in `netbox.env`.
 Read [Environment Variables in Compose][compose-env] to understand about the various possibilities to overwrite these variables.
 (The easiest solution being simply adjusting that file.)
 
-To find all possible variables, have a look at the [configuration.docker.py][docker-config] and [docker-entrypoint.sh][entrypoint] files.
+To find all possible variables, have a look at the [configuration.py][docker-config] and [docker-entrypoint.sh][entrypoint] files.
 Generally, the environment variables are called the same as their respective Netbox configuration variables.
 Variables which are arrays are usually composed by putting all the values into the same environment variables with the values separated by a whitespace ("` `").
 For example defining `ALLOWED_HOSTS=localhost ::1 127.0.0.1` would allows access to Netbox through `http://localhost:8080`, `http://[::1]:8080` and `http://127.0.0.1:8080`.
@@ -85,7 +85,12 @@ You may run this image in a cluster such as Docker Swarm, Kubernetes or OpenShif
 
 In this case, we encourage you to statically configure Netbox by starting from [Netbox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/config/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
 
-But if you rather continue to configure your application through environment variables, you may continue to use [the built-in configuration file][docker-config].
+But if you rather continue to configure your application through environment variables, you may continue to use [the built-in configuration file][
+
+
+
+
+].
 We discourage storing secrets in environment variables, as environment variable are passed on to all sub-processes and may leak easily into other systems, e.g. error collecting tools that often collect all environment variables whenever an error occurs.
 
 Therefore we *strongly advise* to make use of the secrets mechanism provided by your container platform (i.e. [Docker Swarm secrets][swarm-secrets], [Kubernetes secrets][k8s-secrets], [OpenShift secrets][openshift-secrets]).
@@ -102,7 +107,7 @@ If a secret is defined by an environment variable and in the respective file at 
 
 Please also consider [the advice about running Netbox in production](#production) above!
 
-[docker-config]: https://github.com/netbox-community/netbox-docker/blob/master/docker/configuration.docker.py
+[docker-config]: https://github.com/netbox-community/netbox-docker/blob/master/configuration/configuration.py
 [default-config]: https://github.com/digitalocean/netbox/blob/develop/netbox/netbox/configuration.example.py
 [entrypoint]: https://github.com/netbox-community/netbox-docker/blob/master/docker/docker-entrypoint.sh
 [swarm-config]: https://docs.docker.com/engine/swarm/configs/
