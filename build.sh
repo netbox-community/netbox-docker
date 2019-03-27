@@ -34,6 +34,9 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  DOCKER_TAG The name of the tag which is applied to the image."
   echo "           Useful for pushing into another registry than hub.docker.com."
   echo "           Default: <DOCKER_ORG>/<DOCKER_REPO>:<BRANCH>"
+  echo "  DOCKER_SHORT_TAG The name of the short tag which is applied to the image."
+  echo "           This is used to tag all patch releases to their containing version e.g. v2.5.1 -> v2.5"
+  echo "           Default: <DOCKER_ORG>/<DOCKER_REPO>:\$MAJOR.\$MINOR"
   echo "  SRC_ORG  Which fork of netbox to use (i.e. github.com/<SRC_ORG>/<SRC_REPO>)."
   echo "           Default: digitalocean"
   echo "  SRC_REPO The name of the netbox for to use (i.e. github.com/<SRC_ORG>/<SRC_REPO>)."
@@ -165,4 +168,18 @@ if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ] ; then
   echo "⏫ Pushing '${DOCKER_TAG}"
   $DOCKER_CMD push "${DOCKER_TAG}"
   echo "✅ Finished pushing the Docker image '${DOCKER_TAG}'."
+  if [[ "${TAG}" =~ ^v([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
+    MAJOR=${BASH_REMATCH[1]}
+    MINOR=${BASH_REMATCH[2]}
+    DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG-${DOCKER_ORG}/${DOCKER_REPO}:v${MAJOR}.${MINOR}}"
+    if [ "$VARIANT" != "main" ]; then
+      DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG}-${VARIANT}"
+    fi
+    echo "⏫ Pushing '${DOCKER_SHORT_TAG}'"
+    $DOCKER_CMD tag "${DOCKER_TAG}" "${DOCKER_SHORT_TAG}"
+    $DOCKER_CMD push "${DOCKER_SHORT_TAG}"
+    echo "✅ Finished pushing the Docker image '${DOCKER_SHORT_TAG}'."
+  else
+    echo "☇ No version tag detected; skipping short tag"
+  fi
 fi
