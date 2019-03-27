@@ -384,6 +384,7 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.11.0: The docker-compose file now marks volumes as shared (`:z`). This should prevent SELinux problems [#131][131]
 * 0.9.0: Upgrade to at least 2.1.5
 * 0.8.0: Alpine linux was upgraded to 3.9 [#126][126]
 * 0.7.0: The value of the `MAX_PAGE_SIZE` environment variable was changed to `1000`, which is the default of Netbox.
@@ -397,6 +398,7 @@ The following is a list of breaking changes of the `netbox-docker` project:
 
 [54]: https://github.com/netbox-community/netbox-docker/issues/54
 [126]: https://github.com/netbox-community/netbox-docker/pull/126
+[131]: https://github.com/netbox-community/netbox-docker/pull/131
 
 ## Rebuilding & Publishing images
 
