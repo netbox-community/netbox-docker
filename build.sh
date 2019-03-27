@@ -86,6 +86,25 @@ SRC_REPO="${SRC_REPO-netbox}"
 BRANCH="${1}"
 URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}/archive/$BRANCH.tar.gz}"
 
+# Checking which VARIANT to build
+VARIANT="${VARIANT-main}"
+if [ "$VARIANT" == "main" ]; then
+  DOCKERFILE="Dockerfile"
+else
+  DOCKERFILE="Dockerfile.${VARIANT}"
+fi
+
+# Fail fast
+if [ ! -f "${DOCKERFILE}" ]; then
+  echo "🚨 The Dockerfile ${DOCKERFILE} for variant '${VARIANT}' doesn't exist."
+
+  if [ -z "$DEBUG" ]; then
+    exit 1
+  else
+    echo "⚠️ Would exit here with code '1', but DEBUG is enabled."
+  fi
+fi
+
 # variables for tagging the docker image
 DOCKER_ORG="${DOCKER_ORG-netboxcommunity}"
 DOCKER_REPO="${DOCKER_REPO-netbox}"
@@ -97,25 +116,20 @@ case "${BRANCH}" in
   *)
     TAG="${TAG-$BRANCH}";;
 esac
+
 DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
-
-# Checking which VARIANT to build
-VARIANT="${VARIANT-main}"
-if [ "$VARIANT" == "main" ]; then
-  DOCKERFILE="Dockerfile"
-else
-  DOCKERFILE="Dockerfile.${VARIANT}"
+if [ "$VARIANT" != "main" ]; then
   DOCKER_TAG="${DOCKER_TAG}-${VARIANT}"
+fi
 
-  # Fail fast
-  if [ ! -f "${DOCKERFILE}" ]; then
-    echo "🚨 The Dockerfile ${DOCKERFILE} for variant '${VARIANT}' doesn't exist."
+if [[ "${TAG}" =~ ^v([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
+  MAJOR=${BASH_REMATCH[1]}
+  MINOR=${BASH_REMATCH[2]}
 
-    if [ -z "$DEBUG" ]; then
-      exit 1
-    else
-      echo "⚠️ Would exit here with code '1', but DEBUG is enabled."
-    fi
+  DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG-${DOCKER_ORG}/${DOCKER_REPO}:v${MAJOR}.${MINOR}}"
+
+  if [ "$VARIANT" != "main" ]; then
+    DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG}-${VARIANT}"
   fi
 fi
 
@@ -162,24 +176,22 @@ if [ "${2}" != "--push-only" ] ; then
   echo "🐳 Building the Docker image '${DOCKER_TAG}' from the url '${URL}'."
   $DOCKER_CMD build -t "${DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
   echo "✅ Finished building the Docker images '${DOCKER_TAG}'"
+
+  if [ -n "$DOCKER_SHORT_TAG" ]; then
+    echo "🐳 Tagging image '${DOCKER_SHORT_TAG}'."
+    $DOCKER_CMD tag "${DOCKER_TAG}" "${DOCKER_SHORT_TAG}"
+    echo "✅ Tagged image '${DOCKER_SHORT_TAG}'"
+  fi
 fi
 
 if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ] ; then
   echo "⏫ Pushing '${DOCKER_TAG}"
   $DOCKER_CMD push "${DOCKER_TAG}"
   echo "✅ Finished pushing the Docker image '${DOCKER_TAG}'."
-  if [[ "${TAG}" =~ ^v([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
-    MAJOR=${BASH_REMATCH[1]}
-    MINOR=${BASH_REMATCH[2]}
-    DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG-${DOCKER_ORG}/${DOCKER_REPO}:v${MAJOR}.${MINOR}}"
-    if [ "$VARIANT" != "main" ]; then
-      DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG}-${VARIANT}"
-    fi
+
+  if [ -n "$DOCKER_SHORT_TAG" ]; then
     echo "⏫ Pushing '${DOCKER_SHORT_TAG}'"
-    $DOCKER_CMD tag "${DOCKER_TAG}" "${DOCKER_SHORT_TAG}"
     $DOCKER_CMD push "${DOCKER_SHORT_TAG}"
     echo "✅ Finished pushing the Docker image '${DOCKER_SHORT_TAG}'."
-  else
-    echo "☇ No version tag detected; skipping short tag"
   fi
 fi
