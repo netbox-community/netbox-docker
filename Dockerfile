@@ -15,20 +15,6 @@ RUN apk add --no-cache \
       ttf-ubuntu-font-family \
       wget
 
-RUN pip install \
-# gunicorn is used for launching netbox
-      gunicorn \
-# napalm is used for gathering information from network devices
-      napalm \
-# ruamel is used in startup_scripts
-      ruamel.yaml \
-# pinning django to the version required by netbox
-# adding it here, to install the correct version of
-# django-rq
-      'Django>=2.1.5,<2.2' \
-# django-rq is used for webhooks
-      django-rq
-
 WORKDIR /opt
 
 ARG BRANCH=master
@@ -38,6 +24,16 @@ RUN wget -q -O - "${URL}" | tar xz \
 
 WORKDIR /opt/netbox
 RUN pip install -r requirements.txt
+
+RUN pip install \
+# gunicorn is used for launching netbox
+      gunicorn \
+# napalm is used for gathering information from network devices
+      napalm \
+# ruamel is used in startup_scripts
+      ruamel.yaml \
+# django-rq is used for webhooks
+      django-rq
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY configuration/gunicorn_config.py /etc/netbox/config/
