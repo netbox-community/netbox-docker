@@ -3,6 +3,16 @@ import os
 
 from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
+# Read secret from file
+def read_secret(secret_name):
+    try:
+        f = open('/run/secrets/' + secret_name, 'r', encoding='utf-8')
+    except EnvironmentError:
+        return ''
+    else:
+        with f:
+            return f.readline().strip()
+
 # Server URI
 AUTH_LDAP_SERVER_URI = os.environ.get('AUTH_LDAP_SERVER_URI', '')
 
@@ -13,7 +23,7 @@ AUTH_LDAP_CONNECTION_OPTIONS = {
 
 # Set the DN and password for the NetBox service account.
 AUTH_LDAP_BIND_DN = os.environ.get('AUTH_LDAP_BIND_DN', '')
-AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', '')
+AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', read_secret('auth_ldap_bind_password'))
 
 # Set a string template that describes any user’s distinguished name based on the username.
 AUTH_LDAP_USER_DN_TEMPLATE = os.environ.get('AUTH_LDAP_USER_DN_TEMPLATE', None)

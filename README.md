@@ -104,6 +104,7 @@ If a secret is defined by an environment variable and in the respective file at 
 * `EMAIL_PASSWORD`: `/run/secrets/email_password`
 * `NAPALM_PASSWORD`: `/run/secrets/napalm_password`
 * `REDIS_PASSWORD`: `/run/secrets/redis_password`
+* `AUTH_LDAP_BIND_PASSWORD`: `/run/secrets/auth_ldap_bind_password`
 
 Please also consider [the advice about running Netbox in production](#production) above!
 
