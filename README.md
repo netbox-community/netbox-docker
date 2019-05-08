@@ -374,7 +374,7 @@ docker-compose run --rm -T redis sh -c 'redis-cli -h redis -a $REDIS_PASSWORD mo
 
 If you don't see anything happening after you triggered a webhook, double-check the configuration of the `netbox` and the `netbox-worker` containers and also check the configuration of your webhook in the admin interface of Netbox.
 
-### Breaking Changes
+## Breaking Changes
 
 From time to time it might become necessary to re-engineer the structure of this setup.
 Things like the `docker-compose.yml` file or your Kubernetes or OpenShift configurations have to be adjusted as a consequence.
@@ -384,6 +384,7 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.12.0: A new flag `REDIS_SSL=false` was added to the `env/netbox.env` file. [#129][129]
 * 0.11.0: The docker-compose file now marks volumes as shared (`:z`). This should prevent SELinux problems [#131][131]
 * 0.9.0: Upgrade to at least 2.1.5
 * 0.8.0: Alpine linux was upgraded to 3.9 [#126][126]
@@ -399,6 +400,7 @@ The following is a list of breaking changes of the `netbox-docker` project:
 [54]: https://github.com/netbox-community/netbox-docker/issues/54
 [126]: https://github.com/netbox-community/netbox-docker/pull/126
 [131]: https://github.com/netbox-community/netbox-docker/pull/131
+[129]: https://github.com/netbox-community/netbox-docker/pull/129
 
 ## Rebuilding & Publishing images
 
