@@ -25,7 +25,7 @@ RUN pip install \
 # pinning django to the version required by netbox
 # adding it here, to install the correct version of
 # django-rq
-      'Django>=2.1.5,<2.2' \
+      'Django>=2.2,<2.3' \
 # django-rq is used for webhooks
       django-rq
 
