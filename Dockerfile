@@ -32,12 +32,15 @@ RUN pip install \
 WORKDIR /opt
 
 ARG BRANCH=master
+ARG REQUIREMENTS_URL=https://raw.githubusercontent.com/digitalocean/netbox/$BRANCH/requirements.txt
+ADD ${REQUIREMENTS_URL} requirements.txt
+RUN pip install -r requirements.txt
+
 ARG URL=https://github.com/digitalocean/netbox/archive/$BRANCH.tar.gz
 RUN wget -q -O - "${URL}" | tar xz \
   && mv netbox* netbox
 
 WORKDIR /opt/netbox
-RUN pip install -r requirements.txt
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY configuration/gunicorn_config.py /etc/netbox/config/
