@@ -36,7 +36,7 @@ ARG REQUIREMENTS_URL=https://raw.githubusercontent.com/digitalocean/netbox/$BRAN
 ADD ${REQUIREMENTS_URL} requirements.txt
 RUN pip install -r requirements.txt
 
-ARG REF_URL=https://api.github.com/repos/digitalocean/netbox/git/refs/heads/$BRANCH
+ARG REF_URL=https://api.github.com/repos/digitalocean/netbox/contents?ref=$BRANCH
 ADD ${REF_URL} version.json
 
 ARG URL=https://github.com/digitalocean/netbox/archive/$BRANCH.tar.gz
