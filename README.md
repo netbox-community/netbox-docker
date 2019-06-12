@@ -385,6 +385,8 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.14.0: Improved caching strategy [#137][137] [#136][136].
+  New `AUTH_LDAP_GROUP_TYPE` environment variable [#135][135].
 * 0.13.0: `AUTH_LDAP_BIND_PASSWORD` can now be extracted into a secrets file. [#133][133]
 * 0.12.0: A new flag `REDIS_SSL=false` was added to the `env/netbox.env` file. [#129][129]
 * 0.11.0: The docker-compose file now marks volumes as shared (`:z`). This should prevent SELinux problems [#131][131]
@@ -404,6 +406,9 @@ The following is a list of breaking changes of the `netbox-docker` project:
 [131]: https://github.com/netbox-community/netbox-docker/pull/131
 [129]: https://github.com/netbox-community/netbox-docker/pull/129
 [133]: https://github.com/netbox-community/netbox-docker/pull/133
+[135]: https://github.com/netbox-community/netbox-docker/pull/135
+[136]: https://github.com/netbox-community/netbox-docker/pull/136
+[137]: https://github.com/netbox-community/netbox-docker/pull/137
 
 ## Rebuilding & Publishing images
 
