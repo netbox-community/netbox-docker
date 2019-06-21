@@ -385,6 +385,17 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.15.0: Update for Netbox v2.6.0.
+  The `configuration/configuration.py` file has been updated to match the file from Netbox.
+  `CORS_ORIGIN_WHITELIST` has a new default value of `http://localhost`.
+  To provide a nice development environment, `CORS_ORIGIN_ALLOW_ALL` added to `env/netbox.env` with a default value of `True`.
+  There are also new options:
+  * `REDIS_CACHE_DATABASE`
+  * `CACHE_TIMEOUT` (set to 0 to disable caching)
+  * `CHANGELOG_RETENTION`
+  * `CORS_ORIGIN_REGEX_WHITELIST` (space separated list of regular expressions)
+  * `EXEMPT_VIEW_PERMISSIONS` (space separated list)
+  * `METRICS_ENABLED`
 * 0.14.0: Improved caching strategy [#137][137] [#136][136].
   New `AUTH_LDAP_GROUP_TYPE` environment variable [#135][135].
 * 0.13.0: `AUTH_LDAP_BIND_PASSWORD` can now be extracted into a secrets file. [#133][133]

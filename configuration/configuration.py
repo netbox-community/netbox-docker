@@ -1,4 +1,5 @@
 import os
+import re
 import socket
 
 # For reference see http://netbox.readthedocs.io/en/latest/configuration/mandatory-settings/
@@ -44,6 +45,17 @@ DATABASE = {
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SECRET_KEY
 SECRET_KEY = os.environ.get('SECRET_KEY', read_secret('secret_key'))
 
+# Redis database settings. The Redis database is used for caching and background processing such as webhooks
+REDIS = {
+    'HOST': os.environ.get('REDIS_HOST', 'localhost'),
+    'PORT': os.environ.get('REDIS_PORT', 6379),
+    'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
+    'DATABASE': os.environ.get('REDIS_DATABASE', '0'),
+    'CACHE_DATABASE': os.environ.get('REDIS_CACHE_DATABASE', '1'),
+    'DEFAULT_TIMEOUT': os.environ.get('REDIS_TIMEOUT', '300'),
+    'SSL': os.environ.get('REDIS_SSL', 'False').lower() == 'true',
+}
+
 #########################
 #                       #
 #   Optional settings   #
@@ -68,14 +80,18 @@ BANNER_LOGIN = os.environ.get('BANNER_LOGIN', '')
 # BASE_PATH = 'netbox/'
 BASE_PATH = os.environ.get('BASE_PATH', '')
 
+# Cache timeout in seconds. Set to 0 to dissable caching. Defaults to 900 (15 minutes)
+CACHE_TIMEOUT = int(os.environ.get('CACHE_TIMEOUT', 900))
+
+# Maximum number of days to retain logged changes. Set to 0 to retain changes indefinitely. (Default: 90)
+CHANGELOG_RETENTION = int(os.environ.get('CHANGELOG_RETENTION', 90))
+
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
 # allowed. Otherwise, define a list of allowed origins using either CORS_ORIGIN_WHITELIST or
 # CORS_ORIGIN_REGEX_WHITELIST. For more information, see https://github.com/ottoyiu/django-cors-headers
 CORS_ORIGIN_ALLOW_ALL = os.environ.get('CORS_ORIGIN_ALLOW_ALL', 'False').lower() == 'true'
-CORS_ORIGIN_WHITELIST = os.environ.get('CORS_ORIGIN_WHITELIST', '').split(' ')
-CORS_ORIGIN_REGEX_WHITELIST = [
-    # r'^(https?://)?(\w+\.)?example\.com$',
-]
+CORS_ORIGIN_WHITELIST = list(filter(None, os.environ.get('CORS_ORIGIN_WHITELIST', 'https://localhost').split(' ')))
+CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in list(filter(None, os.environ.get('CORS_ORIGIN_REGEX_WHITELIST', '').split(' ')))]
 
 # Set to True to enable server debugging. WARNING: Debugging introduces a substantial performance penalty and may reveal
 # sensitive information about your installation. Only enable debugging while performing testing. Never enable debugging
@@ -97,6 +113,10 @@ EMAIL = {
 # set ENFORCE_GLOBAL_UNIQUE to True.
 ENFORCE_GLOBAL_UNIQUE = os.environ.get('ENFORCE_GLOBAL_UNIQUE', 'False').lower() == 'true'
 
+# Exempt certain models from the enforcement of view permissions. Models listed here will be viewable by all users and
+# by anonymous users. List models in the form `<app>.<model>`. Add '*' to this list to exempt all models.
+EXEMPT_VIEW_PERMISSIONS = list(filter(None, os.environ.get('EXEMPT_VIEW_PERMISSIONS', '').split(' ')))
+
 # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
 #   https://docs.djangoproject.com/en/1.11/topics/logging/
 LOGGING = {}
@@ -117,6 +137,9 @@ MAX_PAGE_SIZE = int(os.environ.get('MAX_PAGE_SIZE', 1000))
 # the default value of this setting is derived from the installed location.
 MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 
+# Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
+METRICS_ENABLED = os.environ.get('METRICS_ENABLED', 'False').lower() == 'true'
+
 # Credentials that NetBox will use to access live devices.
 NAPALM_USERNAME = os.environ.get('NAPALM_USERNAME', '')
 NAPALM_PASSWORD = os.environ.get('NAPALM_PASSWORD', read_secret('napalm_password'))
@@ -134,27 +157,16 @@ PAGINATE_COUNT = int(os.environ.get('PAGINATE_COUNT', 50))
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
 # prefer IPv4 instead.
 PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
-
-# The Webhook event backend is disabled by default. Set this to True to enable it. Note that this requires a Redis
-# database be configured and accessible by NetBox (see `REDIS` below).
-WEBHOOKS_ENABLED = os.environ.get('WEBHOOKS_ENABLED', 'False').lower() == 'true'
-
-# Redis database settings (optional). A Redis database is required only if the webhooks backend is enabled.
-REDIS = {
-    'HOST': os.environ.get('REDIS_HOST', 'localhost'),
-    'PORT': os.environ.get('REDIS_PORT', 6379),
-    'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
-    'DATABASE': os.environ.get('REDIS_DATABASE', '0'),
-    'DEFAULT_TIMEOUT': os.environ.get('REDIS_TIMEOUT', '300'),
-    'SSL': os.environ.get('REDIS_SSL', 'False').lower() == 'true',
-}
-
 # The file path where custom reports will be stored. A trailing slash is not needed. Note that the default value of
 # this setting is derived from the installed location.
 REPORTS_ROOT = os.environ.get('REPORTS_ROOT', '/etc/netbox/reports')
 
 # Time zone (default: UTC)
 TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
+
+# The Webhook event backend is disabled by default. Set this to True to enable it. Note that this requires a Redis
+# database be configured and accessible by NetBox (see `REDIS` below).
+WEBHOOKS_ENABLED = os.environ.get('WEBHOOKS_ENABLED', 'False').lower() == 'true'
 
 # Date/time formatting. See the following link for supported formats:
 # https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date
