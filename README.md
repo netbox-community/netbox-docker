@@ -13,17 +13,17 @@ Questions? Before opening an issue on Github, please join the [Network To Code][
 
 To get Netbox up and running:
 
-```
-$ git clone -b master https://github.com/netbox-community/netbox-docker.git
-$ cd netbox-docker
-$ docker-compose pull
-$ docker-compose up -d
+```bash
+git clone -b master https://github.com/netbox-community/netbox-docker.git
+cd netbox-docker
+docker-compose pull
+docker-compose up -d
 ```
 
 The application will be available after a few minutes.
 Use `docker-compose port nginx 8080` to find out where to connect to.
 
-```
+```bash
 $ echo "http://$(docker-compose port nginx 8080)/"
 http://0.0.0.0:32768/
 
@@ -85,12 +85,7 @@ You may run this image in a cluster such as Docker Swarm, Kubernetes or OpenShif
 
 In this case, we encourage you to statically configure Netbox by starting from [Netbox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/config/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
 
-But if you rather continue to configure your application through environment variables, you may continue to use [the built-in configuration file][
-
-
-
-
-].
+But if you rather continue to configure your application through environment variables, you may continue to use [the built-in configuration file][docker-config].
 We discourage storing secrets in environment variables, as environment variable are passed on to all sub-processes and may leak easily into other systems, e.g. error collecting tools that often collect all environment variables whenever an error occurs.
 
 Therefore we *strongly advise* to make use of the secrets mechanism provided by your container platform (i.e. [Docker Swarm secrets][swarm-secrets], [Kubernetes secrets][k8s-secrets], [OpenShift secrets][openshift-secrets]).
@@ -109,7 +104,7 @@ If a secret is defined by an environment variable and in the respective file at 
 Please also consider [the advice about running Netbox in production](#production) above!
 
 [docker-config]: https://github.com/netbox-community/netbox-docker/blob/master/configuration/configuration.py
-[default-config]: https://github.com/digitalocean/netbox/blob/develop/netbox/netbox/configuration.example.py
+[default-config]: https://github.com/netbox-community/netbox/blob/develop/netbox/netbox/configuration.example.py
 [entrypoint]: https://github.com/netbox-community/netbox-docker/blob/master/docker/docker-entrypoint.sh
 [swarm-config]: https://docs.docker.com/engine/swarm/configs/
 [swarm-secrets]: https://docs.docker.com/engine/swarm/secrets/
@@ -219,7 +214,7 @@ echo "from django.contrib.auth.models import Permission\nfor p in Permission.obj
 You can also build your own Netbox Docker image containing your own startup scripts, custom fields, users and groups
 like this:
 
-```
+```Dockerfile
 ARG VERSION=latest
 FROM netboxcommunity/netbox:$VERSION
 
@@ -234,27 +229,27 @@ To use this feature, set the environment-variable `VERSION` before launching `do
 `VERSION` may be set to the name of
 [any tag of the `netboxcommunity/netbox` Docker image on Docker Hub][netbox-dockerhub].
 
-```
-$ export VERSION=v2.2.6
-$ docker-compose pull netbox
-$ docker-compose up -d
+```bash
+export VERSION=v2.2.6
+docker-compose pull netbox
+docker-compose up -d
 ```
 
 You can also build a specific version of the Netbox image. This time, `VERSION` indicates any valid
-[Git Reference][git-ref] declared on [the 'digitalocean/netbox' Github repository][netbox-github].
+[Git Reference][git-ref] declared on [the 'netbox-community/netbox' Github repository][netbox-github].
 Most commonly you will specify a tag or branch name.
 
-```
-$ export VERSION=develop
-$ docker-compose build --no-cache netbox
-$ docker-compose up -d
+```bash
+export VERSION=develop
+docker-compose build --no-cache netbox
+docker-compose up -d
 ```
 
 Hint: If you're building a specific version by tag name, the `--no-cache` argument is not strictly necessary.
 This can increase the build speed if you're just adjusting the config, for example.
 
 [git-ref]: https://git-scm.com/book/en/v2/Git-Internals-Git-References
-[netbox-github]: https://github.com/digitalocean/netbox/releases
+[netbox-github]: https://github.com/netbox-community/netbox/releases
 
 ### LDAP enabled variant
 
@@ -304,7 +299,7 @@ Now start everything up again.
 If this didn't help, try to see if there's anything in the logs indicating why nginx doesn't start:
 
 ```bash
-$ docker-compose logs -f nginx
+docker-compose logs -f nginx
 ```
 
 ### Getting a "Bad Request (400)"
@@ -331,14 +326,14 @@ docker-compose up -d netbox netbox-worker
 First make sure that the webhooks feature is enabled in your Netbox configuration and that a redis host is defined.
 Check `netbox.env` if the following variables are defined:
 
-```
+```bash
 WEBHOOKS_ENABLED=true
 REDIS_HOST=redis
 ```
 
 Then make sure that the `redis` container and at least one `netbox-worker` are running.
 
-```
+```bash
 # check the container status
 $ docker-compose ps
 
@@ -385,6 +380,7 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.16.0: Update the Netbox URL from "github.com/digitalocean/netbox" to "github.com/netbox-community/netbox"
 * 0.15.0: Update for Netbox v2.6.0.
   The `configuration/configuration.py` file has been updated to match the file from Netbox.
   `CORS_ORIGIN_WHITELIST` has a new default value of `http://localhost`.
@@ -436,8 +432,8 @@ New Docker images are built and published every 24h on the [Docker Build Infrast
 
 To run the tests coming with Netbox, use the `docker-compose.yml` file as such:
 
-```
-$ docker-compose run netbox ./manage.py test
+```bash
+docker-compose run netbox ./manage.py test
 ```
 
 ## About

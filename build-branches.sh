@@ -11,7 +11,7 @@ else
   GITHUB_OAUTH_PARAMS=""
 fi
 
-ORIGINAL_GITHUB_REPO="${SRC_ORG-digitalocean}/${SRC_REPO-netbox}"
+ORIGINAL_GITHUB_REPO="${SRC_ORG-netbox-community}/${SRC_REPO-netbox}"
 GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
 URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/branches?${GITHUB_OAUTH_PARAMS}"
 

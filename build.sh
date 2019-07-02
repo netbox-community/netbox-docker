@@ -38,7 +38,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "           This is used to tag all patch releases to their containing version e.g. v2.5.1 -> v2.5"
   echo "           Default: <DOCKER_ORG>/<DOCKER_REPO>:\$MAJOR.\$MINOR"
   echo "  SRC_ORG  Which fork of netbox to use (i.e. github.com/<SRC_ORG>/<SRC_REPO>)."
-  echo "           Default: digitalocean"
+  echo "           Default: netbox-community"
   echo "  SRC_REPO The name of the netbox for to use (i.e. github.com/<SRC_ORG>/<SRC_REPO>)."
   echo "           Default: netbox"
   echo "  URL      Where to fetch the package from."
@@ -81,7 +81,7 @@ fi
 NETBOX_DOCKER_PROJECT_VERSION="${NETBOX_DOCKER_PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' VERSION)}"
 
 # variables for fetching the source
-SRC_ORG="${SRC_ORG-digitalocean}"
+SRC_ORG="${SRC_ORG-netbox-community}"
 SRC_REPO="${SRC_REPO-netbox}"
 BRANCH="${1}"
 URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}/archive/$BRANCH.tar.gz}"

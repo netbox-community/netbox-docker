@@ -11,7 +11,7 @@ else
   GITHUB_OAUTH_PARAMS=""
 fi
 
-ORIGINAL_GITHUB_REPO="digitalocean/netbox"
+ORIGINAL_GITHUB_REPO="netbox-community/netbox"
 GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
 URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/releases?${GITHUB_OAUTH_PARAMS}"
 
