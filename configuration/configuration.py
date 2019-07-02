@@ -48,7 +48,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', read_secret('secret_key'))
 # Redis database settings. The Redis database is used for caching and background processing such as webhooks
 REDIS = {
     'HOST': os.environ.get('REDIS_HOST', 'localhost'),
-    'PORT': os.environ.get('REDIS_PORT', 6379),
+    'PORT': int(os.environ.get('REDIS_PORT', 6379)),
     'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
     'DATABASE': os.environ.get('REDIS_DATABASE', '0'),
     'CACHE_DATABASE': os.environ.get('REDIS_CACHE_DATABASE', '1'),
