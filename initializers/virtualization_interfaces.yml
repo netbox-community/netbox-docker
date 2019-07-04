@@ -1,0 +1,14 @@
+#- description: Network Interface 1
+#  enabled: true
+#  form_factor: 0
+#  mac_address: 00:77:77:77:77:77
+#  mtu: 1500
+#  name: Network Interface 1
+#  virtual_machine: virtual_machine1
+#- description: Network Interface 2
+#  enabled: true
+#  form_factor: 0
+#  mac_address: 00:55:55:55:55:55
+#  mtu: 1500
+#  name: Network Interface 2
+#  virtual_machine: virtual_machine1

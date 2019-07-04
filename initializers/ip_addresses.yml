@@ -1,0 +1,18 @@
+
+#- address: 10.1.1.1/24
+#  device: router1
+#  family: 4
+#  interface: Loopback0
+#  status: 1
+#  vrf: vrf1
+#- address: 10.1.1.2/24
+#  device: switch1
+#  family: 4
+#  interface: Vlan5
+#  status: 1
+#- address: 10.1.1.10/24
+#  description: reserved IP
+#  family: 4
+#  status: 2
+#  tenant: tenant1
+

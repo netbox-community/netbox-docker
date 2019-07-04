@@ -1,0 +1,9 @@
+#- cluster: cluster1
+#  comments: VM1
+#  disk: 200
+#  memory: 4096
+#  name: virtual machine 1
+#  platform: Platform 2
+#  status: 1
+#  tenant: tenant1
+#  vcpus: 8

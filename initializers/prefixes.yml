@@ -1,0 +1,12 @@
+#- description: prefix1
+#  prefix: 10.1.1.0/24
+#  site: AMS 1
+#  status: 1
+#  tenant: tenant1
+#  vlan: vlan1
+#- description: prefix2
+#  prefix: 10.1.2.0/24
+#  site: AMS 2
+#  status: 1
+#  tenant: tenant2
+#  vlan: vlan2

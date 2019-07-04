@@ -1,0 +1,12 @@
+#- device: router1
+#  enabled: true
+#  form_factor: 0
+#  name: router2
+#- device: 9901-2.bwi-stf.lab
+#  enabled: true
+#  form_factor: 0
+#  name: Loopback0
+#- device: switch1
+#  enabled: true
+#  form_factor: 0
+#  name: Vlan5

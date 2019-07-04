@@ -1,0 +1,5 @@
+#- enforce_unique: true
+#  name: vrf1
+#  tenant: tenant1
+#- enforce_unique: true
+#  name: vrf2

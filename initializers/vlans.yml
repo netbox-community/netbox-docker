@@ -1,0 +1,9 @@
+#- name: vlan1
+#  site: AMS 1
+#  status: 1
+#  vid: 5
+#- group: VLAN group 2
+#  name: vlan2
+#  site: AMS 1
+#  status: 1
+#  vid: 1300
