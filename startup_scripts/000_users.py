@@ -29,6 +29,6 @@ with file.open('r') as stream:
         if user_permissions:
           user.user_permissions.clear()
           for permission_codename in user_details.get('permissions', []):
-            permission = Permission.objects.get(codename=permission_codename)
-            user.user_permissions.add(permission)
+            for permission in Permission.objects.filter(codename=permission_codename):
+              user.user_permissions.add(permission)
           user.save()
