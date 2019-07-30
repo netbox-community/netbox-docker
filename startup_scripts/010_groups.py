@@ -29,5 +29,5 @@ with file.open('r') as stream:
         group.permissions.clear()
         print("Permissions:", group.permissions.all())
         for permission_codename in group_details.get('permissions', []):
-          permission = Permission.objects.get(codename=permission_codename)
-          group.permissions.add(permission)
+          for permission in Permission.objects.filter(codename=permission_codename):
+            group.permissions.add(permission)
