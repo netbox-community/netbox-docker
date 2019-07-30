@@ -380,6 +380,7 @@ Compare the version with the list below to check whether a breaking change was i
 
 The following is a list of breaking changes of the `netbox-docker` project:
 
+* 0.17.0: Updated the python image to `python:3.7-alpine3.10` in [#144][144]. Fixed the permissions and group scripts for Netbox 2.6. in [#148][148].
 * 0.16.0: Update the Netbox URL from "github.com/digitalocean/netbox" to "github.com/netbox-community/netbox"
 * 0.15.0: Update for Netbox v2.6.0.
   The `configuration/configuration.py` file has been updated to match the file from Netbox.
@@ -416,6 +417,8 @@ The following is a list of breaking changes of the `netbox-docker` project:
 [135]: https://github.com/netbox-community/netbox-docker/pull/135
 [136]: https://github.com/netbox-community/netbox-docker/pull/136
 [137]: https://github.com/netbox-community/netbox-docker/pull/137
+[144]: https://github.com/netbox-community/netbox-docker/pull/144
+[148]: https://github.com/netbox-community/netbox-docker/pull/148
 
 ## Rebuilding & Publishing images
 
