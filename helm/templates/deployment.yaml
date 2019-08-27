@@ -1,0 +1,20 @@
+{{- if eq .Values.kind "Deployment" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "netbox.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "netbox.name" . }}
+    helm.sh/chart: {{ include "netbox.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.extraLabels }}
+    {{ . | toYaml | trim | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+{{ include "netbox.common" . | indent 2 }}
+{{- if .Values.persistence.enabled }}
+    {{ required "With Deployment, .Values.persistence.customClaim is required for persistence" .Values.persistence.customClaim | toYaml | nindent 4 }}
+{{- end }}
+{{- end }}

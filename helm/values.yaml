@@ -1,0 +1,124 @@
+---
+# Default values for netbox.
+#
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+kind: StatefulSet
+
+statefulSet:
+  ## Warning if you change replicaCount on statefulset
+  # You need
+  replicaCount: 1
+  updateStrategy:
+    type: RollingUpdate
+  persistence:
+    enabled: true
+    accessModes:
+     - 'ReadWriteOnce'
+    size: "5G"
+    storageClassName:
+
+deployment:
+  replicaCount: 1
+
+extraLabels: {}
+
+image:
+  repository: netboxcommunity/netbox
+  tag: v2.6.2
+  pullPolicy: IfNotPresent
+
+nginxImage:
+  repository: nginx
+  tag: 1.17.3-alpine
+  pullPolicy: IfNotPresent
+
+restartPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+initializers: {}
+
+ingress:
+  enabled: false
+  isNginx: true
+  annotations: {}
+  paths:
+    - /
+  hosts:
+    - netbox.local
+  tls: []
+  #  - secretName: netbox
+  #    hosts:
+  #      - netbox.local
+
+persistence:
+  enabled: true
+
+proxyBodySize:
+
+livenessProbe:
+  httpGet:
+    path: /api/
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /api/
+    port: http
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+allowedHosts: "*"
+emailFrom:
+emailServer:
+emailPort: 25
+emailTimeout: 10
+emailUsername: ""
+emailPassword: ""
+
+secretKey:
+
+superuser:
+  email: admin@example.com
+  name: admin
+  password:
+  token:
+
+extraEnvs: {}
+extraSecretEnvs: {}
+extraSecrets: {}
+extraVolumes: []
+extraVolumeMounts: []
+extraContainers: []
+extraInitContainers: []
+extraStartupScripts: []
+
+nginx:
+  proxyBodySize:
+  customConfig:
+  proxyPass: http://localhost:8001
+
+postgresql:
+  enabled: true
+  host:
+  postgresqlUsername: netbox
+  postgresqlDatabase: netbox
+
+redis:
+  cluster:
+    enabled: false
+  enabled: true
+  host:

@@ -1,0 +1,51 @@
+{{- if eq .Values.kind "StatefulSet" }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "netbox.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "netbox.name" . }}
+    helm.sh/chart: {{ include "netbox.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.extraLabels }}
+    {{ . | toYaml | trim | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.statefulSet.replicaCount }}
+{{- with .Values.statefulSet.updateStrategy }}
+  updateStrategy:
+  {{ . | toYaml | trim |indent 2 }}
+{{- end }}
+  serviceName: 'netbox'
+{{ include "netbox.common" . | indent 2 }}
+{{- if .Values.persistence.enabled }}
+{{- if .Values.persistence.customClaim }}
+    {{ .Values.persistence.customClaim | toYaml | nindent 4 }}
+{{- else }}
+  volumeClaimTemplates:
+  - spec:
+      accessModes:
+      {{- range .Values.persistence.accessModes }}
+        - {{ . | quote }}
+      {{- end }}
+      resources:
+        requests:
+          storage: "{{.Values.persistence.size }}"
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.server.persistence.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.persistence.storageClass }}"
+    {{- end }}
+    {{- end }}
+    metadata:
+      name: netbox-media-files
+      labels:
+        app.kubernetes.io/name: {{ include "netbox.name" . }}
+        helm.sh/chart: {{ include "netbox.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+{{- end }}
+{{- end }}

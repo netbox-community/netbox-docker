@@ -1,0 +1,16 @@
+{{- if .Values.initializers  }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "netbox.fullname" . }}-initializers
+  labels:
+    app.kubernetes.io/name: {{ include "netbox.name" . }}
+    helm.sh/chart: {{ include "netbox.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+{{- range $key, $value := .Values.initializers }}
+  {{ $key }}: |
+    {{ $value | indent 4 | trim }}
+{{- end }}
+{{- end }}

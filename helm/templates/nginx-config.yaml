@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "netbox.fullname" . }}-nginx
+  labels:
+    app.kubernetes.io/name: {{ include "netbox.name" . }}
+    helm.sh/chart: {{ include "netbox.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  nginx.conf: |
+{{- if .Values.nginx.customConfig }}
+{{ .Values.nginx.customConfig | indent 4 }}
+{{- else }}
+    worker_processes 1;
+    events {
+      worker_connections  1024;
+    }
+    http {
+      include           /etc/nginx/mime.types;
+      default_type      application/octet-stream;
+      sendfile          on;
+      tcp_nopush        on;
+      keepalive_timeout 65;
+      gzip              on;
+      server_tokens     off;
+      server {
+          listen 80;
+          access_log off;
+          location /static/ {
+            alias /opt/netbox/netbox/static/;
+          }
+          location / {
+            proxy_pass {{ .Values.nginx.proxyPass }};
+            {{- with .Values.nginx.proxyBodySize }}
+            client_max_body_size {{.}};
+            {{- end }}
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
+          }
+      }
+    }
+{{- end }}
