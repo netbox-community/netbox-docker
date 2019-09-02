@@ -4,6 +4,7 @@ RUN apk add --no-cache \
       bash \
       build-base \
       ca-certificates \
+      coreutils \
       cyrus-sasl-dev \
       graphviz \
       jpeg-dev \
@@ -12,6 +13,7 @@ RUN apk add --no-cache \
       libxslt-dev \
       openldap-dev \
       postgresql-dev \
+      tar \
       ttf-ubuntu-font-family \
       wget
 
