@@ -81,6 +81,8 @@ You should therefore adjust the configuration for production setups, at least th
 
 ### Running on Docker Swarm / Kubernetes / OpenShift
 
+NetBox can be installed via Helm using the [bootc/netbox][helm-chart] helm chart.
+
 You may run this image in a cluster such as Docker Swarm, Kubernetes or OpenShift, but this is advanced level.
 
 In this case, we encourage you to statically configure Netbox by starting from [Netbox's example config file][default-config], and mounting it into your container in the directory `/etc/netbox/config/` using the mechanism provided by your container platform (i.e. [Docker Swarm configs][swarm-config], [Kubernetes ConfigMap][k8s-config], [OpenShift ConfigMaps][openshift-config]).
@@ -112,6 +114,7 @@ Please also consider [the advice about running Netbox in production](#production
 [openshift-secrets]: https://docs.openshift.org/latest/dev_guide/secrets.html
 [k8s-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
 [k8s-config]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+[helm-chart]: https://github.com/bootc/netbox-chart
 
 ### NAPALM Configuration
 
