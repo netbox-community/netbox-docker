@@ -30,6 +30,10 @@ run_build() {
       # shellcheck disable=SC2068
       ./build-branches.sh $@
       ;;
+    this) # Pull Requests
+      # build all branches, but never push
+      ./build-branches.sh
+      ;;
     *)
       echo "🚨 Unrecognized build '$BUILD'."
 
