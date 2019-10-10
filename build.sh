@@ -19,10 +19,6 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "             When <BRANCH>=master:  latest"
   echo "             When <BRANCH>=develop: snapshot"
   echo "             Else:          same as <BRANCH>"
-  echo "  DOCKER_OPTS Add parameters to Docker."
-  echo "           Default:"
-  echo "             When <TAG> starts with 'v':  \"\""
-  echo "             Else:                        \"--no-cache\""
   echo "  DOCKER_ORG The Docker registry (i.e. hub.docker.com/r/<DOCKER_ORG>/<DOCKER_REPO>)"
   echo "           Also used for tagging the image."
   echo "           Default: netboxcommunity"
@@ -129,11 +125,11 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   echo "🏗 Building the target '$DOCKER_TARGET'"
 
   ###
-  # composing the final DOCKER_TAG
+  # composing the final TARGET_DOCKER_TAG
   ###
-  DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
+  TARGET_DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
   if [ "$DOCKER_TARGET" != "main" ]; then
-    DOCKER_TAG="${DOCKER_TAG}-${DOCKER_TARGET}"
+    TARGET_DOCKER_TAG="${TARGET_DOCKER_TAG}-${DOCKER_TARGET}"
   fi
 
   ###
@@ -155,7 +151,10 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   ###
   # Composing global Docker CLI arguments
   ###
-  DOCKER_OPTS=("${DOCKER_OPTS[@]}")
+  DOCKER_OPTS=(
+    --pull
+    --target "$DOCKER_TARGET"
+  )
 
   # caching is only ok for version tags,
   # but turning the cache off is only required for the
@@ -164,9 +163,6 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   v*) ;;
   *)  [ "$DOCKER_TARGET" == "${DOCKER_TARGETS[0]}" ] && DOCKER_OPTS+=( --no-cache ) ;;
   esac
-
-  DOCKER_OPTS+=( --pull )
-  DOCKER_OPTS+=( --target "$DOCKER_TARGET" )
 
   ###
   # Composing arguments for `docker build` CLI
@@ -208,13 +204,13 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   # Building the docker images, except if `--push-only` is passed
   ###
   if [ "${2}" != "--push-only" ] ; then
-    echo "🐳 Building the Docker image '${DOCKER_TAG}' from the url '${URL}'."
-    $DOCKER_CMD build -t "${DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
-    echo "✅ Finished building the Docker images '${DOCKER_TAG}'"
+    echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG}' from the url '${URL}'."
+    $DOCKER_CMD build -t "${TARGET_DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
+    echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG}'"
 
     if [ -n "$DOCKER_SHORT_TAG" ]; then
       echo "🐳 Tagging image '${DOCKER_SHORT_TAG}'."
-      $DOCKER_CMD tag "${DOCKER_TAG}" "${DOCKER_SHORT_TAG}"
+      $DOCKER_CMD tag "${TARGET_DOCKER_TAG}" "${DOCKER_SHORT_TAG}"
       echo "✅ Tagged image '${DOCKER_SHORT_TAG}'"
     fi
   fi
@@ -223,9 +219,9 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   # Pushing the docker images if either `--push` or `--push-only` are passed
   ###
   if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ] ; then
-    echo "⏫ Pushing '${DOCKER_TAG}"
-    $DOCKER_CMD push "${DOCKER_TAG}"
-    echo "✅ Finished pushing the Docker image '${DOCKER_TAG}'."
+    echo "⏫ Pushing '${TARGET_DOCKER_TAG}"
+    $DOCKER_CMD push "${TARGET_DOCKER_TAG}"
+    echo "✅ Finished pushing the Docker image '${TARGET_DOCKER_TAG}'."
 
     if [ -n "$DOCKER_SHORT_TAG" ]; then
       echo "⏫ Pushing '${DOCKER_SHORT_TAG}'"
