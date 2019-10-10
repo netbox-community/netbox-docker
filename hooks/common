@@ -1,37 +1,19 @@
 #!/bin/bash
 
 ensure_jq() {
-  echo "🛠🛠🛠 Installing JQ via apt-get"
-  [ -x "$(command -v jq)" ] || ( apt-get update && apt-get install -y jq )
-}
-
-ensure_dockerfile_present() {
-  if [ "${VARIANT}" == "main" ]; then
-    DOCKERFILE="Dockerfile"
-  else
-    DOCKERFILE="Dockerfile.${VARIANT}"
-
-    # Fail fast
-    if [ ! -f "${DOCKERFILE}" ]; then
-      echo "🚨 The Dockerfile '${DOCKERFILE}' for variant '${VARIANT}' doesn't exist."
-
-      if [ -z "$DEBUG" ]; then
-        exit 1
-      else
-        echo "⚠️ Would skip this, but DEBUG is enabled."
-      fi
-    fi
-
-    if [ "${DOCKERFILE}" != "${DOCKERFILE_PATH}" ]; then
-      echo "⚠️ The specified Dockerfile '${DOCKERFILE_PATH}' does not match the expected Dockerfile '${DOCKERFILE}'."
-      echo "   This script will use '${DOCKERFILE}' and ignore '${DOCKERFILE_PATH}'."
+  if [ ! -x "$(command -v jq)" ]; then
+    if [ ! -x "$(command -v apt-get)" ]; then
+      echo "🛠🛠🛠 Installing 'jq' via 'apt-get'"
+      apt-get update && apt-get install -y jq
+    else
+      echo "⚠️⚠️⚠️ apt-get not found, unable to automatically install 'jq'."
     fi
   fi
 }
 
 # Passes args to the scripts
 run_build() {
-  echo "🐳🐳🐳 Building '${BUILD}' images, the '${VARIANT:-main}' variant"
+  echo "🐳🐳🐳 Building '${BUILD}' images"
   case $BUILD in
     release)
       # build the latest release
@@ -47,12 +29,6 @@ run_build() {
       # build all branches
       # shellcheck disable=SC2068
       ./build-branches.sh $@
-      ;;
-    special)
-      # special build
-      # shellcheck disable=SC2068
-      #SRC_ORG=lampwins TAG=webhooks-backend ./build.sh "feature/webhooks-backend" $@
-      echo "✅ No special builds today."
       ;;
     *)
       echo "🚨 Unrecognized build '$BUILD'."
@@ -70,13 +46,9 @@ echo "🤖🤖🤖 Preparing build"
 export DOCKER_ORG="index.docker.io/netboxcommunity"
 export DOCKER_REPO=netbox
 export DOCKERHUB_REPO=netboxcommunity/netbox
-
-# mis-using the "${DOCKER_TAG}" variable as "branch to build"
-export BUILD="${DOCKER_TAG%-*}"
-export VARIANT="${DOCKER_TAG#*-}"
+# shellcheck disable=SC2153
+export BUILD="$DOCKER_TAG"
 
 unset DOCKER_TAG
-
-ensure_dockerfile_present
 
 ensure_jq
