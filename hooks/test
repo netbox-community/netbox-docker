@@ -2,11 +2,13 @@
 
 . hooks/common
 
-if [ "${VARIANT}" == "main" ] && [ "${BUILD}" == "BRANCHES" ]; then
+if [ "${BUILD}" == "BRANCHES" ]; then
   echo "🐳🐳🐳 Testing"
+  export DOCKER_TARGET="main"
+
   docker-compose pull --parallel
   docker-compose build
   docker-compose run netbox ./manage.py test
 else
-  echo "🐳🐳🐳 No tests are implemented for build '${BUILD}' with variant '${VARIANT}'."
+  echo "🐳🐳🐳 No tests are implemented for build '${BUILD}'."
 fi

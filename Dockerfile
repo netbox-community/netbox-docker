@@ -1,4 +1,5 @@
-FROM python:3.7-alpine3.10
+ARG FROM=python:3.7-alpine
+FROM ${FROM} as main
 
 RUN apk add --no-cache \
       bash \
@@ -71,3 +72,14 @@ LABEL SRC_URL="$URL"
 
 ARG NETBOX_DOCKER_PROJECT_VERSION=snapshot
 LABEL NETBOX_DOCKER_PROJECT_VERSION="$NETBOX_DOCKER_PROJECT_VERSION"
+
+#####
+## LDAP specific tasks
+#####
+
+FROM main as ldap
+
+RUN pip install django_auth_ldap
+
+COPY docker/ldap_config.docker.py /opt/netbox/netbox/netbox/ldap_config.py
+COPY configuration/ldap_config.py /etc/netbox/config/ldap_config.py

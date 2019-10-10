@@ -48,8 +48,8 @@ Default credentials:
 
 This project relies only on *Docker* and *docker-compose* meeting this requirements:
 
-* The *Docker version* must be at least `1.13.0`.
-* The *docker-compose version* must be at least `1.10.0`.
+* The *Docker version* must be at least `17.05`.
+* The *docker-compose version* must be at least `1.17.0`.
 
 To ensure this, compare the output of `docker --version` and `docker-compose --version` with the requirements above.
 
