@@ -31,8 +31,10 @@ run_build() {
       ./build-branches.sh $@
       ;;
     this) # Pull Requests
-      # build all branches, but never push
-      ./build-branches.sh
+      # only build the 'master' branch
+      # (resulting in the 'latest' docker tag)
+      # and the 'main' target.
+      DOCKER_TARGET=main ./build.sh master
       ;;
     *)
       echo "🚨 Unrecognized build '$BUILD'."
