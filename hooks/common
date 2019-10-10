@@ -2,7 +2,7 @@
 
 ensure_jq() {
   if [ ! -x "$(command -v jq)" ]; then
-    if [ ! -x "$(command -v apt-get)" ]; then
+    if [ -x "$(command -v apt-get)" ]; then
       echo "🛠🛠🛠 Installing 'jq' via 'apt-get'"
       apt-get update && apt-get install -y jq
     else
