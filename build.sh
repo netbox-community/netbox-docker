@@ -40,6 +40,9 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "           Default: <DOCKER_ORG>/<DOCKER_REPO>:\$MAJOR.\$MINOR"
   echo "  DOCKERFILE The name of Dockerfile to use."
   echo "           Default: Dockerfile"
+  echo "  DOCKER_TARGET A specific target to build."
+  echo "           It's currently not possible to pass multiple targets."
+  echo "           Default: main ldap"
   echo "  SRC_ORG  Which fork of netbox to use (i.e. github.com/<SRC_ORG>/<SRC_REPO>)."
   echo "           Default: netbox-community"
   echo "  SRC_REPO The name of the netbox for to use (i.e. github.com/<SRC_ORG>/<SRC_REPO>)."
@@ -112,8 +115,19 @@ case "${BRANCH}" in
     TAG="${TAG-$BRANCH}";;
 esac
 
-DOCKER_TARGETS=("main" "ldap")
+###
+# Determine targets to build
+###
+DEFAULT_DOCKER_TARGETS=("main" "ldap")
+DOCKER_TARGETS=( "${DOCKER_TARGET:-"${DEFAULT_DOCKER_TARGETS[@]}"}")
+echo "🏭 Building the following targets:" "${DOCKER_TARGETS[@]}"
+
+###
+# Build each target
+###
 for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
+  echo "🏗 Building the target '$DOCKER_TARGET'"
+
   ###
   # composing the final DOCKER_TAG
   ###
@@ -143,10 +157,12 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   ###
   DOCKER_OPTS=("${DOCKER_OPTS[@]}")
 
-  # caching is only ok for version tags
+  # caching is only ok for version tags,
+  # but turning the cache off is only required for the
+  # first build target, usually "main".
   case "${TAG}" in
   v*) ;;
-  *)  DOCKER_OPTS+=( --no-cache ) ;;
+  *)  [ "$DOCKER_TARGET" == "${DOCKER_TARGETS[0]}" ] && DOCKER_OPTS+=( --no-cache ) ;;
   esac
 
   DOCKER_OPTS+=( --pull )
