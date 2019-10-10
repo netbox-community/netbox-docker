@@ -1,39 +1,34 @@
-from dcim.models import Site, Platform, DeviceRole
-from virtualization.models import Cluster, VirtualMachine
-from tenancy.models import Tenant
+from dcim.models import Site
+from ipam.models import Prefix, VLAN, Role, VRF
+from tenancy.models import Tenant, TenantGroup
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
+from netaddr import IPNetwork
 from pathlib import Path
 import sys
 
-file = Path('/opt/netbox/initializers/virtual_machines.yml')
+file = Path('/opt/netbox/initializers/prefixes.yml')
 if not file.is_file():
   sys.exit()
 
 with file.open('r') as stream:
   yaml = YAML(typ='safe')
-  virtual_machines = yaml.load(stream)
-
-  required_assocs = {
-    'cluster': (Cluster, 'name')
-  }
+  prefixes = yaml.load(stream)
 
   optional_assocs = {
+    'site': (Site, 'name'),
     'tenant': (Tenant, 'name'),
-    'platform': (Platform, 'name'),
-    'role': (DeviceRole, 'name')
+    'tenant_group': (TenantGroup, 'name'),
+    'vlan': (VLAN, 'name'),
+    'role': (Role, 'name'),
+    'vrf': (VRF, 'name')
   }
 
-  if virtual_machines is not None:
-    for params in virtual_machines:
+  if prefixes is not None:
+    for params in prefixes:
       custom_fields = params.pop('custom_fields', None)
-
-      for assoc, details in required_assocs.items():
-        model, field = details
-        query = { field: params.pop(assoc) }
-
-        params[assoc] = model.objects.get(**query)
+      params['prefix'] = IPNetwork(params['prefix'])
 
       for assoc, details in optional_assocs.items():
         if assoc in params:
@@ -42,7 +37,7 @@ with file.open('r') as stream:
 
           params[assoc] = model.objects.get(**query)
 
-      virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
+      prefix, created = Prefix.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
@@ -50,10 +45,10 @@ with file.open('r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=virtual_machine,
+              obj=prefix,
               value=cf_value
             )
 
-            virtual_machine.custom_field_values.add(custom_field_value)
+            prefix.custom_field_values.add(custom_field_value)
 
-        print("Created virtual machine", virtual_machine.name)
+        print("📌 Created Prefix", prefix.prefix)

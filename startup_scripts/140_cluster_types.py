@@ -16,4 +16,4 @@ with file.open('r') as stream:
       cluster_type, created = ClusterType.objects.get_or_create(**params)
 
       if created:
-        print("Created Cluster Type", cluster_type.name)
+        print("🧰 Created Cluster Type", cluster_type.name)

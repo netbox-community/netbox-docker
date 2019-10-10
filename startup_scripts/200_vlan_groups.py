@@ -43,4 +43,4 @@ with file.open('r') as stream:
 
             vlan_group.custom_field_values.add(custom_field_value)
 
-        print("Created VLAN Group", vlan_group.name)
+        print("🏘️ Created VLAN Group", vlan_group.name)

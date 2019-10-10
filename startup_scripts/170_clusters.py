@@ -1,33 +1,37 @@
 from dcim.models import Site
-from ipam.models import Prefix, VLAN, Role, VRF
-from tenancy.models import Tenant
+from virtualization.models import Cluster, ClusterType, ClusterGroup
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
-from netaddr import IPNetwork
 from pathlib import Path
 import sys
 
-file = Path('/opt/netbox/initializers/prefixes.yml')
+file = Path('/opt/netbox/initializers/clusters.yml')
 if not file.is_file():
   sys.exit()
 
 with file.open('r') as stream:
   yaml = YAML(typ='safe')
-  prefixes = yaml.load(stream)
+  clusters = yaml.load(stream)
+
+  required_assocs = {
+    'type': (ClusterType, 'name')
+  }
 
   optional_assocs = {
     'site': (Site, 'name'),
-    'tenant': (Tenant, 'name'),
-    'vlan': (VLAN, 'name'),
-    'role': (Role, 'name'),
-    'vrf': (VRF, 'name')
+    'group': (ClusterGroup, 'name')
   }
 
-  if prefixes is not None:
-    for params in prefixes:
+  if clusters is not None:
+    for params in clusters:
       custom_fields = params.pop('custom_fields', None)
-      params['prefix'] = IPNetwork(params['prefix'])
+
+      for assoc, details in required_assocs.items():
+        model, field = details
+        query = { field: params.pop(assoc) }
+
+        params[assoc] = model.objects.get(**query)
 
       for assoc, details in optional_assocs.items():
         if assoc in params:
@@ -36,7 +40,7 @@ with file.open('r') as stream:
 
           params[assoc] = model.objects.get(**query)
 
-      prefix, created = Prefix.objects.get_or_create(**params)
+      cluster, created = Cluster.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
@@ -44,10 +48,10 @@ with file.open('r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=prefix,
+              obj=cluster,
               value=cf_value
             )
 
-            prefix.custom_field_values.add(custom_field_value)
+            cluster.custom_field_values.add(custom_field_value)
 
-        print("Created Prefix", prefix.prefix)
+        print("🗄️ Created cluster", cluster.name)

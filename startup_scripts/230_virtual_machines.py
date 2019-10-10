@@ -1,5 +1,5 @@
-from dcim.models import Site
-from ipam.models import VLAN, VLANGroup, Role
+from dcim.models import Site, Platform, DeviceRole
+from virtualization.models import Cluster, VirtualMachine
 from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
@@ -7,24 +7,33 @@ from ruamel.yaml import YAML
 from pathlib import Path
 import sys
 
-file = Path('/opt/netbox/initializers/vlans.yml')
+file = Path('/opt/netbox/initializers/virtual_machines.yml')
 if not file.is_file():
   sys.exit()
 
 with file.open('r') as stream:
   yaml = YAML(typ='safe')
-  vlans = yaml.load(stream)
+  virtual_machines = yaml.load(stream)
 
-  optional_assocs = {
-    'site': (Site, 'name'),
-    'tenant': (Tenant, 'name'),
-    'group': (VLANGroup, 'name'),
-    'role': (Role, 'name')
+  required_assocs = {
+    'cluster': (Cluster, 'name')
   }
 
-  if vlans is not None:
-    for params in vlans:
+  optional_assocs = {
+    'tenant': (Tenant, 'name'),
+    'platform': (Platform, 'name'),
+    'role': (DeviceRole, 'name')
+  }
+
+  if virtual_machines is not None:
+    for params in virtual_machines:
       custom_fields = params.pop('custom_fields', None)
+
+      for assoc, details in required_assocs.items():
+        model, field = details
+        query = { field: params.pop(assoc) }
+
+        params[assoc] = model.objects.get(**query)
 
       for assoc, details in optional_assocs.items():
         if assoc in params:
@@ -33,7 +42,7 @@ with file.open('r') as stream:
 
           params[assoc] = model.objects.get(**query)
 
-      vlan, created = VLAN.objects.get_or_create(**params)
+      virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
@@ -41,10 +50,10 @@ with file.open('r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=vlan,
+              obj=virtual_machine,
               value=cf_value
             )
 
-            vlan.custom_field_values.add(custom_field_value)
+            virtual_machine.custom_field_values.add(custom_field_value)
 
-        print("Created VLAN", vlan.name)
+        print("🖥️ Created virtual machine", virtual_machine.name)

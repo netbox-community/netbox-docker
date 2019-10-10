@@ -1,25 +1,30 @@
-from ipam.models import VRF
-from tenancy.models import Tenant
-from ruamel.yaml import YAML
+from dcim.models import Site
+from ipam.models import VLAN, VLANGroup, Role
+from tenancy.models import Tenant, TenantGroup
 from extras.models import CustomField, CustomFieldValue
+from ruamel.yaml import YAML
 
 from pathlib import Path
 import sys
 
-file = Path('/opt/netbox/initializers/vrfs.yml')
+file = Path('/opt/netbox/initializers/vlans.yml')
 if not file.is_file():
   sys.exit()
 
 with file.open('r') as stream:
   yaml = YAML(typ='safe')
-  vrfs = yaml.load(stream)
+  vlans = yaml.load(stream)
 
   optional_assocs = {
-    'tenant': (Tenant, 'name')
+    'site': (Site, 'name'),
+    'tenant': (Tenant, 'name'),
+    'tenant_group': (TenantGroup, 'name'),
+    'group': (VLANGroup, 'name'),
+    'role': (Role, 'name')
   }
 
-  if vrfs is not None:
-    for params in vrfs:
+  if vlans is not None:
+    for params in vlans:
       custom_fields = params.pop('custom_fields', None)
 
       for assoc, details in optional_assocs.items():
@@ -29,7 +34,7 @@ with file.open('r') as stream:
 
           params[assoc] = model.objects.get(**query)
 
-      vrf, created = VRF.objects.get_or_create(**params)
+      vlan, created = VLAN.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
@@ -37,11 +42,10 @@ with file.open('r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=vrf,
+              obj=vlan,
               value=cf_value
             )
 
-            vrf.custom_field_values.add(custom_field_value)
+            vlan.custom_field_values.add(custom_field_value)
 
-        print("Created VRF", vrf.name)
-
+        print("🏠 Created VLAN", vlan.name)

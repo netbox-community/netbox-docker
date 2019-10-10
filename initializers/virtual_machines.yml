@@ -7,3 +7,12 @@
 #  status: 1
 #  tenant: tenant1
 #  vcpus: 8
+#- cluster: cluster1
+#  comments: VM2
+#  disk: 100
+#  memory: 2048
+#  name: virtual machine 2
+#  platform: Platform 2
+#  status: 1
+#  tenant: tenant1
+#  vcpus: 8

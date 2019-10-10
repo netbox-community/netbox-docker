@@ -16,4 +16,4 @@ with file.open('r') as stream:
       rir, created = RIR.objects.get_or_create(**params)
 
       if created:
-        print("Created RIR", rir.name)
+        print("🗺️ Created RIR", rir.name)

@@ -43,5 +43,4 @@ with file.open('r') as stream:
 
             aggregate.custom_field_values.add(custom_field_value)
 
-        print("Created Aggregate", aggregate.prefix)
-
+        print("🗞️ Created Aggregate", aggregate.prefix)

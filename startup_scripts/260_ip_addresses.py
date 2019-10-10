@@ -58,4 +58,4 @@ with file.open('r') as stream:
 
             ip_address.custom_field_values.add(custom_field_value)
 
-        print("Created IP Address", ip_address.address)
+        print("🧬 Created IP Address", ip_address.address)

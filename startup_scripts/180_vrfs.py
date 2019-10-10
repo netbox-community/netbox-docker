@@ -1,24 +1,25 @@
-from tenancy.models import Tenant, TenantGroup
-from extras.models import CustomField, CustomFieldValue
+from ipam.models import VRF
+from tenancy.models import Tenant
 from ruamel.yaml import YAML
+from extras.models import CustomField, CustomFieldValue
 
 from pathlib import Path
 import sys
 
-file = Path('/opt/netbox/initializers/tenants.yml')
+file = Path('/opt/netbox/initializers/vrfs.yml')
 if not file.is_file():
   sys.exit()
 
 with file.open('r') as stream:
   yaml = YAML(typ='safe')
-  tenants = yaml.load(stream)
+  vrfs = yaml.load(stream)
 
   optional_assocs = {
-    'group': (TenantGroup, 'name')
+    'tenant': (Tenant, 'name')
   }
 
-  if tenants is not None:
-    for params in tenants:
+  if vrfs is not None:
+    for params in vrfs:
       custom_fields = params.pop('custom_fields', None)
 
       for assoc, details in optional_assocs.items():
@@ -28,7 +29,7 @@ with file.open('r') as stream:
 
           params[assoc] = model.objects.get(**query)
 
-      tenant, created = Tenant.objects.get_or_create(**params)
+      vrf, created = VRF.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
@@ -36,10 +37,10 @@ with file.open('r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=tenant,
+              obj=vrf,
               value=cf_value
             )
 
-            tenant.custom_field_values.add(custom_field_value)
+            vrf.custom_field_values.add(custom_field_value)
 
-        print("Created Tenant", tenant.name)
+        print("📦 Created VRF", vrf.name)

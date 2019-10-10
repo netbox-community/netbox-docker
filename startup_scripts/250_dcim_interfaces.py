@@ -1,12 +1,11 @@
-from dcim.models import Interface
-from virtualization.models import VirtualMachine
+from dcim.models import Interface, Device
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
 from pathlib import Path
 import sys
 
-file = Path('/opt/netbox/initializers/virtualization_interfaces.yml')
+file = Path('/opt/netbox/initializers/dcim_interfaces.yml')
 if not file.is_file():
   sys.exit()
 
@@ -15,7 +14,7 @@ with file.open('r') as stream:
   interfaces = yaml.load(stream)
 
   optional_assocs = {
-    'virtual_machine': (VirtualMachine, 'name')
+    'device': (Device, 'name')
   }
 
   if interfaces is not None:
@@ -43,5 +42,5 @@ with file.open('r') as stream:
 
             interface.custom_field_values.add(custom_field_value)
 
-        print("Created interface", interface.name, interface.virtual_machine.name)
+        print("🧷 Created interface", interface.name, interface.device.name)
 

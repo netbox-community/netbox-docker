@@ -1,5 +1,9 @@
 #- enforce_unique: true
 #  name: vrf1
 #  tenant: tenant1
+#  description: main VRF
 #- enforce_unique: true
 #  name: vrf2
+#  rd: "6500:6500"
+#  tenant: tenant2
+#  tenant_group: Tenant Group 2

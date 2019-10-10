@@ -16,4 +16,4 @@ with file.open('r') as stream:
       role, created = Role.objects.get_or_create(**params)
 
       if created:
-        print("Created Prefix/VLAN Role", role.name)
+        print("⛹️‍ Created Prefix/VLAN Role", role.name)

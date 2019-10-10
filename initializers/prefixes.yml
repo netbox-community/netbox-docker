@@ -10,3 +10,12 @@
 #  status: 1
 #  tenant: tenant2
 #  vlan: vlan2
+#  is_pool: true
+#  vrf: vrf2
+#  tenant: tenant2
+#- description: ipv6 prefix1
+#  prefix: fd00:ccdd:a000:1::/64
+#  site: AMS 2
+#  status: 1
+#  tenant: tenant2
+#  vlan: vlan2

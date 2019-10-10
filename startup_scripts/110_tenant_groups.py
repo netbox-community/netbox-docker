@@ -16,4 +16,4 @@ with file.open('r') as stream:
       tenant_group, created = TenantGroup.objects.get_or_create(**params)
 
       if created:
-        print("Created Tenant Group", tenant_group.name)
+        print("🔳 Created Tenant Group", tenant_group.name)

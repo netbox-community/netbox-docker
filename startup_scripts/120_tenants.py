@@ -1,24 +1,24 @@
-from dcim.models import Interface, Device
+from tenancy.models import Tenant, TenantGroup
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
 from pathlib import Path
 import sys
 
-file = Path('/opt/netbox/initializers/dcim_interfaces.yml')
+file = Path('/opt/netbox/initializers/tenants.yml')
 if not file.is_file():
   sys.exit()
 
 with file.open('r') as stream:
   yaml = YAML(typ='safe')
-  interfaces = yaml.load(stream)
+  tenants = yaml.load(stream)
 
   optional_assocs = {
-    'device': (Device, 'name')
+    'group': (TenantGroup, 'name')
   }
 
-  if interfaces is not None:
-    for params in interfaces:
+  if tenants is not None:
+    for params in tenants:
       custom_fields = params.pop('custom_fields', None)
 
       for assoc, details in optional_assocs.items():
@@ -28,7 +28,7 @@ with file.open('r') as stream:
 
           params[assoc] = model.objects.get(**query)
 
-      interface, created = Interface.objects.get_or_create(**params)
+      tenant, created = Tenant.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
@@ -36,11 +36,10 @@ with file.open('r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=interface,
+              obj=tenant,
               value=cf_value
             )
 
-            interface.custom_field_values.add(custom_field_value)
+            tenant.custom_field_values.add(custom_field_value)
 
-        print("Created interface", interface.name, interface.device.name)
-
+        print("👩‍💻 Created Tenant", tenant.name)
