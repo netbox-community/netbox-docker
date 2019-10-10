@@ -1,5 +1,6 @@
 from dcim.models import Site
 from ipam.models import Prefix, VLAN, Role, VRF
+from ipam.constants import PREFIX_STATUS_CHOICES
 from tenancy.models import Tenant, TenantGroup
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
@@ -36,6 +37,11 @@ with file.open('r') as stream:
           query = { field: params.pop(assoc) }
 
           params[assoc] = model.objects.get(**query)
+
+      if 'status' in params:
+        for prefix_status in PREFIX_STATUS_CHOICES:
+          if params['status'] in prefix_status:
+            params['status'] = prefix_status[0]
 
       prefix, created = Prefix.objects.get_or_create(**params)
 

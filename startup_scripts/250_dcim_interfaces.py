@@ -1,4 +1,5 @@
 from dcim.models import Interface, Device
+from dcim.constants import IFACE_TYPE_CHOICES
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
@@ -13,7 +14,7 @@ with file.open('r') as stream:
   yaml = YAML(typ='safe')
   interfaces = yaml.load(stream)
 
-  optional_assocs = {
+  required_assocs = {
     'device': (Device, 'name')
   }
 
@@ -21,12 +22,21 @@ with file.open('r') as stream:
     for params in interfaces:
       custom_fields = params.pop('custom_fields', None)
 
-      for assoc, details in optional_assocs.items():
-        if assoc in params:
-          model, field = details
-          query = { field: params.pop(assoc) }
+      for assoc, details in required_assocs.items():
+        model, field = details
+        query = { field: params.pop(assoc) }
 
-          params[assoc] = model.objects.get(**query)
+        params[assoc] = model.objects.get(**query)
+
+      if 'form_factor' in params:
+        for outer_list in IFACE_TYPE_CHOICES:
+          for ffactor_choices in outer_list[1]:
+            if params['form_factor'] in ffactor_choices:
+              params['form_factor'] = ffactor_choices[0]
+              break
+          else:
+            continue
+          break
 
       interface, created = Interface.objects.get_or_create(**params)
 
@@ -43,4 +53,3 @@ with file.open('r') as stream:
             interface.custom_field_values.add(custom_field_value)
 
         print("🧷 Created interface", interface.name, interface.device.name)
-

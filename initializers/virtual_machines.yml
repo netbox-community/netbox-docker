@@ -4,7 +4,7 @@
 #  memory: 4096
 #  name: virtual machine 1
 #  platform: Platform 2
-#  status: 1
+#  status: Active
 #  tenant: tenant1
 #  vcpus: 8
 #- cluster: cluster1
@@ -13,6 +13,6 @@
 #  memory: 2048
 #  name: virtual machine 2
 #  platform: Platform 2
-#  status: 1
+#  status: Active
 #  tenant: tenant1
 #  vcpus: 8

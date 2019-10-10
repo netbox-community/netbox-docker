@@ -1,4 +1,5 @@
 from ipam.models import IPAddress, VRF
+from ipam.constants import IPADDRESS_STATUS_CHOICES
 from dcim.models import Device, Interface
 from virtualization.models import VirtualMachine
 from tenancy.models import Tenant
@@ -30,6 +31,10 @@ with file.open('r') as stream:
       custom_fields = params.pop('custom_fields', None)
       params['address'] = IPNetwork(params['address'])
 
+      if vm and device:
+        print("IP Address can only specify one of the following: virtual_machine or device.")
+        sys.exit()
+
       for assoc, details in optional_assocs.items():
         if assoc in params:
           model, field = details
@@ -43,6 +48,11 @@ with file.open('r') as stream:
           else:
               query = { field: params.pop(assoc) }
           params[assoc] = model.objects.get(**query)
+
+      if 'status' in params:
+        for ip_status in IPADDRESS_STATUS_CHOICES:
+          if params['status'] in ip_status:
+            params['status'] = ip_status[0]
 
       ip_address, created = IPAddress.objects.get_or_create(**params)
 

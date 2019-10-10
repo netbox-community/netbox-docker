@@ -1,5 +1,6 @@
 from dcim.models import Site
 from ipam.models import VLAN, VLANGroup, Role
+from ipam.constants import VLAN_STATUS_CHOICES
 from tenancy.models import Tenant, TenantGroup
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
@@ -33,6 +34,11 @@ with file.open('r') as stream:
           query = { field: params.pop(assoc) }
 
           params[assoc] = model.objects.get(**query)
+
+      if 'status' in params:
+        for vlan_status in VLAN_STATUS_CHOICES:
+          if params['status'] in vlan_status:
+            params['status'] = vlan_status[0]
 
       vlan, created = VLAN.objects.get_or_create(**params)
 

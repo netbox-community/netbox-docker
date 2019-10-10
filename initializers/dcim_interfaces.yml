@@ -1,8 +1,8 @@
 #- device: server01
 #  enabled: true
-#  form_factor: 0
+#  form_factor: Virtual
 #  name: to-server02
 #- device: server02
 #  enabled: true
-#  form_factor: 0
+#  form_factor: Virtual
 #  name: to-server01
