@@ -1,0 +1,13 @@
+#- address: 10.1.1.1/24
+#  device: server01
+#  interface: Loopback0
+#  status: Active
+#  vrf: vrf1
+#- address: 10.1.1.2/24
+#  device: server02
+#  interface: Vlan5
+#  status: Active
+#- address: 10.1.1.10/24
+#  description: reserved IP
+#  status: Reserved
+#  tenant: tenant1
