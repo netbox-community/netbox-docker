@@ -47,6 +47,7 @@ with file.open('r') as stream:
         for vm_status in VM_STATUS_CHOICES:
           if params['status'] in vm_status:
             params['status'] = vm_status[0]
+            break
 
       virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
 

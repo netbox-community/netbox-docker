@@ -42,6 +42,7 @@ with file.open('r') as stream:
         for prefix_status in PREFIX_STATUS_CHOICES:
           if params['status'] in prefix_status:
             params['status'] = prefix_status[0]
+            break
 
       prefix, created = Prefix.objects.get_or_create(**params)
 

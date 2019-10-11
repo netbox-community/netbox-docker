@@ -39,6 +39,7 @@ with file.open('r') as stream:
         for vlan_status in VLAN_STATUS_CHOICES:
           if params['status'] in vlan_status:
             params['status'] = vlan_status[0]
+            break
 
       vlan, created = VLAN.objects.get_or_create(**params)
 
