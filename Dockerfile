@@ -1,4 +1,4 @@
-FROM python:3.6-alpine3.9
+FROM python:3.7-alpine3.10
 
 RUN apk add --no-cache \
       bash \
@@ -21,7 +21,7 @@ RUN pip install \
 # napalm is used for gathering information from network devices
       napalm \
 # ruamel is used in startup_scripts
-      ruamel.yaml \
+      'ruamel.yaml>=0.15,<0.16' \
 # pinning django to the version required by netbox
 # adding it here, to install the correct version of
 # django-rq
