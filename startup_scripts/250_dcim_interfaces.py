@@ -28,11 +28,11 @@ with file.open('r') as stream:
 
         params[assoc] = model.objects.get(**query)
 
-      if 'form_factor' in params:
+      if 'type' in params:
         for outer_list in IFACE_TYPE_CHOICES:
-          for ffactor_choices in outer_list[1]:
-            if params['form_factor'] in ffactor_choices:
-              params['form_factor'] = ffactor_choices[0]
+          for type_choices in outer_list[1]:
+            if params['type'] in type_choices:
+              params['type'] = type_choices[0]
               break
           else:
             continue
