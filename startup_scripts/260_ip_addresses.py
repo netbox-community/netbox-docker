@@ -53,6 +53,7 @@ with file.open('r') as stream:
         for ip_status in IPADDRESS_STATUS_CHOICES:
           if params['status'] in ip_status:
             params['status'] = ip_status[0]
+            break
 
       ip_address, created = IPAddress.objects.get_or_create(**params)
 
