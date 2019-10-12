@@ -17,7 +17,7 @@
 #   custom_fields:
 #     text_field: Description
 # - model: Other
-#   manufacturer: NoName
+#   manufacturer: No Name
 #   slug: other
 #   custom_fields:
 #     text_field: Description

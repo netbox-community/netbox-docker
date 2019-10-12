@@ -10,6 +10,6 @@
 #   napalm_args: "{'arg1': 'value1', 'arg2': 'value2'}"
 # - name: Platform 3
 #   slug: platform-3
-#   manufacturer: NoName
+#   manufacturer: No Name
 #   napalm_driver: driver3
 #   napalm_args: "{'arg1': 'value1', 'arg2': 'value2'}"
