@@ -1,0 +1,5 @@
+# - name: tenant1
+#   slug: tenant1
+# - name: tenant2
+#   slug: tenant2
+#   group: Tenant Group 2

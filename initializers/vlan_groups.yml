@@ -1,0 +1,6 @@
+# - name: VLAN group 1
+#   site: AMS 1
+#   slug: vlan-group-1
+# - name: VLAN group 2
+#   site: AMS 1
+#   slug: vlan-group-2

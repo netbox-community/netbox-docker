@@ -1,7 +1,6 @@
-from dcim.models import Site, Rack, DeviceRole, DeviceType, Device, Platform
-from dcim.constants import RACK_FACE_CHOICES
-from ipam.models import IPAddress
-from virtualization.models import Cluster
+from dcim.models import Site, Platform, DeviceRole
+from virtualization.models import Cluster, VirtualMachine
+from virtualization.constants import VM_STATUS_CHOICES
 from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
@@ -9,31 +8,26 @@ from ruamel.yaml import YAML
 from pathlib import Path
 import sys
 
-file = Path('/opt/netbox/initializers/devices.yml')
+file = Path('/opt/netbox/initializers/virtual_machines.yml')
 if not file.is_file():
   sys.exit()
 
 with file.open('r') as stream:
   yaml = YAML(typ='safe')
-  devices = yaml.load(stream)
+  virtual_machines = yaml.load(stream)
 
   required_assocs = {
-    'device_role': (DeviceRole, 'name'),
-    'device_type': (DeviceType, 'model'),
-    'site': (Site, 'name')
+    'cluster': (Cluster, 'name')
   }
 
   optional_assocs = {
     'tenant': (Tenant, 'name'),
     'platform': (Platform, 'name'),
-    'rack': (Rack, 'name'),
-    'cluster': (Cluster, 'name'),
-    'primary_ip4': (IPAddress, 'address'),
-    'primary_ip6': (IPAddress, 'address')
+    'role': (DeviceRole, 'name')
   }
 
-  if devices is not None:
-    for params in devices:
+  if virtual_machines is not None:
+    for params in virtual_machines:
       custom_fields = params.pop('custom_fields', None)
 
       for assoc, details in required_assocs.items():
@@ -49,12 +43,13 @@ with file.open('r') as stream:
 
           params[assoc] = model.objects.get(**query)
 
-      if 'face' in params:
-        for rack_face in RACK_FACE_CHOICES:
-          if params['face'] in rack_face:
-            params['face'] = rack_face[0]
+      if 'status' in params:
+        for vm_status in VM_STATUS_CHOICES:
+          if params['status'] in vm_status:
+            params['status'] = vm_status[0]
+            break
 
-      device, created = Device.objects.get_or_create(**params)
+      virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
 
       if created:
         if custom_fields is not None:
@@ -62,10 +57,10 @@ with file.open('r') as stream:
             custom_field = CustomField.objects.get(name=cf_name)
             custom_field_value = CustomFieldValue.objects.create(
               field=custom_field,
-              obj=device,
+              obj=virtual_machine,
               value=cf_value
             )
 
-            device.custom_field_values.add(custom_field_value)
+            virtual_machine.custom_field_values.add(custom_field_value)
 
-        print("🖥️  Created device", device.name)
+        print("🖥️ Created virtual machine", virtual_machine.name)

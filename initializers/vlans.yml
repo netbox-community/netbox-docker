@@ -1,0 +1,11 @@
+# - name: vlan1
+#   site: AMS 1
+#   status: Active
+#   vid: 5
+#   role: Main Management
+#   description: VLAN 5 for MGMT
+# - group: VLAN group 2
+#   name: vlan2
+#   site: AMS 1
+#   status: Active
+#   vid: 1300

@@ -1,0 +1,5 @@
+# - name: cluster1
+#   type: Hyper-V
+# - name: cluster2
+#   type: Hyper-V
+#   site: SING 1
