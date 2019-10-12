@@ -53,6 +53,7 @@ with file.open('r') as stream:
         for rack_face in RACK_FACE_CHOICES:
           if params['face'] in rack_face:
             params['face'] = rack_face[0]
+            break
 
       device, created = Device.objects.get_or_create(**params)
 
