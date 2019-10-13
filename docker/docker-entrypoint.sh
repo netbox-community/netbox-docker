@@ -8,7 +8,7 @@ while ! ./manage.py migrate 2>&1; do
 done
 
 if [ "$SKIP_SUPERUSER" == "true" ]; then
-  echo "↩️ Skipp creating the superuser"
+  echo "↩️ Skip creating the superuser"
 else
   if [ -z ${SUPERUSER_NAME+x} ]; then
     SUPERUSER_NAME='admin'
