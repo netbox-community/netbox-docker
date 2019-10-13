@@ -2,3 +2,4 @@
 .travis.yml
 build*
 *.env
+.git

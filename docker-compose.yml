@@ -1,11 +1,6 @@
 version: '3.4'
 services:
   netbox: &netbox
-    build:
-     context: .
-     target: ${DOCKER_TARGET-main}
-     args:
-       - BRANCH=${VERSION-master}
     image: netboxcommunity/netbox:${VERSION-latest}
     depends_on:
     - postgres

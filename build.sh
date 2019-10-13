@@ -69,6 +69,16 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
 fi
 
 ###
+# Determining the build command to use
+###
+if [ -z "$DRY_RUN" ]; then
+  DRY=""
+else
+  echo "⚠️ DRY_RUN MODE ON ⚠️"
+  DRY="echo"
+fi
+
+###
 # read the project version from the `VERSION` file and trim it
 # see https://stackoverflow.com/a/3232433/172132
 ###
@@ -81,6 +91,26 @@ SRC_ORG="${SRC_ORG-netbox-community}"
 SRC_REPO="${SRC_REPO-netbox}"
 BRANCH="${1}"
 URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}/archive/$BRANCH.tar.gz}"
+
+###
+# fetching the source
+###
+if [ "${2}" != "--push-only" ] ; then
+  echo "🗑️ Preparing"
+  $DRY rm -rf .netbox
+  $DRY mkdir .netbox
+  echo "✅ Done preparing"
+
+  echo "🌐 Downloading netbox from the url '${URL}'"
+  (
+    $DRY cd .netbox
+
+    $DRY wget -qO netbox.tgz "${URL}" && \
+    $DRY tar  -xzf netbox.tgz && \
+    $DRY mv   netbox-* netbox
+  )
+  echo "✅ Downloaded netbox"
+fi
 
 ###
 # Determining the value for DOCKERFILE
@@ -156,21 +186,12 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     --target "$DOCKER_TARGET"
   )
 
-  # caching is only ok for version tags,
-  # but turning the cache off is only required for the
-  # first build target, usually "main".
-  case "${TAG}" in
-  v*) ;;
-  *)  [ "$DOCKER_TARGET" == "${DOCKER_TARGETS[0]}" ] && DOCKER_OPTS+=( --no-cache ) ;;
-  esac
-
   ###
   # Composing arguments for `docker build` CLI
   ###
   DOCKER_BUILD_ARGS=(
     --build-arg "NETBOX_DOCKER_PROJECT_VERSION=${NETBOX_DOCKER_PROJECT_VERSION}"
-    --build-arg "BRANCH=${BRANCH}"
-    --build-arg "URL=${URL}"
+    --build-arg "NETBOX_BRANCH=${BRANCH}"
     --build-arg "DOCKER_ORG=${DOCKER_ORG}"
     --build-arg "DOCKER_REPO=${DOCKER_REPO}"
   )
@@ -191,26 +212,16 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   fi
 
   ###
-  # Determining the build command to use
-  ###
-  if [ -z "$DRY_RUN" ]; then
-    DOCKER_CMD="docker"
-  else
-    echo "⚠️ DRY_RUN MODE ON ⚠️"
-    DOCKER_CMD="echo docker"
-  fi
-
-  ###
   # Building the docker images, except if `--push-only` is passed
   ###
   if [ "${2}" != "--push-only" ] ; then
-    echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG}' from the url '${URL}'."
-    $DOCKER_CMD build -t "${TARGET_DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
+    echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG}'."
+    $DRY docker build -t "${TARGET_DOCKER_TAG}" "${DOCKER_BUILD_ARGS[@]}" "${DOCKER_OPTS[@]}" -f "${DOCKERFILE}" .
     echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG}'"
 
     if [ -n "$DOCKER_SHORT_TAG" ]; then
       echo "🐳 Tagging image '${DOCKER_SHORT_TAG}'."
-      $DOCKER_CMD tag "${TARGET_DOCKER_TAG}" "${DOCKER_SHORT_TAG}"
+      $DRY docker tag "${TARGET_DOCKER_TAG}" "${DOCKER_SHORT_TAG}"
       echo "✅ Tagged image '${DOCKER_SHORT_TAG}'"
     fi
   fi
@@ -220,13 +231,20 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   ###
   if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ] ; then
     echo "⏫ Pushing '${TARGET_DOCKER_TAG}"
-    $DOCKER_CMD push "${TARGET_DOCKER_TAG}"
+    $DRY docker push "${TARGET_DOCKER_TAG}"
     echo "✅ Finished pushing the Docker image '${TARGET_DOCKER_TAG}'."
 
     if [ -n "$DOCKER_SHORT_TAG" ]; then
       echo "⏫ Pushing '${DOCKER_SHORT_TAG}'"
-      $DOCKER_CMD push "${DOCKER_SHORT_TAG}"
+      $DRY docker push "${DOCKER_SHORT_TAG}"
       echo "✅ Finished pushing the Docker image '${DOCKER_SHORT_TAG}'."
     fi
   fi
 done
+
+###
+# Cleaning up
+###
+echo "🗑️ Cleaning up"
+$DRY rm -rf .netbox
+echo "✅ Cleaned up"
