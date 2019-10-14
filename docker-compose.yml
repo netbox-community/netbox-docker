@@ -16,6 +16,7 @@ services:
     - ./initializers:/opt/netbox/initializers:z,ro
     - ./configuration:/etc/netbox/config:z,ro
     - ./reports:/etc/netbox/reports:z,ro
+    - ./scripts:/etc/netbox/scripts:z,ro
     - netbox-nginx-config:/etc/netbox-nginx:z
     - netbox-static-files:/opt/netbox/netbox/static:z
     - netbox-media-files:/opt/netbox/netbox/media:z
