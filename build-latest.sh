@@ -18,14 +18,14 @@ fi
 ###
 # Checking if PRERELEASE is either unset, 'true' or 'false'
 ###
-if [ -n "$PRERELEASE" ] &&
-   { [ "$PRERELEASE" != "true" ] && [ "$PRERELEASE" != "false" ]; }; then
+if [ -n "${PRERELEASE}" ] &&
+   { [ "${PRERELEASE}" != "true" ] && [ "${PRERELEAS}E" != "false" ]; }; then
 
-  if [ -z "$DEBUG" ]; then
-    echo "⚠️ PRERELEASE must be either unset, 'true' or 'false', but was \"$PRERELEASE\"!"
+  if [ -z "${DEBUG}" ]; then
+    echo "⚠️ PRERELEASE must be either unset, 'true' or 'false', but was '${PRERELEASE}'!"
     exit 1
   else
-    echo "⚠️ Would exit here with code '0', but DEBUG is enabled."
+    echo "⚠️ Would exit here with code '1', but DEBUG is enabled."
   fi
 fi
 
@@ -60,10 +60,11 @@ if [ "${PRERELEASE}" == "true" ]; then
   # shellcheck disable=SC2003
   MINOR_UNSTABLE=$(expr match "${VERSION}" 'v[0-9]\+\.\([0-9]\+\)')
 
-  if { [ "$MAJOR_STABLE" -eq "$MAJOR_UNSTABLE" ] && [ "$MINOR_STABLE" -ge "$MINOR_UNSTABLE" ]; } \
-     || [ "$MAJOR_STABLE" -gt "$MAJOR_UNSTABLE" ]; then
+  if { [ "${MAJOR_STABLE}" -eq "${MAJOR_UNSTABLE}" ] \
+       && [ "${MINOR_STABLE}" -ge "${MINOR_UNSTABLE}" ];
+     } || [ "${MAJOR_STABLE}" -gt "${MAJOR_UNSTABLE}" ]; then
 
-    echo "❎ Latest unstable version ('$VERSION') is not higher than the latest stable version ('$STABLE_VERSION')."
+    echo "❎ Latest unstable version '${VERSION}' is not higher than the latest stable version '$STABLE_VERSION'."
     if [ -z "$DEBUG" ]; then
       exit 0
     else
