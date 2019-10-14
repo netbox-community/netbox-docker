@@ -130,7 +130,7 @@ if [ "${2}" != "--push-only" ] ; then
     fi
 
     $DRY git remote set-url origin "${URL}"
-    $DRY git fetch -qpP --depth 10 origin "${BRANCH}"
+    $DRY git fetch -qp --depth 10 origin "${BRANCH}"
     $DRY git checkout -qf FETCH_HEAD
     $DRY git prune
   )
