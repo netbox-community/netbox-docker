@@ -14,14 +14,23 @@ Build Rules:
   Source: master
   Docker Tag: branches
   Dockerfile location: Dockerfile
+  Build Context: /
+  Autobuild: on
+  Build Caching: on
 - Source Type: Branch
   Source: master
   Docker Tag: prerelease
   Dockerfile location: Dockerfile
+  Build Context: /
+  Autobuild: on
+  Build Caching: on
 - Source Type: Branch
   Source: master
   Docker Tag: release
   Dockerfile location: Dockerfile
+  Build Context: /
+  Autobuild: on
+  Build Caching: on
 Build Environment Variables:
 # Create an app on Github and use it's OATH credentials here
 - Key: GITHUB_OAUTH_CLIENT_ID
@@ -30,6 +39,7 @@ Build Environment Variables:
   Value: <secret>
 Build Triggers:
 - Name: Cron Trigger
+  Trigger URL: <generated>
 # Use this trigger in combination with e.g. https://cron-job.org in order to regularly schedule builds
 ```
 
