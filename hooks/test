@@ -3,11 +3,12 @@
 . hooks/common
 
 # test 'branches' and 'this' (i.e. pull request) builds
-if [ "${BUILD}" == "branches" ] || [ "${BUILD}" == "this" ]; then
+if [ "${BUILD}" == "branches" ] \
+   || [ "${BUILD}" == "this" ] \
+   || [ "${DEBUG}" == "true" ]; then
   echo "🐳🐳🐳 Testing"
-  export DOCKER_TARGET="main"
-
-  docker-compose run netbox ./manage.py test
+  VERSION=latest docker-compose run netbox ./manage.py test
+  VERSION=snapshot docker-compose run netbox ./manage.py test
   docker-compose down -v
 else
   echo "🐳🐳🐳 No tests are implemented for build '${BUILD}'."

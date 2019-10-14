@@ -53,7 +53,7 @@ export DOCKER_ORG="index.docker.io/netboxcommunity"
 export DOCKER_REPO=netbox
 export DOCKERHUB_REPO=netboxcommunity/netbox
 # shellcheck disable=SC2153
-export BUILD="$DOCKER_TAG"
+export BUILD="${DOCKER_TAG}"
 
 unset DOCKER_TAG
 
