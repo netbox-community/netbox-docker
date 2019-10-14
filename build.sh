@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds the Dockerfile and injects tgz'ed Netbox code from Github
+# Clones the Netbox repository with git from Github and builds the Dockerfile
 
 echo "▶️ $0 $*"
 
