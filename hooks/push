@@ -2,4 +2,13 @@
 
 . hooks/common
 
-run_build --push-only
+if [ "${SOURCE_BRANCH}" == "main" ] || [ "${DEBUG}" == "true" ]; then
+  if [ "${SOURCE_BRANCH}" != "main" ]; then
+    echo "⚠️⚠️⚠️ Would exit, but DEBUG is '${DEBUG}'".
+  fi
+
+  run_build --push-only
+else
+  echo "⚠️⚠️⚠️ Only pushing on 'main' branch, but current branch is '${SOURCE_BRANCH}'"
+  exit 0
+fi
