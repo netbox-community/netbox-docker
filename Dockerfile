@@ -28,7 +28,8 @@ RUN pip install --install-option="--prefix=/install" \
 # django_auth_ldap is required for ldap
       django_auth_ldap
 
-COPY .netbox/netbox/requirements.txt /
+ARG NETBOX_PATH
+COPY ${NETBOX_PATH}/requirements.txt /
 RUN pip install --install-option="--prefix=/install" -r /requirements.txt 
 
 ###
@@ -53,7 +54,9 @@ RUN apk add --no-cache \
 WORKDIR /opt
 
 COPY --from=builder /install /usr/local
-COPY .netbox/netbox /opt/netbox
+
+ARG NETBOX_PATH
+COPY ${NETBOX_PATH} /opt/netbox
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY configuration/gunicorn_config.py /etc/netbox/config/
@@ -69,13 +72,11 @@ ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
 CMD ["gunicorn", "-c /etc/netbox/config/gunicorn_config.py", "netbox.wsgi"]
 
-LABEL SRC_URL="$URL"
-
-ARG NETBOX_DOCKER_PROJECT_VERSION=snapshot
-LABEL NETBOX_DOCKER_PROJECT_VERSION="$NETBOX_DOCKER_PROJECT_VERSION"
-
-ARG NETBOX_BRANCH=custom_build
-LABEL NETBOX_BRANCH="$NETBOX_BRANCH"
+LABEL NETBOX_DOCKER_PROJECT_VERSION="custom build" \
+      NETBOX_BRANCH="custom build" \
+      ORIGINAL_DOCKER_TAG="custom build" \
+      NETBOX_GIT_COMMIT="not built from git" \
+      NETBOX_GIT_URL="not built from git"
 
 #####
 ## LDAP specific configuration

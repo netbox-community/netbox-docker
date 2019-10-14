@@ -72,42 +72,6 @@ if [ "${PRERELEASE}" == "true" ]; then
   fi
 fi
 
-###
-# Compose DOCKER_TAG to build
-###
-if [ -z "$DOCKER_TARGET" ] || [ "$DOCKER_TARGET" == "main" ]; then
-  DOCKER_TAG="${VERSION}"
-else
-  DOCKER_TAG="${VERSION}-${DOCKER_TARGET}"
-fi
-
-###
-# Check if the version received is not already available on Docker Hub:
-###
-ORIGINAL_DOCKERHUB_REPO="${DOCKER_ORG-netboxcommunity}/${DOCKER_REPO-netbox}"
-DOCKERHUB_REPO="${DOCKERHUB_REPO-$ORIGINAL_DOCKERHUB_REPO}"
-
-# Bearer Token
-URL_DOCKERHUB_TOKEN="https://auth.docker.io/token?service=registry.docker.io&scope=repository:${DOCKERHUB_REPO}:pull"
-BEARER_TOKEN="$($CURL "${URL_DOCKERHUB_TOKEN}" | jq -r .token)"
-
-# Actual API call
-URL_DOCKERHUB_TAG="https://registry.hub.docker.com/v2/${DOCKERHUB_REPO}/tags/list"
-AUTHORIZATION_HEADER="Authorization: Bearer ${BEARER_TOKEN}"
-ALREADY_BUILT="$($CURL -H "${AUTHORIZATION_HEADER}" "${URL_DOCKERHUB_TAG}" | jq -e ".tags | any(.==\"${DOCKER_TAG}\")")"
-
-###
-# Only build the image if it's not already been built before
-###
-if [ -n "$DEBUG" ] || [ "$ALREADY_BUILT" == "false" ]; then
-  if [ -n "$DEBUG" ]; then
-    echo "⚠️ Would not build, because ${DOCKER_TAG} already exists on https://hub.docker.com/r/${DOCKERHUB_REPO}, but DEBUG is enabled."
-  fi
-
-  # shellcheck disable=SC2068
-  ./build.sh "${VERSION}" $@
-  exit $?
-else
-  echo "✅ ${DOCKER_TAG} already exists on https://hub.docker.com/r/${DOCKERHUB_REPO}"
-  exit 0
-fi
+# shellcheck disable=SC2068
+./build.sh "${VERSION}" $@
+exit $?

@@ -82,9 +82,6 @@ export VERSION=v2.6.6
 docker-compose up -d
 ```
 
-Hint: If you're building a specific version by tag name, the `--no-cache` argument is not strictly necessary.
-This can increase the build speed if you're just adjusting the config, for example.
-
 [git-ref]: https://git-scm.com/book/en/v2/Git-Internals-Git-References
 [netbox-github]: https://github.com/netbox-community/netbox/releases
 

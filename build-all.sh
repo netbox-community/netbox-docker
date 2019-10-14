@@ -18,9 +18,6 @@ fi
 
 ERROR=0
 
-# Don't build if not on `master` and don't build if on a pull request,
-# but build when DEBUG is not empty
-
 for BUILD in "${BUILDS[@]}"; do
   echo "🛠 Building '$BUILD' from '$DOCKERFILE'"
   case $BUILD in
