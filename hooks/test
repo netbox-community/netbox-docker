@@ -2,11 +2,21 @@
 
 . hooks/common
 
-if [ "${VARIANT}" == "main" ] && [ "${BUILD}" == "BRANCHES" ]; then
-  echo "🐳🐳🐳 Testing"
-  docker-compose pull --parallel
-  docker-compose build
-  docker-compose run netbox ./manage.py test
+run_test() {
+  echo "🐳🐳🐳 Testing '${1}'"
+  VERSION="${1}" docker-compose run netbox ./manage.py test
+  docker-compose down -v
+  echo "🐳🐳🐳 Done testing '${1}'"
+}
+
+# test on builds of 'branches'
+if [ "${BUILD}" == "branches" ] \
+   || [ "${DEBUG}" == "true" ]; then
+  run_test latest
+  run_test snapshot
+# test on bulds of 'this' (i.e. pull request)
+elif [ "${BUILD}" == "this" ]; then
+  run_test latest
 else
-  echo "🐳🐳🐳 No tests are implemented for build '${BUILD}' with variant '${VARIANT}'."
+  echo "🐳🐳🐳 No tests are implemented for build '${BUILD}'."
 fi

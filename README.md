@@ -49,8 +49,8 @@ Default credentials:
 
 This project relies only on *Docker* and *docker-compose* meeting this requirements:
 
-* The *Docker version* must be at least `1.13.0`.
-* The *docker-compose version* must be at least `1.10.0`.
+* The *Docker version* must be at least `17.05`.
+* The *docker-compose version* must be at least `1.17.0`.
 
 To ensure this, compare the output of `docker --version` and `docker-compose --version` with the requirements above.
 
@@ -69,23 +69,19 @@ To use this feature, set the environment-variable `VERSION` before launching `do
 [any tag of the `netboxcommunity/netbox` Docker image on Docker Hub][netbox-dockerhub].
 
 ```bash
-export VERSION=v2.2.6
+export VERSION=v2.6.6
 docker-compose pull netbox
 docker-compose up -d
 ```
 
-You can also build a specific version of the Netbox image. This time, `VERSION` indicates any valid
-[Git Reference][git-ref] declared on [the 'netbox-community/netbox' Github repository][netbox-github].
-Most commonly you will specify a tag or branch name.
+You can also build a specific version of the Netbox Docker image yourself.
+`VERSION` can be any valid [git ref][git-ref] in that case.
 
 ```bash
-export VERSION=develop
-docker-compose build --no-cache netbox
+export VERSION=v2.6.6
+./build.sh $VERSION
 docker-compose up -d
 ```
-
-Hint: If you're building a specific version by tag name, the `--no-cache` argument is not strictly necessary.
-This can increase the build speed if you're just adjusting the config, for example.
 
 [git-ref]: https://git-scm.com/book/en/v2/Git-Internals-Git-References
 [netbox-github]: https://github.com/netbox-community/netbox/releases

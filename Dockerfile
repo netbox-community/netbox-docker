@@ -1,4 +1,5 @@
-FROM python:3.7-alpine3.10
+ARG FROM=python:3.7-alpine
+FROM ${FROM} as builder
 
 RUN apk add --no-cache \
       bash \
@@ -7,51 +8,55 @@ RUN apk add --no-cache \
       cyrus-sasl-dev \
       graphviz \
       jpeg-dev \
+      libevent-dev \
       libffi-dev \
-      libxml2-dev \
       libxslt-dev \
       openldap-dev \
-      postgresql-dev \
-      ttf-ubuntu-font-family \
-      wget
+      postgresql-dev
 
-RUN pip install \
+WORKDIR /install
+
+RUN pip install --install-option="--prefix=/install" \
 # gunicorn is used for launching netbox
       gunicorn \
+      greenlet \
+      eventlet \
 # napalm is used for gathering information from network devices
       napalm \
 # ruamel is used in startup_scripts
       'ruamel.yaml>=0.15,<0.16' \
-# pinning django to the version required by netbox
-# adding it here, to install the correct version of
-# django-rq
-      'Django>=2.2,<2.3' \
-# django-rq is used for webhooks
-      django-rq
+# django_auth_ldap is required for ldap
+      django_auth_ldap
 
-ARG BRANCH=master
+ARG NETBOX_PATH
+COPY ${NETBOX_PATH}/requirements.txt /
+RUN pip install --install-option="--prefix=/install" -r /requirements.txt 
 
-WORKDIR /tmp
+###
+# Main stage
+###
 
-# As the requirements don't change very often,
-# and as they take some time to compile,
-# we try to cache them very agressively.
-ARG REQUIREMENTS_URL=https://raw.githubusercontent.com/netbox-community/netbox/$BRANCH/requirements.txt
-ADD ${REQUIREMENTS_URL} requirements.txt
-RUN pip install -r requirements.txt
+ARG FROM
+FROM ${FROM} as main
 
-# Cache bust when the upstream branch changes:
-# ADD will fetch the file and check if it has changed
-# If not, Docker will use the existing build cache.
-# If yes, Docker will bust the cache and run every build step from here on.
-ARG REF_URL=https://api.github.com/repos/netbox-community/netbox/contents?ref=$BRANCH
-ADD ${REF_URL} version.json
+RUN apk add --no-cache \
+      bash \
+      ca-certificates \
+      graphviz \
+      libevent \
+      libffi \
+      libjpeg-turbo \
+      libressl \
+      libxslt \
+      postgresql-libs \
+      ttf-ubuntu-font-family
 
 WORKDIR /opt
 
-ARG URL=https://github.com/netbox-community/netbox/archive/$BRANCH.tar.gz
-RUN wget -q -O - "${URL}" | tar xz \
-  && mv netbox* netbox
+COPY --from=builder /install /usr/local
+
+ARG NETBOX_PATH
+COPY ${NETBOX_PATH} /opt/netbox
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY configuration/gunicorn_config.py /etc/netbox/config/
@@ -67,7 +72,22 @@ ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
 CMD ["gunicorn", "-c /etc/netbox/config/gunicorn_config.py", "netbox.wsgi"]
 
-LABEL SRC_URL="$URL"
+LABEL NETBOX_DOCKER_PROJECT_VERSION="custom build" \
+      NETBOX_BRANCH="custom build" \
+      ORIGINAL_DOCKER_TAG="custom build" \
+      NETBOX_GIT_COMMIT="not built from git" \
+      NETBOX_GIT_URL="not built from git"
 
-ARG NETBOX_DOCKER_PROJECT_VERSION=snapshot
-LABEL NETBOX_DOCKER_PROJECT_VERSION="$NETBOX_DOCKER_PROJECT_VERSION"
+#####
+## LDAP specific configuration
+#####
+
+FROM main as ldap
+
+RUN apk add --no-cache \
+      libsasl \
+      libldap \
+      util-linux
+
+COPY docker/ldap_config.docker.py /opt/netbox/netbox/netbox/ldap_config.py
+COPY configuration/ldap_config.py /etc/netbox/config/ldap_config.py
