@@ -161,6 +161,10 @@ PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
 # this setting is derived from the installed location.
 REPORTS_ROOT = os.environ.get('REPORTS_ROOT', '/etc/netbox/reports')
 
+# The file path where custom scripts will be stored. A trailing slash is not needed. Note that the default value of
+# this setting is derived from the installed location.
+SCRIPTS_ROOT = os.environ.get('SCRIPTS_ROOT', '/etc/netbox/scripts')
+
 # Time zone (default: UTC)
 TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
 
