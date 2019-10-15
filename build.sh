@@ -222,22 +222,19 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
 
     # --label
     DOCKER_BUILD_ARGS+=(
-      --label "NETBOX_DOCKER_PROJECT_VERSION=${NETBOX_DOCKER_PROJECT_VERSION}"
-      --label "NETBOX_BRANCH=${BRANCH}"
-      --label "ORIGINAL_DOCKER_TAG=${TARGET_DOCKER_TAG}"
+        --label "NETBOX_DOCKER_PROJECT_VERSION=${NETBOX_DOCKER_PROJECT_VERSION}"
+        --label "NETBOX_BRANCH=${BRANCH}"
+        --label "ORIGINAL_DOCKER_TAG=${TARGET_DOCKER_TAG}"
     )
     if [ -d "${NETBOX_PATH}/.git" ]; then
       DOCKER_BUILD_ARGS+=(
-        --label "NETBOX_GIT_COMMIT=$($DRY cd ${NETBOX_PATH}; $DRY git rev-parse HEAD)"
-        --label "NETBOX_GIT_URL=$($DRY cd ${NETBOX_PATH}; $DRY git remote get-url origin)"
+        --label "NETBOX_GIT_COMMIT=$($DRY cd "${NETBOX_PATH}"; $DRY git rev-parse HEAD)"
+        --label "NETBOX_GIT_URL=$($DRY cd "${NETBOX_PATH}"; $DRY git remote get-url origin)"
       )
     fi
 
     # --build-arg
-    DOCKER_BUILD_ARGS+=(
-      --build-arg "NETBOX_PATH=${NETBOX_PATH}"
-      --build-arg "DOCKER_REPO=${DOCKER_REPO}"
-    )
+    DOCKER_BUILD_ARGS+=(    --build-arg "NETBOX_PATH=${NETBOX_PATH}" )
     if [ -n "${DOCKER_FROM}" ]; then
       DOCKER_BUILD_ARGS+=( --build-arg "FROM=${DOCKER_FROM}" )
     fi

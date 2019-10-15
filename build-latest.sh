@@ -19,7 +19,7 @@ fi
 # Checking if PRERELEASE is either unset, 'true' or 'false'
 ###
 if [ -n "${PRERELEASE}" ] &&
-   { [ "${PRERELEASE}" != "true" ] && [ "${PRERELEAS}E" != "false" ]; }; then
+   { [ "${PRERELEASE}" != "true" ] && [ "${PRERELEASE}" != "false" ]; }; then
 
   if [ -z "${DEBUG}" ]; then
     echo "⚠️ PRERELEASE must be either unset, 'true' or 'false', but was '${PRERELEASE}'!"
