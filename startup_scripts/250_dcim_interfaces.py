@@ -1,5 +1,10 @@
 from dcim.models import Interface, Device
-from dcim.constants import IFACE_TYPE_CHOICES
+
+try:
+    from dcim.constants import IFACE_TYPE_CHOICES
+except ImportError:
+    from dcim.constants import IFACE_FF_CHOICES as IFACE_TYPE_CHOICES
+
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
