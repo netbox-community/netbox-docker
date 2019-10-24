@@ -30,7 +30,7 @@ RUN pip install --install-option="--prefix=/install" \
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt /
-RUN pip install --install-option="--prefix=/install" -r /requirements.txt 
+RUN pip install --install-option="--prefix=/install" -r /requirements.txt
 
 ###
 # Main stage
