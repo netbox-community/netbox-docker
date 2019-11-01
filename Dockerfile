@@ -16,7 +16,7 @@ RUN apk add --no-cache \
 
 WORKDIR /install
 
-RUN pip install --prefix="/install" --install-option="--prefix=/install" \
+RUN pip install --prefix="/install" --no-warn-script-location \
 # gunicorn is used for launching netbox
       gunicorn \
       greenlet \
@@ -30,7 +30,7 @@ RUN pip install --prefix="/install" --install-option="--prefix=/install" \
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt /
-RUN pip install --prefix="/install" --install-option="--prefix=/install" -r /requirements.txt
+RUN pip install --prefix="/install" --no-warn-script-location -r /requirements.txt
 
 ###
 # Main stage
