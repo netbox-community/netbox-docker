@@ -37,6 +37,8 @@ DATABASE = {
                                                          # PostgreSQL password
     'HOST': os.environ.get('DB_HOST', 'localhost'),      # Database server
     'PORT': os.environ.get('DB_PORT', ''),               # Database port (leave blank for default)
+    'OPTIONS': {'sslmode': os.environ.get('DB_SSLMODE', 'prefer')}, 
+                                                         # Database connection SSLMODE
 }
 
 # This key is used for secure generation of random numbers and strings. It must never be exposed outside of this file.
