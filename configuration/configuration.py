@@ -37,6 +37,8 @@ DATABASE = {
                                                          # PostgreSQL password
     'HOST': os.environ.get('DB_HOST', 'localhost'),      # Database server
     'PORT': os.environ.get('DB_PORT', ''),               # Database port (leave blank for default)
+    'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', '300')), 
+                                                         # Database connection persistence
 }
 
 # This key is used for secure generation of random numbers and strings. It must never be exposed outside of this file.
