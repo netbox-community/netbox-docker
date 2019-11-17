@@ -30,23 +30,26 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "                When \${BRANCH}=master:  latest"
   echo "                When \${BRANCH}=develop: snapshot"
   echo "                Else:          same as \${BRANCH}"
-  echo "  DOCKER_ORG  The Docker registry (i.e. hub.docker.com/r/\${DOCKER_ORG}/\${DOCKER_REPO})"
-  echo "              Also used for tagging the image."
+  echo "  DOCKER_REGISTRY The Docker repository's registry (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
+  echo "              Used for tagging the image."
+  echo "              Default: docker.io"
+  echo "  DOCKER_ORG  The Docker repository's organisation (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
+  echo "              Used for tagging the image."
   echo "              Default: netboxcommunity"
-  echo "  DOCKER_REPO The Docker registry (i.e. hub.docker.com/r/\${DOCKER_ORG}/\${DOCKER_REPO})"
-  echo "              Also used for tagging the image."
+  echo "  DOCKER_REPO The Docker repository's name (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
+  echo "              Used for tagging the image."
   echo "              Default: netbox"
-  echo "  DOCKER_FROM The base image to use."
-  echo "              Default: Whatever is defined as default in the Dockerfile."
   echo "  DOCKER_TAG  The name of the tag which is applied to the image."
   echo "              Useful for pushing into another registry than hub.docker.com."
-  echo "              Default: \${DOCKER_ORG}/\${DOCKER_REPO}:\${TAG}"
+  echo "              Default: \${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}:\${TAG}"
   echo "  DOCKER_SHORT_TAG The name of the short tag which is applied to the"
   echo "              image. This is used to tag all patch releases to their"
   echo "              containing version e.g. v2.5.1 -> v2.5"
-  echo "              Default: \${DOCKER_ORG}/\${DOCKER_REPO}:<MAJOR>.<MINOR>"
+  echo "              Default: \${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}:<MAJOR>.<MINOR>"
   echo "  DOCKERFILE  The name of Dockerfile to use."
   echo "              Default: Dockerfile"
+  echo "  DOCKER_FROM The base image to use."
+  echo "              Default: Whatever is defined as default in the Dockerfile."
   echo "  DOCKER_TARGET A specific target to build."
   echo "              It's currently not possible to pass multiple targets."
   echo "              Default: main ldap"
@@ -99,12 +102,6 @@ else
 fi
 
 ###
-# read the project version from the `VERSION` file and trim it
-# see https://stackoverflow.com/a/3232433/172132
-###
-NETBOX_DOCKER_PROJECT_VERSION="${NETBOX_DOCKER_PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' VERSION)}"
-
-###
 # variables for fetching the source
 ###
 SRC_ORG="${SRC_ORG-netbox-community}"
@@ -153,8 +150,28 @@ if [ ! -f "${DOCKERFILE}" ]; then
 fi
 
 ###
+# variables for labelling the docker image
+###
+BUILD_DATE="$(date --utc --iso-8601=minutes)"
+
+if [ -d ".git" ]; then
+  GIT_REF="$(git rev-parse HEAD)"
+fi
+
+# read the project version from the `VERSION` file and trim it, see https://stackoverflow.com/a/3232433/172132
+PROJECT_VERSION="${PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' VERSION)}"
+
+# Get the Git information from the netbox directory
+if [ -d "${NETBOX_PATH}/.git" ]; then
+  NETBOX_GIT_REF=$(cd ${NETBOX_PATH}; git rev-parse HEAD)
+  NETBOX_GIT_BRANCH=$(cd ${NETBOX_PATH}; git rev-parse --abbrev-ref HEAD)
+  NETBOX_GIT_URL=$(cd ${NETBOX_PATH}; git remote get-url origin)
+fi
+
+###
 # variables for tagging the docker image
 ###
+DOCKER_REGISTRY="${DOCKER_REGISTRY-docker.io}"
 DOCKER_ORG="${DOCKER_ORG-netboxcommunity}"
 DOCKER_REPO="${DOCKER_REPO-netbox}"
 case "${BRANCH}" in
@@ -182,7 +199,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   ###
   # composing the final TARGET_DOCKER_TAG
   ###
-  TARGET_DOCKER_TAG="${DOCKER_TAG-${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
+  TARGET_DOCKER_TAG="${DOCKER_TAG-${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
   if [ "${DOCKER_TARGET}" != "main" ]; then
     TARGET_DOCKER_TAG="${TARGET_DOCKER_TAG}-${DOCKER_TARGET}"
   fi
@@ -196,10 +213,10 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     MAJOR=${BASH_REMATCH[1]}
     MINOR=${BASH_REMATCH[2]}
 
-    DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG-${DOCKER_ORG}/${DOCKER_REPO}:v${MAJOR}.${MINOR}}"
+    TARGET_DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG-${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_REPO}:v${MAJOR}.${MINOR}}"
 
     if [ "${DOCKER_TARGET}" != "main" ]; then
-      DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG}-${DOCKER_TARGET}"
+      TARGET_DOCKER_SHORT_TAG="${TARGET_DOCKER_SHORT_TAG}-${DOCKER_TARGET}"
     fi
   fi
 
@@ -216,25 +233,39 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       -f "${DOCKERFILE}"
       -t "${TARGET_DOCKER_TAG}"
     )
-    if [ -n "${DOCKER_SHORT_TAG}" ]; then
-      DOCKER_BUILD_ARGS+=( -t "${DOCKER_SHORT_TAG}" )
+    if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
+      DOCKER_BUILD_ARGS+=( -t "${TARGET_DOCKER_SHORT_TAG}" )
     fi
 
     # --label
-    DOCKER_BUILD_ARGS+=(
-        --label "NETBOX_DOCKER_PROJECT_VERSION=${NETBOX_DOCKER_PROJECT_VERSION}"
-        --label "NETBOX_BRANCH=${BRANCH}"
-        --label "ORIGINAL_DOCKER_TAG=${TARGET_DOCKER_TAG}"
-    )
-    if [ -d "${NETBOX_PATH}/.git" ]; then
+    if [ "${DOCKER_TARGET}" == "main" ]; then
       DOCKER_BUILD_ARGS+=(
-        --label "NETBOX_GIT_COMMIT=$($DRY cd "${NETBOX_PATH}"; $DRY git rev-parse HEAD)"
-        --label "NETBOX_GIT_URL=$($DRY cd "${NETBOX_PATH}"; $DRY git remote get-url origin)"
+        --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
+        
+        --label "org.label-schema.build-date=${BUILD_DATE}"
+        --label "org.opencontainers.image.created=${BUILD_DATE}"
+
+        --label "org.label-schema.version=${PROJECT_VERSION}"
+        --label "org.opencontainers.image.version=${PROJECT_VERSION}"
       )
+      if [ -d ".git" ]; then
+        DOCKER_BUILD_ARGS+=(
+          --label "org.label-schema.vcs-ref=${GIT_REF}"
+          --label "org.opencontainers.image.revision=${GIT_REF}"
+        )
+      fi
+      if [ -d "${NETBOX_PATH}/.git" ]; then
+        DOCKER_BUILD_ARGS+=(
+          --label "NETBOX_GIT_BRANCH=${NETBOX_GIT_BRANCH}"
+          --label "NETBOX_GIT_REF=${NETBOX_GIT_REF}"
+          --label "NETBOX_GIT_URL=${NETBOX_GIT_URL}"
+        )
+      fi
     fi
 
     # --build-arg
-    DOCKER_BUILD_ARGS+=(    --build-arg "NETBOX_PATH=${NETBOX_PATH}" )
+    DOCKER_BUILD_ARGS+=(   --build-arg "NETBOX_PATH=${NETBOX_PATH}" )
+
     if [ -n "${DOCKER_FROM}" ]; then
       DOCKER_BUILD_ARGS+=( --build-arg "FROM=${DOCKER_FROM}" )
     fi
@@ -262,10 +293,10 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     $DRY docker push "${TARGET_DOCKER_TAG}"
     echo "✅ Finished pushing the Docker image '${TARGET_DOCKER_TAG}'."
 
-    if [ -n "$DOCKER_SHORT_TAG" ]; then
-      echo "⏫ Pushing '${DOCKER_SHORT_TAG}'"
-      $DRY docker push "${DOCKER_SHORT_TAG}"
-      echo "✅ Finished pushing the Docker image '${DOCKER_SHORT_TAG}'."
+    if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
+      echo "⏫ Pushing '${TARGET_DOCKER_SHORT_TAG}'"
+      $DRY docker push "${TARGET_DOCKER_SHORT_TAG}"
+      echo "✅ Finished pushing the Docker image '${TARGET_DOCKER_SHORT_TAG}'."
     fi
   fi
 done

@@ -45,12 +45,22 @@ The output of `docker version`: `XXXXX`
 The output of `git rev-parse HEAD`: `XXXXX`
 The command you used to start the project: `XXXXX`
 
+<!-- adjust the `latest` tag to the version you're using -->
+The output of `docker inspect netboxcommunity/netbox:latest --format "{{json .ContainerConfig.Labels}}"`:
+
+```json
+{
+  "JSON JSON JSON":
+    "--> Please paste formatted json. (Use e.g. `jq` or https://jsonformatter.curiousconcept.com/)"
+}
+```
+
 The output of `docker-compose logs netbox`:
 <!--
 If your log is very long, create a Gist instead (and post the link to it): https://gist.github.com
 -->
 
-```
+```text
 LOG LOG LOG
 ```
 
@@ -60,6 +70,6 @@ Only if you have gotten a 5xx http error, else delete this section.
 If your log is very long, create a Gist instead (and post the link to it): https://gist.github.com
 -->
 
-```
+```text
 LOG LOG LOG
 ```
