@@ -51,6 +51,10 @@ RUN apk add --no-cache \
       postgresql-libs \
       ttf-ubuntu-font-family
 
+RUN addgroup -S -g 101 netbox \
+ && adduser -DHS -u 101 netbox \
+ && adduser netbox netbox
+
 WORKDIR /opt
 
 COPY --from=builder /install /usr/local
@@ -67,6 +71,12 @@ COPY initializers/ /opt/netbox/initializers/
 COPY configuration/configuration.py /etc/netbox/config/configuration.py
 
 WORKDIR /opt/netbox/netbox
+
+# Must set permissions for '/opt/netbox/netbox/static' directory
+# to a+w so that `./manage.py collectstatic` can be executed during
+# container startup.
+# Not satisfying
+RUN mkdir static && chmod a+w static media
 
 ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
