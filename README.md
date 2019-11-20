@@ -37,12 +37,15 @@ $ xdg-open "http://$(docker-compose port nginx 8080)/" &>/dev/null &
 
 Alternatively, use something like [Reception][docker-reception] to connect to _docker-compose_ projects.
 
-Default credentials:
+The default credentials are:
 
 * Username: **admin**
 * Password: **admin**
 * API Token: **0123456789abcdef0123456789abcdef01234567**
 
+There is a more complete [Getting Started guide on our Wiki][wiki-getting-started].
+
+[wiki-getting-started]: https://github.com/netbox-community/netbox-docker/wiki/Getting-Started
 [docker-reception]: https://github.com/nxt-engineering/reception
 
 ## Dependencies
