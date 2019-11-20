@@ -111,12 +111,12 @@ SRC_ORG="${SRC_ORG-netbox-community}"
 SRC_REPO="${SRC_REPO-netbox}"
 BRANCH="${1}"
 URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}.git}"
+NETBOX_PATH="${NETBOX_PATH-.netbox}"
 
 ###
 # fetching the source
 ###
-if [ "${2}" != "--push-only" ] ; then
-  NETBOX_PATH="${NETBOX_PATH-.netbox}"
+if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
   echo "🌐 Checking out '${BRANCH}' of netbox from the url '${URL}' into '${NETBOX_PATH}'"
   if [ ! -d "${NETBOX_PATH}" ]; then
     $DRY git clone -q --depth 10 -b "${BRANCH}" "${URL}" "${NETBOX_PATH}"
