@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+umask 002
 
 # wait shortly and then run db migrations (retry on error)
 while ! ./manage.py migrate 2>&1; do
