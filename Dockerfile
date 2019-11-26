@@ -18,7 +18,7 @@ WORKDIR /install
 
 RUN pip install --prefix="/install" --no-warn-script-location \
 # gunicorn is used for launching netbox
-      'gunicorn<20.0.0' \
+      gunicorn \
       greenlet \
       eventlet \
 # napalm is used for gathering information from network devices
