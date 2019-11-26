@@ -50,12 +50,12 @@ There is a more complete [Getting Started guide on our Wiki][wiki-getting-starte
 
 ## Dependencies
 
-This project relies only on *Docker* and *docker-compose* meeting this requirements:
+This project relies only on *Docker* and *docker-compose* meeting these requirements:
 
 * The *Docker version* must be at least `17.05`.
 * The *docker-compose version* must be at least `1.17.0`.
 
-To ensure this, compare the output of `docker --version` and `docker-compose --version` with the requirements above.
+To check the version installed on your system, compare the output of `docker --version` and `docker-compose --version` with the requirements above.
 
 ## Reference Documentation
 
