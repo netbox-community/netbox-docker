@@ -152,7 +152,7 @@ fi
 ###
 # variables for labelling the docker image
 ###
-BUILD_DATE="$(date --utc --iso-8601=minutes)"
+BUILD_DATE="$(date -u '+%Y-%m-%dT%H:%M+00:00')"
 
 if [ -d ".git" ]; then
   GIT_REF="$(git rev-parse HEAD)"
