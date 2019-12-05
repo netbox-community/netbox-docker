@@ -17,6 +17,9 @@
 # vm_managers:
 #   - codename__endswith:
 #     - _virtualmachine
+# device_managers:
+#   - codename__contains:
+#     - device
 # creators:
 #   - codename__startswith:
 #     - add_
