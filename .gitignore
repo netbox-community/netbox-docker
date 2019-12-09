@@ -1,2 +1,3 @@
 *.sql.gz
 .netbox
+docker-compose.override.yml

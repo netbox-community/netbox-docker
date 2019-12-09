@@ -1,5 +1,7 @@
+.git
 .github
 .travis.yml
+*.md
+env
 build*
-*.env
-.git
+docker-compose.override.yml
