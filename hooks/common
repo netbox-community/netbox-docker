@@ -14,7 +14,7 @@ ensure_jq() {
 # Passes args to the scripts
 run_build() {
   echo "🐳🐳🐳 Building '${BUILD}' images"
-  case $BUILD in
+  case ${BUILD} in
     release)
       # build the latest release
       # shellcheck disable=SC2068
@@ -49,9 +49,9 @@ run_build() {
 }
 
 echo "🤖🤖🤖 Preparing build"
-export DOCKER_ORG="index.docker.io/netboxcommunity"
+export DOCKER_ORG=netboxcommunity
 export DOCKER_REPO=netbox
-export DOCKERHUB_REPO=netboxcommunity/netbox
+export DOCKER_REGISTRY=docker.io
 # shellcheck disable=SC2153
 export BUILD="${DOCKER_TAG}"
 
