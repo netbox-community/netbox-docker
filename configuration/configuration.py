@@ -37,6 +37,8 @@ DATABASE = {
                                                          # PostgreSQL password
     'HOST': os.environ.get('DB_HOST', 'localhost'),      # Database server
     'PORT': os.environ.get('DB_PORT', ''),               # Database port (leave blank for default)
+    'OPTIONS': {'sslmode': os.environ.get('DB_SSLMODE', 'prefer')}, 
+                                                         # Database connection SSLMODE
     'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', '300')), 
                                                          # Database connection persistence
 }
