@@ -2,8 +2,8 @@
 
 . hooks/common
 
-if [ "${SOURCE_BRANCH}" == "master" ] || [ "${DEBUG}" == "true" ]; then
-  if [ "${SOURCE_BRANCH}" != "master" ]; then
+if [ "${SOURCE_BRANCH}" == "release" ] || [ "${DEBUG}" == "true" ]; then
+  if [ "${SOURCE_BRANCH}" != "release" ]; then
     echo "⚠️⚠️⚠️ Would exit, but DEBUG is '${DEBUG}'".
   fi
 

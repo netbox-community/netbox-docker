@@ -11,21 +11,21 @@ Autotest: Internal and External Pull Requests
 Repository Links: Enable for Base Image
 Build Rules:
 - Source Type: Branch
-  Source: master
+  Source: release
   Docker Tag: branches
   Dockerfile location: Dockerfile
   Build Context: /
   Autobuild: on
   Build Caching: on
 - Source Type: Branch
-  Source: master
+  Source: release
   Docker Tag: prerelease
   Dockerfile location: Dockerfile
   Build Context: /
   Autobuild: on
   Build Caching: on
 - Source Type: Branch
-  Source: master
+  Source: release
   Docker Tag: release
   Dockerfile location: Dockerfile
   Build Context: /
