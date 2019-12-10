@@ -1,7 +1,7 @@
 <!--
 Please don't open an issue when submit PR.
 
-But if there is already a related issue, please put it's number here. E.g. #123 -->
+But if there is already a related issue, please put it's number here. E.g. #123 or N/A -->
 Related Issue:
 
 ## New Behavior
