@@ -30,18 +30,15 @@ with file.open('r') as stream:
         if yaml_permissions:
           permission_object.permissions.clear()
           for yaml_permission in yaml_permissions:
-            if isinstance(yaml_permission,dict):
-              # assume this is the specific codename filter function instead of an exact codename
-              permission_codename_function = list(yaml_permission.keys())[0]
-              permission_codenames = yaml_permission[permission_codename_function]
+            if '*' in yaml_permission:
+              permission_codename_function = 'codename__iregex'
+              permission_codename = '^' + yaml_permission.replace('*','.*') + '$'
             else:
               permission_codename_function = 'codename'
-              permission_codenames = list({yaml_permission})
-
-            # supports either one codename from the permissions list, or multiple codenames in a codename_function dict
-            for permission_codename in permission_codenames:
-              # supports non-unique permission codenames
-              for permission in eval('Permission.objects.filter(' + permission_codename_function + '=permission_codename)'):
-                permission_object.permissions.add(permission)
+              permission_codename = yaml_permission
+            
+            # supports non-unique permission codenames
+            for permission in eval('Permission.objects.filter(' + permission_codename_function + '=permission_codename)'):
+              permission_object.permissions.add(permission)
 
           permission_object.save()

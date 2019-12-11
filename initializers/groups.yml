@@ -7,19 +7,15 @@
 # writers:
 #   users:
 #   - writer
-## specify explicit permission codenames or codename filter functions and filters to match on
+## specify explicit permission codenames or include wildcard to match multiple permissions
 #   permissions:
 #   - delete_device
 #   - delete_virtualmachine
-#   - codename__startswith:
-#     - add_
-#     - change_
+#   - add_*
+#   - change_*
 # vm_managers:
-#   - codename__endswith:
-#     - _virtualmachine
+#   - *_virtualmachine
 # device_managers:
-#   - codename__contains:
-#     - device
+#   - *device*
 # creators:
-#   - codename__startswith:
-#     - add_
+#   - add_*
