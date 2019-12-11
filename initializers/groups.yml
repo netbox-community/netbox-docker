@@ -14,8 +14,9 @@
 #   - add_*
 #   - change_*
 # vm_managers:
-#   - *_virtualmachine
+## yaml doesn't allow starting a key with an asterisk without explicit use of single quote
+#   - '*_virtualmachine'
 # device_managers:
-#   - *device*
+#   - '*device*'
 # creators:
 #   - add_*
