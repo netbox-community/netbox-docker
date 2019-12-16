@@ -25,6 +25,8 @@ Please try this means to get help before opening an issue here:
 * On the networktocode Slack in the #netbox channel: http://slack.networktocode.com/
 * On the Netbox mailing list: https://groups.google.com/d/forum/netbox-discuss
 
+Please don't open an issue when you have a PR ready. Just submit the PR, that's good enough.
+
 -->
 
 ## Current Behavior
