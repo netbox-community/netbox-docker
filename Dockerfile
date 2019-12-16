@@ -26,7 +26,9 @@ RUN pip install --prefix="/install" --no-warn-script-location \
 # ruamel is used in startup_scripts
       'ruamel.yaml>=0.15,<0.16' \
 # django_auth_ldap is required for ldap
-      django_auth_ldap
+      django_auth_ldap \
+# django-storages was introduced in 2.7 and is optional
+      django-storages
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt /
