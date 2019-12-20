@@ -68,6 +68,13 @@ COPY configuration/configuration.py /etc/netbox/config/configuration.py
 
 WORKDIR /opt/netbox/netbox
 
+# Must set permissions for '/opt/netbox/netbox/static' directory
+# to g+w so that `./manage.py collectstatic` can be executed during
+# container startup.
+# Must set permissions for '/opt/netbox/netbox/media' directory
+# to g+w so that pictures can be uploaded to netbox.
+RUN mkdir static && chmod g+w static media
+
 ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
 CMD ["gunicorn", "-c /etc/netbox/config/gunicorn_config.py", "netbox.wsgi"]
