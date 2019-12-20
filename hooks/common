@@ -31,7 +31,7 @@ run_build() {
       ./build-branches.sh $@
       ;;
     this) # Pull Requests
-      # only build the 'master' branch
+      # only build the 'master' branch of netbox
       # (resulting in the 'latest' docker tag)
       # and the 'main' target.
       DOCKER_TARGET=main ./build.sh master

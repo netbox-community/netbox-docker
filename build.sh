@@ -27,9 +27,9 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "              Default: undefined"
   echo "  TAG         The version part of the docker tag."
   echo "              Default:"
-  echo "                When \${BRANCH}=master:  latest"
-  echo "                When \${BRANCH}=develop: snapshot"
-  echo "                Else:          same as \${BRANCH}"
+  echo "                When <branch>=master:  latest"
+  echo "                When <branch>=develop: snapshot"
+  echo "                Else:                  same as <branch>"
   echo "  DOCKER_REGISTRY The Docker repository's registry (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
   echo "              Used for tagging the image."
   echo "              Default: docker.io"
@@ -106,7 +106,7 @@ fi
 ###
 SRC_ORG="${SRC_ORG-netbox-community}"
 SRC_REPO="${SRC_REPO-netbox}"
-BRANCH="${1}"
+NETBOX_BRANCH="${1}"
 URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}.git}"
 NETBOX_PATH="${NETBOX_PATH-.netbox}"
 
@@ -114,9 +114,9 @@ NETBOX_PATH="${NETBOX_PATH-.netbox}"
 # fetching the source
 ###
 if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
-  echo "🌐 Checking out '${BRANCH}' of netbox from the url '${URL}' into '${NETBOX_PATH}'"
+  echo "🌐 Checking out '${NETBOX_BRANCH}' of netbox from the url '${URL}' into '${NETBOX_PATH}'"
   if [ ! -d "${NETBOX_PATH}" ]; then
-    $DRY git clone -q --depth 10 -b "${BRANCH}" "${URL}" "${NETBOX_PATH}"
+    $DRY git clone -q --depth 10 -b "${NETBOX_BRANCH}" "${URL}" "${NETBOX_PATH}"
   fi
 
   (
@@ -127,7 +127,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
     fi
 
     $DRY git remote set-url origin "${URL}"
-    $DRY git fetch -qp --depth 10 origin "${BRANCH}"
+    $DRY git fetch -qp --depth 10 origin "${NETBOX_BRANCH}"
     $DRY git checkout -qf FETCH_HEAD
     $DRY git prune
   )
@@ -174,13 +174,13 @@ fi
 DOCKER_REGISTRY="${DOCKER_REGISTRY-docker.io}"
 DOCKER_ORG="${DOCKER_ORG-netboxcommunity}"
 DOCKER_REPO="${DOCKER_REPO-netbox}"
-case "${BRANCH}" in
+case "${NETBOX_BRANCH}" in
   master)
     TAG="${TAG-latest}";;
   develop)
     TAG="${TAG-snapshot}";;
   *)
-    TAG="${TAG-$BRANCH}";;
+    TAG="${TAG-$NETBOX_BRANCH}";;
 esac
 
 ###
@@ -241,7 +241,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     if [ "${DOCKER_TARGET}" == "main" ]; then
       DOCKER_BUILD_ARGS+=(
         --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
-        
+
         --label "org.label-schema.build-date=${BUILD_DATE}"
         --label "org.opencontainers.image.created=${BUILD_DATE}"
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds develop, develop-* and master branches
+# Builds develop, develop-* and master branches of Netbox
 
 echo "▶️ $0 $*"
 
