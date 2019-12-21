@@ -9,6 +9,6 @@ if [ "${SOURCE_BRANCH}" == "release" ] || [ "${DEBUG}" == "true" ]; then
 
   run_build --push-only
 else
-  echo "⚠️⚠️⚠️ Only pushing on 'main' branch, but current branch is '${SOURCE_BRANCH}'"
+  echo "⚠️⚠️⚠️ Only pushing on 'release' branch, but current branch is '${SOURCE_BRANCH}'"
   exit 0
 fi

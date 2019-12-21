@@ -163,9 +163,9 @@ PROJECT_VERSION="${PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]
 
 # Get the Git information from the netbox directory
 if [ -d "${NETBOX_PATH}/.git" ]; then
-  NETBOX_GIT_REF=$(cd ${NETBOX_PATH}; git rev-parse HEAD)
-  NETBOX_GIT_BRANCH=$(cd ${NETBOX_PATH}; git rev-parse --abbrev-ref HEAD)
-  NETBOX_GIT_URL=$(cd ${NETBOX_PATH}; git remote get-url origin)
+  NETBOX_GIT_REF=$(cd "${NETBOX_PATH}"; git rev-parse HEAD)
+  NETBOX_GIT_BRANCH=$(cd "${NETBOX_PATH}"; git rev-parse --abbrev-ref HEAD)
+  NETBOX_GIT_URL=$(cd "${NETBOX_PATH}"; git remote get-url origin)
 fi
 
 ###
