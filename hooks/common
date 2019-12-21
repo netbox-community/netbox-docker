@@ -48,6 +48,40 @@ run_build() {
   esac
 }
 
+env_info() {
+  echo "ℹ️ docker version"
+  docker version
+
+  echo "ℹ️ docker-compose version"
+  docker-compose version
+
+  echo "ℹ️ git version"
+  git --version
+
+  echo "ℹ️ curl version"
+  curl --version
+
+  echo "ℹ️ jq version"
+  jq --version
+
+  echo "ℹ️ bash version"
+  bash --version
+
+  echo "ℹ️ apt-get version"
+  apt-get --version
+
+  echo "ℹ️ date version"
+  date --version
+
+  echo "ℹ️ Netbox Docker VERSION"
+  cat VERSION
+
+  echo "ℹ️ Netbox Docker git ref"
+  git rev-parse HEAD
+  git rev-parse --abbrev-ref HEAD
+}
+
+
 echo "🤖🤖🤖 Preparing build"
 export DOCKER_ORG=netboxcommunity
 export DOCKER_REPO=netbox
@@ -58,3 +92,6 @@ export BUILD="${DOCKER_TAG}"
 unset DOCKER_TAG
 
 ensure_jq
+
+echo "🤖🤖🤖 Build Environment Information"
+env_info
