@@ -1,11 +1,10 @@
 version: '3.4'
 services:
-  netbox: &netbox
-    image: netboxcommunity/netbox:${VERSION-latest}
+  netbox:
+    image: ${IMAGE-netboxcommunity/netbox:latest}
     depends_on:
     - postgres
     - redis
-    - netbox-worker
     env_file: env/netbox.env
     user: '101'
     volumes:
@@ -17,15 +16,6 @@ services:
     - netbox-nginx-config:/etc/netbox-nginx:z
     - netbox-static-files:/opt/netbox/netbox/static:z
     - netbox-media-files:/opt/netbox/netbox/media:z
-  netbox-worker:
-    <<: *netbox
-    depends_on:
-    - redis
-    entrypoint:
-    - python3
-    - /opt/netbox/netbox/manage.py
-    command:
-    - rqworker
   nginx:
     command: nginx -c /etc/netbox-nginx/nginx.conf
     image: nginx:1.17-alpine
@@ -39,25 +29,17 @@ services:
   postgres:
     image: postgres:11-alpine
     env_file: env/postgres.env
-    volumes:
-    - netbox-postgres-data:/var/lib/postgresql/data
   redis:
     image: redis:5-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis.env
-    volumes:
-    - netbox-redis-data:/data
 volumes:
   netbox-static-files:
     driver: local
   netbox-nginx-config:
     driver: local
   netbox-media-files:
-    driver: local
-  netbox-postgres-data:
-    driver: local
-  netbox-redis-data:
     driver: local

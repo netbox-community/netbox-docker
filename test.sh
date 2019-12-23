@@ -5,11 +5,14 @@ set -e
 
 # version is used by `docker-compose.yml` do determine the tag
 # of the Docker Image that is to be used
-export VERSION=${VERSION-latest}
+export IMAGE="${IMAGE-netboxcommunity/netbox:latest}"
+
+# The docker compose command to use
+doco="docker-compose -f docker-compose.test.yml"
 
 test_netbox_unit_tests() {
   echo "⏱ Running Netbox Unit Tests"
-  docker-compose run --rm netbox ./manage.py test
+  $doco run --rm netbox ./manage.py test
 }
 
 test_initializers() {
@@ -25,17 +28,20 @@ test_initializers() {
   mv initializers initializers_original
   mv initializers_test initializers
 
-  docker-compose run --rm netbox ./manage.py check
+  $doco run --rm netbox ./manage.py check
 }
 
 test_cleanup() {
   echo "💣 Cleaning Up"
-  docker-compose down -v
-  rm -rf initializers
-  mv initializers_original initializers
+  $doco down -v
+
+  if [ -d initializers_original ]; then
+    rm -rf initializers
+    mv initializers_original initializers
+  fi
 }
 
-echo "🐳🐳🐳 Start testing '${VERSION}'"
+echo "🐳🐳🐳 Start testing '${IMAGE}'"
 
 # Make sure the cleanup script is executed
 trap test_cleanup EXIT ERR
@@ -43,4 +49,4 @@ trap test_cleanup EXIT ERR
 test_netbox_unit_tests
 test_initializers
 
-echo "🐳🐳🐳 Done testing '${VERSION}'"
+echo "🐳🐳🐳 Done testing '${IMAGE}'"
