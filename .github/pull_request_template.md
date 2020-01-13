@@ -72,5 +72,5 @@ Please put an x into the brackets (like `[x]`) if you've completed that task.
 -->
 
 * [ ] I have read the comments and followed the PR template.
-* [ ] I have provided a explained my PR according to the information in the comments.
+* [ ] I have provided and explained my PR according to the information in the comments.
 * [ ] My PR targets the `develop` branch.
