@@ -63,6 +63,10 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "              Default: undefined"
   echo "  DRY_RUN     Prints all build statements instead of running them."
   echo "              Default: undefined"
+  echo "  GH_ACTION   If defined, special 'echo' statements are enabled that set the"
+  echo "              following environment variables in Github Actions:"
+  echo "              - FINAL_DOCKER_TAG: The final value of the DOCKER_TAG env variable"
+  echo "              Default: undefined"
   echo ""
   echo "Examples:"
   echo "  ${0} master"
@@ -92,7 +96,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
 fi
 
 ###
-# Determining the build command to use
+# Enabling dry-run mode
 ###
 if [ -z "${DRY_RUN}" ]; then
   DRY=""
@@ -102,7 +106,7 @@ else
 fi
 
 ###
-# variables for fetching the source
+# Variables for fetching the source
 ###
 SRC_ORG="${SRC_ORG-netbox-community}"
 SRC_REPO="${SRC_REPO-netbox}"
@@ -111,7 +115,7 @@ URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}.git}"
 NETBOX_PATH="${NETBOX_PATH-.netbox}"
 
 ###
-# fetching the source
+# Fetching the source
 ###
 if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
   echo "🌐 Checking out '${NETBOX_BRANCH}' of netbox from the url '${URL}' into '${NETBOX_PATH}'"
@@ -150,7 +154,7 @@ if [ ! -f "${DOCKERFILE}" ]; then
 fi
 
 ###
-# variables for labelling the docker image
+# Variables for labelling the docker image
 ###
 BUILD_DATE="$(date -u '+%Y-%m-%dT%H:%M+00:00')"
 
@@ -158,7 +162,7 @@ if [ -d ".git" ]; then
   GIT_REF="$(git rev-parse HEAD)"
 fi
 
-# read the project version from the `VERSION` file and trim it, see https://stackoverflow.com/a/3232433/172132
+# Read the project version from the `VERSION` file and trim it, see https://stackoverflow.com/a/3232433/172132
 PROJECT_VERSION="${PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' VERSION)}"
 
 # Get the Git information from the netbox directory
@@ -169,7 +173,7 @@ if [ -d "${NETBOX_PATH}/.git" ]; then
 fi
 
 ###
-# variables for tagging the docker image
+# Variables for tagging the docker image
 ###
 DOCKER_REGISTRY="${DOCKER_REGISTRY-docker.io}"
 DOCKER_ORG="${DOCKER_ORG-netboxcommunity}"
@@ -193,6 +197,7 @@ echo "🏭 Building the following targets:" "${DOCKER_TARGETS[@]}"
 ###
 # Build each target
 ###
+export DOCKER_BUILDKIT=${DOCKER_BUILDKIT-1}
 for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   echo "🏗 Building the target '${DOCKER_TARGET}'"
 
@@ -202,6 +207,9 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   TARGET_DOCKER_TAG="${DOCKER_TAG-${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_REPO}:${TAG}}"
   if [ "${DOCKER_TARGET}" != "main" ]; then
     TARGET_DOCKER_TAG="${TARGET_DOCKER_TAG}-${DOCKER_TARGET}"
+  fi
+  if [ -n "${GH_ACTION}" ]; then
+    echo "::set-env name=FINAL_DOCKER_TAG::${TARGET_DOCKER_TAG}"
   fi
 
   ###
