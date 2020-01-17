@@ -1,16 +1,32 @@
+## Possible Choices:
+##   width:
+##   - 19
+##   - 23
+##   types:
+##   - 2-post-frame
+##   - 4-post-frame
+##   - 4-post-cabinet
+##   - wall-frame
+##   - wall-cabinet
+##   outer_unit:
+##   - mm
+##   - in
+##
+## Examples:
+
 # - site: AMS 1
 #   name: rack-01
 #   role: Role 1
-#   type: 4-post cabinet
-#   width: 19 inches
+#   type: 4-post-cabinet
+#   width: 19
 #   u_height: 47
 #   custom_fields:
 #     text_field: Description
 # - site: AMS 2
 #   name: rack-02
 #   role: Role 2
-#   type: 4-post cabinet
-#   width: 19 inches
+#   type: 4-post-cabinet
+#   width: 19
 #   u_height: 47
 #   custom_fields:
 #     text_field: Description
@@ -18,8 +34,8 @@
 #   name: rack-03
 #   group: cage 101
 #   role: Role 3
-#   type: 4-post cabinet
-#   width: 19 inches
+#   type: 4-post-cabinet
+#   width: 19
 #   u_height: 47
 #   custom_fields:
 #     text_field: Description
