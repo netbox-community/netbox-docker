@@ -210,6 +210,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   fi
   if [ -n "${GH_ACTION}" ]; then
     echo "::set-env name=FINAL_DOCKER_TAG::${TARGET_DOCKER_TAG}"
+    echo "::set-output name=skipped::false"
   fi
 
   ###

@@ -17,15 +17,20 @@ jobs:
     runs-on: ubuntu-latest
     name: Builds new Netbox Docker Images
     steps:
-    - name: Checkout
+    - id: git-checkout
+      name: Checkout
       uses: actions/checkout@v1
-    - name: Build the image with '${{ matrix.build_cmd }}'
+    - id: docker-build
+      name: Build the image with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
       env:
         GH_ACTION: enable
-    - name: Test the image
+    - id: docker-test
+      name: Test the image
       run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
-    - name: Login to the Docker Registry
+      if: steps.docker-build.outputs.skipped != 'true'
+    - id: registry-login
+      name: Login to the Docker Registry
       run: |
         echo "::add-mask::$DOCKERHUB_USERNAME"
         echo "::add-mask::$DOCKERHUB_PASSWORD"
@@ -33,7 +38,12 @@ jobs:
       env:
         DOCKERHUB_USERNAME: ${{ secrets.dockerhub_username }}
         DOCKERHUB_PASSWORD: ${{ secrets.dockerhub_password }}
-    - name: Push the image
+      if: steps.docker-build.outputs.skipped != 'true'
+    - id: registry-push
+      name: Push the image
       run: ${{ matrix.build_cmd }} --push-only
-    - name: Logout of the Docker Registry
+      if: steps.docker-build.outputs.skipped != 'true'
+    - id: registry-logout
+      name: Logout of the Docker Registry
       run: docker logout "${DOCKER_REGISTRY}"
+      if: steps.docker-build.outputs.skipped != 'true'
