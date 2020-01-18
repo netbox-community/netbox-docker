@@ -65,6 +65,15 @@ If the Wiki must be updated, please make a suggestion below.
 
 ...
 
+## Proposed Release Note Entry
+
+<!--
+Please provide a short summary of your PR that we can copy & paste
+into the release notes.
+-->
+
+...
+
 ## Double Check
 
 <!--
