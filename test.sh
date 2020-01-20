@@ -7,6 +7,16 @@ set -e
 # of the Docker Image that is to be used
 export IMAGE="${IMAGE-netboxcommunity/netbox:latest}"
 
+if [ -z "${IMAGE}" ]; then
+  echo "⚠️ No image defined"
+
+  if [ -z "${DEBUG}" ]; then
+    exit 1;
+  else
+    echo "⚠️ Would 'exit 1' here, but DEBUG is '${DEBUG}'."
+  fi
+fi
+
 # The docker compose command to use
 doco="docker-compose -f docker-compose.test.yml"
 
