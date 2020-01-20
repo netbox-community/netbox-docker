@@ -1,3 +1,18 @@
+## Possible Choices:
+##   type:
+##   - text
+##   - integer
+##   - boolean
+##   - date
+##   - url
+##   - select
+##   filter_logic:
+##   - disabled
+##   - loose
+##   - exact
+##
+## Examples:
+
 # text_field:
 #   type: text
 #   label: Custom Text
@@ -22,8 +37,8 @@
 #   weight: 10
 #   on_objects:
 #   - tenancy.models.Tenant
-# selection_field:
-#   type: selection
+# select_field:
+#   type: select
 #   label: Choose between items
 #   required: false
 #   filter_logic: exact
@@ -41,8 +56,8 @@
 #     weight: 50
 #   - value: Fourth Item
 #     weight: 40
-# selection_field_auto_weight:
-#    type: selection
+# select_field_auto_weight:
+#    type: select
 #    label: Choose between items
 #    required: false
 #    filter_logic: loose

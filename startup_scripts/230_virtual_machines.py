@@ -1,6 +1,5 @@
 from dcim.models import Site, Platform, DeviceRole
 from virtualization.models import Cluster, VirtualMachine
-from virtualization.constants import VM_STATUS_CHOICES
 from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
@@ -42,12 +41,6 @@ with file.open('r') as stream:
           query = { field: params.pop(assoc) }
 
           params[assoc] = model.objects.get(**query)
-
-      if 'status' in params:
-        for vm_status in VM_STATUS_CHOICES:
-          if params['status'] in vm_status:
-            params['status'] = vm_status[0]
-            break
 
       virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
 

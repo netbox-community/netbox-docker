@@ -1,5 +1,4 @@
 from ipam.models import IPAddress, VRF
-from ipam.constants import IPADDRESS_STATUS_CHOICES
 from dcim.models import Device, Interface
 from virtualization.models import VirtualMachine
 from tenancy.models import Tenant
@@ -48,12 +47,6 @@ with file.open('r') as stream:
           else:
               query = { field: params.pop(assoc) }
           params[assoc] = model.objects.get(**query)
-
-      if 'status' in params:
-        for ip_status in IPADDRESS_STATUS_CHOICES:
-          if params['status'] in ip_status:
-            params['status'] = ip_status[0]
-            break
 
       ip_address, created = IPAddress.objects.get_or_create(**params)
 
