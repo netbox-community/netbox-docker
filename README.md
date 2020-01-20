@@ -103,7 +103,7 @@ To use this feature, set the environment-variable `VERSION` before launching `do
 [any tag of the `netboxcommunity/netbox` Docker image on Docker Hub][netbox-dockerhub].
 
 ```bash
-export VERSION=v2.6.9
+export VERSION=v2.7.1
 docker-compose pull netbox
 docker-compose up -d
 ```
@@ -112,7 +112,7 @@ You can also build a specific version of the Netbox Docker image yourself.
 `VERSION` can be any valid [git ref][git-ref] in that case.
 
 ```bash
-export VERSION=v2.6.9
+export VERSION=v2.7.1
 ./build.sh $VERSION
 docker-compose up -d
 ```
@@ -126,7 +126,7 @@ From time to time it might become necessary to re-engineer the structure of this
 Things like the `docker-compose.yml` file or your Kubernetes or OpenShift configurations have to be adjusted as a consequence.
 Since November 2019 each image built from this repo contains a `org.opencontainers.image.version` label.
 (The images contained labels since April 2018, although in November 2019 the labels' names changed.)
-You can check the label of your local image by running `docker inspect netboxcommunity/netbox:v2.6.9 --format "{{json .ContainerConfig.Labels}}"`.
+You can check the label of your local image by running `docker inspect netboxcommunity/netbox:v2.7.1 --format "{{json .ContainerConfig.Labels}}"`.
 
 Please read [the release notes][releases] carefully when updating to a new image version.
 
