@@ -3,7 +3,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/netbox-community/netbox-docker)][github-release]
 [![GitHub stars](https://img.shields.io/github/stars/netbox-community/netbox-docker)][github-stargazers]
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/netbox-community/netbox-docker)
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/netboxcommunity/netbox)
+![Github release workflow](https://img.shields.io/github/workflow/status/netbox-community/netbox-docker/release)
 ![Docker Pulls](https://img.shields.io/docker/pulls/netboxcommunity/netbox)
 [![MicroBadger Layers](https://img.shields.io/microbadger/layers/netboxcommunity/netbox)][netbox-docker-microbadger]
 [![MicroBadger Size](https://img.shields.io/microbadger/image-size/netboxcommunity/netbox)][netbox-docker-microbadger]
@@ -21,7 +21,7 @@ Do you have any questions? Before opening an issue on Github, please join the [N
 [netbox-docker-github]: https://github.com/netbox-community/netbox-docker/
 [ntc-slack]: http://slack.networktocode.com/
 [netbox-docker-slack]: https://slack.com/app_redirect?channel=netbox-docker&team=T09LQ7E9E
-[netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/master/LICENSE
+[netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/release/LICENSE
 
 ## Docker Tags
 
@@ -124,31 +124,34 @@ docker-compose up -d
 
 From time to time it might become necessary to re-engineer the structure of this setup.
 Things like the `docker-compose.yml` file or your Kubernetes or OpenShift configurations have to be adjusted as a consequence.
+
 Since November 2019 each image built from this repo contains a `org.opencontainers.image.version` label.
 (The images contained labels since April 2018, although in November 2019 the labels' names changed.)
-You can check the label of your local image by running `docker inspect netboxcommunity/netbox:v2.7.1 --format "{{json .ContainerConfig.Labels}}"`.
+You can check the label of your local image by running `docker inspect netboxcommunity/netbox:v2.7.1 --format "{{json .Config.Labels}}"`.
 
 Please read [the release notes][releases] carefully when updating to a new image version.
 
 [releases]: https://github.com/netbox-community/netbox-docker/releases
 
-## Rebuilding & Publishing images
+## Rebuilding the Image
 
 `./build.sh` can be used to rebuild the Docker image. See `./build.sh --help` for more information.
 
-### Publishing Docker Images
+For more details on custom builds [consult our wiki][netbox-docker-wiki-build].
 
-New Docker images are built and published every 24h on the [Docker Build Infrastructure][docker-build-infra].
-`DOCKER_HUB.md` contains more information about the build infrastructure.
+[netbox-docker-wiki-build]: https://github.com/netbox-community/netbox-docker/wiki/Build
 
-[docker-build-infra]: https://hub.docker.com/r/netboxcommunity/netbox/builds/
+### Pre-made Docker Images
+
+New Docker images are built and published every 24h.
 
 ## Tests
 
-To run the tests coming with Netbox, use the `docker-compose.yml` file as such:
+We have a test script.
+It runs Netbox's own unit tests and ensures that all initializers work:
 
 ```bash
-docker-compose run netbox ./manage.py test
+IMAGE=netboxcommunity/netbox:latest ./test.sh
 ```
 
 ## About
