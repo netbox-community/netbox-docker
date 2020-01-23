@@ -1,5 +1,5 @@
 <!--
-###############################################################################
+#########################################################################
 
 Thank you for sharing your work and for opening a PR.
 
@@ -9,11 +9,11 @@ First make sure that you point your PR to the `develop` branch!
 Now please read the comments carefully and try to provide information
 on all relevant titles.
 
-###############################################################################
+#########################################################################
 -->
 
 <!--
-Please don't open an extra issue when submiting a PR.
+Please don't open an extra issue when submitting a PR.
 
 But if there is already a related issue, please put it's number here.
 
@@ -81,5 +81,5 @@ Please put an x into the brackets (like `[x]`) if you've completed that task.
 -->
 
 * [ ] I have read the comments and followed the PR template.
-* [ ] I have provided and explained my PR according to the information in the comments.
+* [ ] I have explained my PR according to the information in the comments.
 * [ ] My PR targets the `develop` branch.
