@@ -21,7 +21,7 @@ Do you have any questions? Before opening an issue on Github, please join the [N
 [netbox-docker-github]: https://github.com/netbox-community/netbox-docker/
 [ntc-slack]: http://slack.networktocode.com/
 [netbox-docker-slack]: https://slack.com/app_redirect?channel=netbox-docker&team=T09LQ7E9E
-[netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/master/LICENSE
+[netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/release/LICENSE
 
 ## Docker Tags
 
