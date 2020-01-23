@@ -48,7 +48,7 @@ The output of `git rev-parse HEAD`: `XXXXX`
 The command you used to start the project: `XXXXX`
 
 <!-- adjust the `latest` tag to the version you're using -->
-The output of `docker inspect netboxcommunity/netbox:latest --format "{{json .ContainerConfig.Labels}}"`:
+The output of `docker inspect netboxcommunity/netbox:latest --format "{{json .Config.Labels}}"`:
 
 ```json
 {
