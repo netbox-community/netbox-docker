@@ -3,7 +3,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/netbox-community/netbox-docker)][github-release]
 [![GitHub stars](https://img.shields.io/github/stars/netbox-community/netbox-docker)][github-stargazers]
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/netbox-community/netbox-docker)
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/netboxcommunity/netbox)
+![Github release workflow](https://img.shields.io/github/workflow/status/netbox-community/netbox-docker/release)
 ![Docker Pulls](https://img.shields.io/docker/pulls/netboxcommunity/netbox)
 [![MicroBadger Layers](https://img.shields.io/microbadger/layers/netboxcommunity/netbox)][netbox-docker-microbadger]
 [![MicroBadger Size](https://img.shields.io/microbadger/image-size/netboxcommunity/netbox)][netbox-docker-microbadger]
