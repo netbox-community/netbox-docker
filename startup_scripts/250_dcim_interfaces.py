@@ -1,5 +1,4 @@
 from dcim.models import Interface, Device
-from dcim.constants import IFACE_TYPE_CHOICES
 from extras.models import CustomField, CustomFieldValue
 from ruamel.yaml import YAML
 
@@ -27,16 +26,6 @@ with file.open('r') as stream:
         query = { field: params.pop(assoc) }
 
         params[assoc] = model.objects.get(**query)
-
-      if 'type' in params:
-        for outer_list in IFACE_TYPE_CHOICES:
-          for type_choices in outer_list[1]:
-            if params['type'] in type_choices:
-              params['type'] = type_choices[0]
-              break
-          else:
-            continue
-          break
 
       interface, created = Interface.objects.get_or_create(**params)
 

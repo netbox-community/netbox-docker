@@ -1,7 +1,6 @@
 from dcim.models import Site, RackRole, Rack, RackGroup
 from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
-from dcim.constants import RACK_TYPE_CHOICES, RACK_WIDTH_CHOICES
 from ruamel.yaml import YAML
 from pathlib import Path
 import sys
@@ -40,14 +39,6 @@ with file.open('r') as stream:
           query = { field: params.pop(assoc) }
 
           params[assoc] = model.objects.get(**query)
-
-      for rack_type in RACK_TYPE_CHOICES:
-        if params['type'] in rack_type:
-          params['type'] = rack_type[0]
-
-      for rack_width in RACK_WIDTH_CHOICES:
-        if params['width'] in rack_width:
-          params['width'] = rack_width[0]
 
       rack, created = Rack.objects.get_or_create(**params)
 

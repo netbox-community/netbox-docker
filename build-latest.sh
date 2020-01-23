@@ -66,6 +66,10 @@ if [ "${PRERELEASE}" == "true" ]; then
 
     echo "❎ Latest unstable version '${VERSION}' is not higher than the latest stable version '$STABLE_VERSION'."
     if [ -z "$DEBUG" ]; then
+      if [ -n "${GH_ACTION}" ]; then
+        echo "::set-output name=skipped::true"
+      fi
+
       exit 0
     else
       echo "⚠️ Would exit here with code '0', but DEBUG is enabled."

@@ -43,10 +43,10 @@ Then there is currently one extra tags for each of the above labels:
 
 ## Quickstart
 
-To get Netbox up and running:
+To get Netbox up and running in Docker:
 
 ```bash
-git clone -b master https://github.com/netbox-community/netbox-docker.git
+git clone -b release https://github.com/netbox-community/netbox-docker.git
 cd netbox-docker
 docker-compose pull
 docker-compose up -d
@@ -68,22 +68,25 @@ $ xdg-open "http://$(docker-compose port nginx 8080)/" &>/dev/null &
 
 Alternatively, use something like [Reception][docker-reception] to connect to _docker-compose_ projects.
 
-Default credentials:
+The default credentials are:
 
 * Username: **admin**
 * Password: **admin**
 * API Token: **0123456789abcdef0123456789abcdef01234567**
 
+There is a more complete [Getting Started guide on our Wiki][wiki-getting-started].
+
+[wiki-getting-started]: https://github.com/netbox-community/netbox-docker/wiki/Getting-Started
 [docker-reception]: https://github.com/nxt-engineering/reception
 
 ## Dependencies
 
-This project relies only on *Docker* and *docker-compose* meeting this requirements:
+This project relies only on *Docker* and *docker-compose* meeting these requirements:
 
 * The *Docker version* must be at least `17.05`.
 * The *docker-compose version* must be at least `1.17.0`.
 
-To ensure this, compare the output of `docker --version` and `docker-compose --version` with the requirements above.
+To check the version installed on your system run `docker --version` and `docker-compose --version`.
 
 ## Documentation
 
@@ -100,7 +103,7 @@ To use this feature, set the environment-variable `VERSION` before launching `do
 [any tag of the `netboxcommunity/netbox` Docker image on Docker Hub][netbox-dockerhub].
 
 ```bash
-export VERSION=v2.6.7
+export VERSION=v2.7.1
 docker-compose pull netbox
 docker-compose up -d
 ```
@@ -109,7 +112,7 @@ You can also build a specific version of the Netbox Docker image yourself.
 `VERSION` can be any valid [git ref][git-ref] in that case.
 
 ```bash
-export VERSION=v2.6.7
+export VERSION=v2.7.1
 ./build.sh $VERSION
 docker-compose up -d
 ```
@@ -123,7 +126,7 @@ From time to time it might become necessary to re-engineer the structure of this
 Things like the `docker-compose.yml` file or your Kubernetes or OpenShift configurations have to be adjusted as a consequence.
 Since November 2019 each image built from this repo contains a `org.opencontainers.image.version` label.
 (The images contained labels since April 2018, although in November 2019 the labels' names changed.)
-You can check the label of your local image by running `docker inspect netboxcommunity/netbox:v2.6.7 --format "{{json .ContainerConfig.Labels}}"`.
+You can check the label of your local image by running `docker inspect netboxcommunity/netbox:v2.7.1 --format "{{json .ContainerConfig.Labels}}"`.
 
 Please read [the release notes][releases] carefully when updating to a new image version.
 

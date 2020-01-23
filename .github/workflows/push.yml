@@ -1,0 +1,35 @@
+on:
+  push:
+    branches-ignore:
+      - release
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        build_cmd:
+        - ./build-latest.sh
+        - PRERELEASE=true ./build-latest.sh
+        - ./build-branches.sh
+        docker_from:
+        - '' # use the default of the DOCKERFILE
+        - python:3.7-alpine
+        - python:3.8-alpine
+        - python:3.9-rc-alpine
+      fail-fast: false
+    runs-on: ubuntu-latest
+    name: Builds new Netbox Docker Images
+    steps:
+    - id: git-checkout
+      name: Checkout
+      uses: actions/checkout@v1
+    - id: docker-build
+      name: Build the image from '${{ matrix.docker_from }}' with '${{ matrix.build_cmd }}'
+      run: ${{ matrix.build_cmd }}
+      env:
+        DOCKER_FROM: ${{ matrix.docker_from }}
+        GH_ACTION: enable
+    - id: docker-test
+      name: Test the image
+      run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
+      if: steps.docker-build.outputs.skipped != 'true'

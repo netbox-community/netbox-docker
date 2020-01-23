@@ -18,7 +18,7 @@ WORKDIR /install
 
 RUN pip install --prefix="/install" --no-warn-script-location \
 # gunicorn is used for launching netbox
-      'gunicorn<20.0.0' \
+      gunicorn \
       greenlet \
       eventlet \
 # napalm is used for gathering information from network devices
@@ -26,7 +26,9 @@ RUN pip install --prefix="/install" --no-warn-script-location \
 # ruamel is used in startup_scripts
       'ruamel.yaml>=0.15,<0.16' \
 # django_auth_ldap is required for ldap
-      django_auth_ldap
+      django_auth_ldap \
+# django-storages was introduced in 2.7 and is optional
+      django-storages
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt /
@@ -67,6 +69,13 @@ COPY initializers/ /opt/netbox/initializers/
 COPY configuration/configuration.py /etc/netbox/config/configuration.py
 
 WORKDIR /opt/netbox/netbox
+
+# Must set permissions for '/opt/netbox/netbox/static' directory
+# to g+w so that `./manage.py collectstatic` can be executed during
+# container startup.
+# Must set permissions for '/opt/netbox/netbox/media' directory
+# to g+w so that pictures can be uploaded to netbox.
+RUN mkdir static && chmod g+w static media
 
 ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 

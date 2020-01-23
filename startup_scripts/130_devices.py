@@ -1,5 +1,4 @@
 from dcim.models import Site, Rack, DeviceRole, DeviceType, Device, Platform
-from dcim.constants import RACK_FACE_CHOICES
 from ipam.models import IPAddress
 from virtualization.models import Cluster
 from tenancy.models import Tenant
@@ -48,12 +47,6 @@ with file.open('r') as stream:
           query = { field: params.pop(assoc) }
 
           params[assoc] = model.objects.get(**query)
-
-      if 'face' in params:
-        for rack_face in RACK_FACE_CHOICES:
-          if params['face'] in rack_face:
-            params['face'] = rack_face[0]
-            break
 
       device, created = Device.objects.get_or_create(**params)
 
