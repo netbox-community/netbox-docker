@@ -46,7 +46,7 @@ Then there is currently one extra tags for each of the above labels:
 To get Netbox up and running:
 
 ```bash
-git clone -b master https://github.com/netbox-community/netbox-docker.git
+git clone -b release https://github.com/netbox-community/netbox-docker.git
 cd netbox-docker
 docker-compose pull
 docker-compose up -d
