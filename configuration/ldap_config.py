@@ -70,8 +70,7 @@ AUTH_LDAP_USER_FLAGS_BY_GROUP = {
 AUTH_LDAP_FIND_GROUP_PERMS = os.environ.get('AUTH_LDAP_FIND_GROUP_PERMS', 'True').lower() == 'true'
 
 # Cache groups for one hour to reduce LDAP traffic
-AUTH_LDAP_CACHE_GROUPS = os.environ.get('AUTH_LDAP_CACHE_GROUPS', 'True').lower() == 'true'
-AUTH_LDAP_GROUP_CACHE_TIMEOUT = int(os.environ.get('AUTH_LDAP_GROUP_CACHE_TIMEOUT', 3600))
+AUTH_LDAP_CACHE_TIMEOUT = = int(os.environ.get('AUTH_LDAP_CACHE_TIMEOUT', 3600))
 
 # Populate the Django user from the LDAP directory.
 AUTH_LDAP_USER_ATTR_MAP = {
