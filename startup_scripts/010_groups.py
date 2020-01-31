@@ -25,17 +25,17 @@ with file.open('r') as stream:
           user.groups.add(group)
 
       yaml_permissions = group_details.get('permissions', [])
-      permission_object = group
+      subject = group.permissions
       if yaml_permissions:
-        permission_object.permissions.clear()
+        subject.clear()
         for yaml_permission in yaml_permissions:
           if '*' in yaml_permission:
-            permission_codename_function = 'codename__iregex'
-            permission_codename = '^' + yaml_permission.replace('*','.*') + '$'
+            permission_filter = '^' + yaml_permission.replace('*','.*') + '$'
+            permissions = Permission.objects.filter(codename__iregex=permission_filter)
+            print("  ⚿ Granting", permissions.count(), "permissions matching '" + yaml_permission + "'")
           else:
-            permission_codename_function = 'codename'
-            permission_codename = yaml_permission
-          
-          # supports non-unique permission codenames
-          for permission in eval('Permission.objects.filter(' + permission_codename_function + '=permission_codename)'):
-            permission_object.permissions.add(permission)
+            permissions = Permission.objects.filter(codename=yaml_permission)
+            print("  ⚿ Granting permission", yaml_permission)
+
+          for permission in permissions:
+            subject.add(permission)
