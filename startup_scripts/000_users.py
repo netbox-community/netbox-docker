@@ -26,8 +26,8 @@ with file.open('r') as stream:
           Token.objects.create(user=user, key=user_details['api_token'])
 
         yaml_permissions = user_details.get('permissions', [])
-        subject = user.user_permissions
         if yaml_permissions:
+          subject = user.user_permissions
           subject.clear()
           for yaml_permission in yaml_permissions:
             if '*' in yaml_permission:

@@ -25,8 +25,8 @@ with file.open('r') as stream:
           user.groups.add(group)
 
       yaml_permissions = group_details.get('permissions', [])
-      subject = group.permissions
       if yaml_permissions:
+        subject = group.permissions
         subject.clear()
         for yaml_permission in yaml_permissions:
           if '*' in yaml_permission:
