@@ -20,15 +20,23 @@ with file.open('r') as stream:
           username = username,
           password = user_details.get('password', 0) or User.objects.make_random_password)
 
-        print("👤 Created user ",username)
+        print("👤 Created user",username)
 
         if user_details.get('api_token', 0):
           Token.objects.create(user=user, key=user_details['api_token'])
 
-        user_permissions = user_details.get('permissions', [])
-        if user_permissions:
-          user.user_permissions.clear()
-          for permission_codename in user_details.get('permissions', []):
-            for permission in Permission.objects.filter(codename=permission_codename):
-              user.user_permissions.add(permission)
-          user.save()
+        yaml_permissions = user_details.get('permissions', [])
+        if yaml_permissions:
+          subject = user.user_permissions
+          subject.clear()
+          for yaml_permission in yaml_permissions:
+            if '*' in yaml_permission:
+              permission_filter = '^' + yaml_permission.replace('*','.*') + '$'
+              permissions = Permission.objects.filter(codename__iregex=permission_filter)
+              print("  ⚿ Granting", permissions.count(), "permissions matching '" + yaml_permission + "'")
+            else:
+              permissions = Permission.objects.filter(codename=yaml_permission)
+              print("  ⚿ Granting permission", yaml_permission)
+            
+            for permission in permissions:
+              subject.add(permission)
