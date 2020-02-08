@@ -1,3 +1,15 @@
+## To list all permissions, run:
+## 
+## docker-compose run --rm --entrypoint /bin/bash netbox
+## $ ./manage.py migrate
+## $ ./manage.py shell
+## > from django.contrib.auth.models import Permission
+## > print('\n'.join([p.codename for p in Permission.objects.all()]))
+##
+## Permission lists support wildcards. See the examples below.
+##
+## Examples:
+
 # applications:
 #   users:
 #   - technical_user
@@ -8,9 +20,16 @@
 #   users:
 #   - writer
 #   permissions:
-#   - add_device
-#   - change_device
 #   - delete_device
-#   - add_virtualmachine
-#   - change_virtualmachine
 #   - delete_virtualmachine
+#   - add_*
+#   - change_*
+# vm_managers:
+#   permissions:
+#   - '*_virtualmachine'
+# device_managers:
+#   permissions:
+#   - '*device*'
+# creators:
+#   permissions:
+#   - add_*
