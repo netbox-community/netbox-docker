@@ -1,19 +1,14 @@
 from ipam.models import RIR
-from ruamel.yaml import YAML
-from pathlib import Path
+from startup_script_utils import load_yaml
 import sys
 
-file = Path('/opt/netbox/initializers/rirs.yml')
-if not file.is_file():
+rirs = load_yaml('/opt/netbox/initializers/rirs.yml')
+
+if rirs is None:
   sys.exit()
 
-with file.open('r') as stream:
-  yaml = YAML(typ='safe')
-  rirs = yaml.load(stream)
+for params in rirs:
+  rir, created = RIR.objects.get_or_create(**params)
 
-  if rirs is not None:
-    for params in rirs:
-      rir, created = RIR.objects.get_or_create(**params)
-
-      if created:
-        print("🗺️ Created RIR", rir.name)
+  if created:
+    print("🗺️ Created RIR", rir.name)

@@ -1,19 +1,14 @@
 from ipam.models import Role
-from ruamel.yaml import YAML
-from pathlib import Path
+from startup_script_utils import load_yaml
 import sys
 
-file = Path('/opt/netbox/initializers/prefix_vlan_roles.yml')
-if not file.is_file():
+roles = load_yaml('/opt/netbox/initializers/prefix_vlan_roles.yml')
+
+if roles is None:
   sys.exit()
 
-with file.open('r') as stream:
-  yaml = YAML(typ='safe')
-  roles = yaml.load(stream)
+for params in roles:
+  role, created = Role.objects.get_or_create(**params)
 
-  if roles is not None:
-    for params in roles:
-      role, created = Role.objects.get_or_create(**params)
-
-      if created:
-        print("⛹️‍ Created Prefix/VLAN Role", role.name)
+  if created:
+    print("⛹️‍ Created Prefix/VLAN Role", role.name)
