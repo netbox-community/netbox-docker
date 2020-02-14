@@ -57,7 +57,7 @@ services:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
-    env_file: env/redis.env
+    env_file: env/redis-cache.env
 volumes:
   netbox-static-files:
     driver: local
