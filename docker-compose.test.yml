@@ -5,6 +5,7 @@ services:
     depends_on:
     - postgres
     - redis
+    - redis-cache
     env_file: env/netbox.env
     user: '101'
     volumes:
@@ -34,8 +35,15 @@ services:
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis.env
+  redis-cache:
+    image: redis:5-alpine
+    command:
+    - sh
+    - -c # this is to evaluate the $REDIS_PASSWORD from the env
+    - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    env_file: env/redis-cache.env
 volumes:
   netbox-static-files:
     driver: local
