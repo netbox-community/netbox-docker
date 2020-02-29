@@ -2,6 +2,7 @@ version: '3.4'
 services:
   netbox: &netbox
     image: netboxcommunity/netbox:${VERSION-latest}
+    restart: unless-stopped
     depends_on:
     - postgres
     - redis
@@ -29,6 +30,7 @@ services:
     - rqworker
   nginx:
     command: nginx -c /etc/netbox-nginx/nginx.conf
+    restart: unless-stopped
     image: nginx:1.17-alpine
     depends_on:
     - netbox
@@ -39,11 +41,13 @@ services:
     - netbox-nginx-config:/etc/netbox-nginx/:ro
   postgres:
     image: postgres:11-alpine
+    restart: unless-stopped
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
   redis:
     image: redis:5-alpine
+    restart: unless-stopped
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
@@ -53,6 +57,7 @@ services:
     - netbox-redis-data:/data
   redis-cache:
     image: redis:5-alpine
+    restart: unless-stopped
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
