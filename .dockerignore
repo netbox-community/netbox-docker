@@ -7,5 +7,4 @@ build*
 docker-compose.override.yml
 .netbox/.git*
 .netbox/.travis.yml
-.netbox/docs
 .netbox/scripts
