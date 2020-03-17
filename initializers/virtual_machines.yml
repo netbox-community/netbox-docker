@@ -1,10 +1,18 @@
+## Possible Choices:
+##   status:
+##   - active
+##   - offline
+##   - staged
+##
+## Examples:
+
 # - cluster: cluster1
 #   comments: VM1
 #   disk: 200
 #   memory: 4096
 #   name: virtual machine 1
 #   platform: Platform 2
-#   status: Active
+#   status: active
 #   tenant: tenant1
 #   vcpus: 8
 # - cluster: cluster1
@@ -13,6 +21,6 @@
 #   memory: 2048
 #   name: virtual machine 2
 #   platform: Platform 2
-#   status: Active
+#   status: active
 #   tenant: tenant1
 #   vcpus: 8

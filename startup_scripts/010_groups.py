@@ -24,9 +24,18 @@ with file.open('r') as stream:
         if user:
           user.groups.add(group)
 
-      group_permissions = group_details.get('permissions', [])
-      if group_permissions:
-        group.permissions.clear()
-        for permission_codename in group_details.get('permissions', []):
-          for permission in Permission.objects.filter(codename=permission_codename):
-            group.permissions.add(permission)
+      yaml_permissions = group_details.get('permissions', [])
+      if yaml_permissions:
+        subject = group.permissions
+        subject.clear()
+        for yaml_permission in yaml_permissions:
+          if '*' in yaml_permission:
+            permission_filter = '^' + yaml_permission.replace('*','.*') + '$'
+            permissions = Permission.objects.filter(codename__iregex=permission_filter)
+            print("  ⚿ Granting", permissions.count(), "permissions matching '" + yaml_permission + "'")
+          else:
+            permissions = Permission.objects.filter(codename=yaml_permission)
+            print("  ⚿ Granting permission", yaml_permission)
+
+          for permission in permissions:
+            subject.add(permission)

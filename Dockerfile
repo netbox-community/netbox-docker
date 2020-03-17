@@ -18,7 +18,7 @@ WORKDIR /install
 
 RUN pip install --prefix="/install" --no-warn-script-location \
 # gunicorn is used for launching netbox
-      'gunicorn<20.0.0' \
+      gunicorn \
       greenlet \
       eventlet \
 # napalm is used for gathering information from network devices
@@ -26,7 +26,9 @@ RUN pip install --prefix="/install" --no-warn-script-location \
 # ruamel is used in startup_scripts
       'ruamel.yaml>=0.15,<0.16' \
 # django_auth_ldap is required for ldap
-      django_auth_ldap
+      django_auth_ldap \
+# django-storages was introduced in 2.7 and is optional
+      django-storages
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt /
@@ -68,15 +70,45 @@ COPY configuration/configuration.py /etc/netbox/config/configuration.py
 
 WORKDIR /opt/netbox/netbox
 
+# Must set permissions for '/opt/netbox/netbox/static' directory
+# to g+w so that `./manage.py collectstatic` can be executed during
+# container startup.
+# Must set permissions for '/opt/netbox/netbox/media' directory
+# to g+w so that pictures can be uploaded to netbox.
+RUN mkdir static && chmod g+w static media
+
 ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
 CMD ["gunicorn", "-c /etc/netbox/config/gunicorn_config.py", "netbox.wsgi"]
 
-LABEL NETBOX_DOCKER_PROJECT_VERSION="custom build" \
-      NETBOX_BRANCH="custom build" \
-      ORIGINAL_DOCKER_TAG="custom build" \
-      NETBOX_GIT_COMMIT="not built from git" \
-      NETBOX_GIT_URL="not built from git"
+LABEL ORIGINAL_TAG="" \
+      NETBOX_GIT_BRANCH="" \
+      NETBOX_GIT_REF="" \
+      NETBOX_GIT_URL="" \
+# See http://label-schema.org/rc1/#build-time-labels
+# Also https://microbadger.com/labels
+      org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date="" \
+      org.label-schema.name="Netbox Docker" \
+      org.label-schema.description="A container based distribution of Netbox, the free and open IPAM and DCIM solution." \
+      org.label-schema.vendor="The netbox-docker contributors." \
+      org.label-schema.url="https://github.com/netbox-community/netbox-docker" \
+      org.label-schema.usage="https://github.com/netbox-community/netbox-docker/wiki" \
+      org.label-schema.vcs-url="https://github.com/netbox-community/netbox-docker.git" \
+      org.label-schema.vcs-ref="" \
+      org.label-schema.version="snapshot" \
+# See https://github.com/opencontainers/image-spec/blob/master/annotations.md#pre-defined-annotation-keys
+      org.opencontainers.image.created="" \
+      org.opencontainers.image.title="Netbox Docker" \
+      org.opencontainers.image.description="A container based distribution of Netbox, the free and open IPAM and DCIM solution." \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.authors="The netbox-docker contributors." \
+      org.opencontainers.image.vendor="The netbox-docker contributors." \
+      org.opencontainers.image.url="https://github.com/netbox-community/netbox-docker" \
+      org.opencontainers.image.documentation="https://github.com/netbox-community/netbox-docker/wiki" \
+      org.opencontainers.image.source="https://github.com/netbox-community/netbox-docker.git" \
+      org.opencontainers.image.revision="" \
+      org.opencontainers.image.version="snapshot"
 
 #####
 ## LDAP specific configuration

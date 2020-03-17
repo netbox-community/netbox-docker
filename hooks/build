@@ -1,6 +1,0 @@
-#!/bin/bash
-
-. hooks/common
-
-# shellcheck disable=SC2119
-run_build

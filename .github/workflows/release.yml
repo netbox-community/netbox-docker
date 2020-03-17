@@ -1,0 +1,51 @@
+name: release
+
+on:
+  push:
+    branches:
+      - release
+  schedule:
+    - cron: '45 5 * * *'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        build_cmd:
+        - ./build-latest.sh
+        - PRERELEASE=true ./build-latest.sh
+        - ./build-branches.sh
+      fail-fast: false
+    runs-on: ubuntu-latest
+    name: Builds new Netbox Docker Images
+    steps:
+    - id: git-checkout
+      name: Checkout
+      uses: actions/checkout@v1
+    - id: docker-build
+      name: Build the image with '${{ matrix.build_cmd }}'
+      run: ${{ matrix.build_cmd }}
+      env:
+        GH_ACTION: enable
+    - id: docker-test
+      name: Test the image
+      run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
+      if: steps.docker-build.outputs.skipped != 'true'
+    - id: registry-login
+      name: Login to the Docker Registry
+      run: |
+        echo "::add-mask::$DOCKERHUB_USERNAME"
+        echo "::add-mask::$DOCKERHUB_PASSWORD"
+        docker login -u "$DOCKERHUB_USERNAME" --password "${DOCKERHUB_PASSWORD}" "${DOCKER_REGISTRY}"
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.dockerhub_username }}
+        DOCKERHUB_PASSWORD: ${{ secrets.dockerhub_password }}
+      if: steps.docker-build.outputs.skipped != 'true'
+    - id: registry-push
+      name: Push the image
+      run: ${{ matrix.build_cmd }} --push-only
+      if: steps.docker-build.outputs.skipped != 'true'
+    - id: registry-logout
+      name: Logout of the Docker Registry
+      run: docker logout "${DOCKER_REGISTRY}"
+      if: steps.docker-build.outputs.skipped != 'true'
