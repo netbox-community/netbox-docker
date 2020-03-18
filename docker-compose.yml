@@ -39,7 +39,7 @@ services:
     - netbox-nginx-config:/etc/netbox-nginx/:ro
     - /etc/cert-client:/etc/cert-client:ro
   postgres:
-    image: postgres:11-alpine
+    image: postgres:10.4-alpine
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
