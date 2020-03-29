@@ -171,7 +171,7 @@ PAGINATE_COUNT = int(os.environ.get('PAGINATE_COUNT', 50))
 # prefer IPv4 instead.
 PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
 
-# This determines how often the GitHub API is called to check the latest release of NetBox. Must be at least 1 hour.
+# This determines how often the GitHub API is called to check the latest release of NetBox in seconds. Must be at least 1 hour.
 RELEASE_CHECK_TIMEOUT = os.environ.get('RELEASE_CHECK_TIMEOUT', 24 * 3600)
 
 # This repository is used to check whether there is a new release of NetBox available. Set to None to disable the
