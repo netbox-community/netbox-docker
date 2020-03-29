@@ -35,6 +35,7 @@ AUTH_LDAP_BIND_DN = os.environ.get('AUTH_LDAP_BIND_DN', '')
 AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', read_secret('auth_ldap_bind_password'))
 
 # Set a string template that describes any user’s distinguished name based on the username.
+# DO NOT SET THIS VARIABLE when using Active Directory on  Windows Server 2012 or later
 AUTH_LDAP_USER_DN_TEMPLATE = os.environ.get('AUTH_LDAP_USER_DN_TEMPLATE', None)
 
 # Include this setting if you want to ignore certificate errors. This might be needed to accept a self-signed cert.
