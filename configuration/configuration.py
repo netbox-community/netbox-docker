@@ -170,6 +170,15 @@ PAGINATE_COUNT = int(os.environ.get('PAGINATE_COUNT', 50))
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
 # prefer IPv4 instead.
 PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
+
+# This determines how often the GitHub API is called to check the latest release of NetBox in seconds. Must be at least 1 hour.
+RELEASE_CHECK_TIMEOUT = os.environ.get('RELEASE_CHECK_TIMEOUT', 24 * 3600)
+
+# This repository is used to check whether there is a new release of NetBox available. Set to None to disable the
+# version check or use the URL below to check for release in the official NetBox repository.
+# https://api.github.com/repos/netbox-community/netbox/releases
+RELEASE_CHECK_URL = os.environ.get('RELEASE_CHECK_URL', None)
+
 # The file path where custom reports will be stored. A trailing slash is not needed. Note that the default value of
 # this setting is derived from the installed location.
 REPORTS_ROOT = os.environ.get('REPORTS_ROOT', '/etc/netbox/reports')
