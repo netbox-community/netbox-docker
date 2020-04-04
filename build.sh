@@ -247,29 +247,27 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     fi
 
     # --label
-    if [ "${DOCKER_TARGET}" == "main" ]; then
+    DOCKER_BUILD_ARGS+=(
+      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
+
+      --label "org.label-schema.build-date=${BUILD_DATE}"
+      --label "org.opencontainers.image.created=${BUILD_DATE}"
+
+      --label "org.label-schema.version=${PROJECT_VERSION}"
+      --label "org.opencontainers.image.version=${PROJECT_VERSION}"
+    )
+    if [ -d ".git" ]; then
       DOCKER_BUILD_ARGS+=(
-        --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
-
-        --label "org.label-schema.build-date=${BUILD_DATE}"
-        --label "org.opencontainers.image.created=${BUILD_DATE}"
-
-        --label "org.label-schema.version=${PROJECT_VERSION}"
-        --label "org.opencontainers.image.version=${PROJECT_VERSION}"
+        --label "org.label-schema.vcs-ref=${GIT_REF}"
+        --label "org.opencontainers.image.revision=${GIT_REF}"
       )
-      if [ -d ".git" ]; then
-        DOCKER_BUILD_ARGS+=(
-          --label "org.label-schema.vcs-ref=${GIT_REF}"
-          --label "org.opencontainers.image.revision=${GIT_REF}"
-        )
-      fi
-      if [ -d "${NETBOX_PATH}/.git" ]; then
-        DOCKER_BUILD_ARGS+=(
-          --label "NETBOX_GIT_BRANCH=${NETBOX_GIT_BRANCH}"
-          --label "NETBOX_GIT_REF=${NETBOX_GIT_REF}"
-          --label "NETBOX_GIT_URL=${NETBOX_GIT_URL}"
-        )
-      fi
+    fi
+    if [ -d "${NETBOX_PATH}/.git" ]; then
+      DOCKER_BUILD_ARGS+=(
+        --label "NETBOX_GIT_BRANCH=${NETBOX_GIT_BRANCH}"
+        --label "NETBOX_GIT_REF=${NETBOX_GIT_REF}"
+        --label "NETBOX_GIT_URL=${NETBOX_GIT_URL}"
+      )
     fi
 
     # --build-arg
@@ -298,7 +296,9 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   # Pushing the docker images if either `--push` or `--push-only` are passed
   ###
   if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ] ; then
-    echo "⏫ Pushing '${TARGET_DOCKER_TAG}"
+    echo "⏫ Inspecting labels on '${TARGET_DOCKER_TAG}'"
+    $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
+    echo "⏫ Pushing '${TARGET_DOCKER_TAG}'"
     $DRY docker push "${TARGET_DOCKER_TAG}"
     echo "✅ Finished pushing the Docker image '${TARGET_DOCKER_TAG}'."
 
