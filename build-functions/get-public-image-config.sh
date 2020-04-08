@@ -7,28 +7,33 @@ get_image_label() {
   local label=$1
   local image=$2
   local tag=$3
-  local token=$(_get_token $image)
-  local digest=$(_get_digest $image $tag $token)
+  local token
+  token=$(_get_token "$image")
+  local digest
+  digest=$(_get_digest "$image" "$tag" "$token")
   local retval="null"
-  if [ $digest != "null" ]; then
-    retval=$(_get_image_configuration $image $token $digest $label)
+  if [ "$digest" != "null" ]; then
+    retval=$(_get_image_configuration "$image" "$token" "$digest" "$label")
   fi
-  echo $retval
+  echo "$retval"
 }
 
 get_image_layers() {
   local image=$1
   local tag=$2
-  local token=$(_get_token $image)
-  _get_layers $image $tag $token
+  local token
+  token=$(_get_token "$image")
+  _get_layers "$image" "$tag" "$token"
 }
 
 get_image_last_layer() {
   local image=$1
   local tag=$2
-  local token=$(_get_token $image)
-  local layers=($(_get_layers $image $tag $token))
-  echo ${layers[-1]}
+  local token
+  token=$(_get_token "$image")
+  local layers
+  mapfile -t layers < <(_get_layers "$image" "$tag" "$token")
+  echo "${layers[-1]}"
 }
 
 _get_image_configuration() {

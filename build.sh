@@ -172,9 +172,9 @@ PROJECT_VERSION="${PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]
 
 # Get the Git information from the netbox directory
 if [ -d "${NETBOX_PATH}/.git" ]; then
-  NETBOX_GIT_REF=$(cd ${NETBOX_PATH}; git rev-parse HEAD)
-  NETBOX_GIT_BRANCH=$(cd ${NETBOX_PATH}; git rev-parse --abbrev-ref HEAD)
-  NETBOX_GIT_URL=$(cd ${NETBOX_PATH}; git remote get-url origin)
+  NETBOX_GIT_REF=$(cd "${NETBOX_PATH}"; git rev-parse HEAD)
+  NETBOX_GIT_BRANCH=$(cd "${NETBOX_PATH}"; git rev-parse --abbrev-ref HEAD)
+  NETBOX_GIT_URL=$(cd "${NETBOX_PATH}"; git remote get-url origin)
 fi
 
 ###
@@ -253,19 +253,19 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       SHOULD_BUILD="true"
       BUILD_REASON="${BUILD_REASON} interactive"
     fi
-    if [ $DOCKER_REGISTRY = "docker.io" ] && [ $SHOULD_BUILD = "false" ]; then
+    if [ "$DOCKER_REGISTRY" = "docker.io" ] && [ "$SHOULD_BUILD" = "false" ]; then
       source ./build-functions/get-public-image-config.sh
       IFS=':' read -ra DOCKER_FROM_SPLIT <<< "${DOCKER_FROM}"
-      if ! [[ ${DOCKER_FROM_SPLIT[0]} =~ ".*/.*" ]]; then
+      if ! [[ ${DOCKER_FROM_SPLIT[0]} =~ .*/.* ]]; then
         # Need to use "library/..." for images the have no two part name
         DOCKER_FROM_SPLIT[0]="library/${DOCKER_FROM_SPLIT[0]}"
       fi
-      PYTHON_LAST_LAYER=$(get_image_last_layer ${DOCKER_FROM_SPLIT[0]} ${DOCKER_FROM_SPLIT[1]})
-      IMAGES_LAYERS_OLD=($(get_image_layers ${DOCKER_ORG}/${DOCKER_REPO} ${TAG}))
-      NETBOX_GIT_REF_OLD=$(get_image_label NETBOX_GIT_REF ${DOCKER_ORG}/${DOCKER_REPO} ${TAG})
-      GIT_REF_OLD=$(get_image_label org.label-schema.vcs-ref ${DOCKER_ORG}/${DOCKER_REPO} ${TAG})
+      PYTHON_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
+      mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+      NETBOX_GIT_REF_OLD=$(get_image_label NETBOX_GIT_REF "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+      GIT_REF_OLD=$(get_image_label org.label-schema.vcs-ref "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
 
-      if ! printf '%s\n' ${IMAGES_LAYERS_OLD[@]} | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
+      if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
         SHOULD_BUILD="true"
         BUILD_REASON="${BUILD_REASON} python"
       fi
