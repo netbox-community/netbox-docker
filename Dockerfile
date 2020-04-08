@@ -1,4 +1,4 @@
-ARG FROM=python:3.7-alpine
+ARG FROM
 FROM ${FROM} as builder
 
 RUN apk add --no-cache \
