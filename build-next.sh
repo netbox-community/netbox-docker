@@ -23,25 +23,12 @@ GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
 URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/branches?${GITHUB_OAUTH_PARAMS}"
 
 # Composing the JQ commans to extract the most recent version number
-JQ_BRANCHES='map(.name) | .[] | scan("^[^v].+") | match("^(master|develop).*") | .string'
+JQ_NEXT='map(.name) | .[] | scan("^[^v].+") | match("^(develop-).*") | .string'
 
 CURL="curl -sS"
 
 # Querying the Github API to fetch all branches
-BRANCHES=$($CURL "${URL_RELEASES}" | jq -r "$JQ_BRANCHES")
+NEXT=$($CURL "${URL_RELEASES}" | jq -r "$JQ_NEXT")
 
-###
-# Building each branch
-###
-
-# keeping track whether an error occured
-ERROR=0
-
-# calling build.sh for each branch
-for BRANCH in $BRANCHES; do
-  # shellcheck disable=SC2068
-  ./build.sh "${BRANCH}" $@ || ERROR=1
-done
-
-# returning whether an error occured
-exit $ERROR
+# shellcheck disable=SC2068
+./build.sh "${NEXT}" $@
