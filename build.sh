@@ -222,15 +222,18 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   # composing the additional DOCKER_SHORT_TAG,
   # i.e. "v2.6.1" becomes "v2.6",
   # which is only relevant for version tags
+  # Also let "latest" follow the highest version
   ###
   if [[ "${TAG}" =~ ^v([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
     MAJOR=${BASH_REMATCH[1]}
     MINOR=${BASH_REMATCH[2]}
 
     TARGET_DOCKER_SHORT_TAG="${DOCKER_SHORT_TAG-${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_REPO}:v${MAJOR}.${MINOR}}"
+    TARGET_DOCKER_LATEST_TAG="latest"
 
     if [ "${DOCKER_TARGET}" != "main" ]; then
       TARGET_DOCKER_SHORT_TAG="${TARGET_DOCKER_SHORT_TAG}-${DOCKER_TARGET}"
+      TARGET_DOCKER_LATEST_TAG="${TARGET_DOCKER_LATEST_TAG}-${DOCKER_TARGET}"
     fi
   fi
 
@@ -292,6 +295,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     )
     if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
       DOCKER_BUILD_ARGS+=( -t "${TARGET_DOCKER_SHORT_TAG}" )
+      DOCKER_BUILD_ARGS+=( -t "${TARGET_DOCKER_LATEST_TAG}" )
     fi
 
     # --label
@@ -344,6 +348,8 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       echo "    Build reason set to: ${BUILD_REASON}"
       $DRY docker build "${DOCKER_BUILD_ARGS[@]}" .
       echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG}'"
+      echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG}'"
+      $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
     else
       echo "Build skipped because sources didn't change"
       echo "::set-output name=skipped::true"
@@ -354,16 +360,12 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   # Pushing the docker images if either `--push` or `--push-only` are passed
   ###
   if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ] ; then
-    echo "⏫ Inspecting labels on '${TARGET_DOCKER_TAG}'"
-    $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
-    echo "⏫ Pushing '${TARGET_DOCKER_TAG}'"
-    $DRY docker push "${TARGET_DOCKER_TAG}"
-    echo "✅ Finished pushing the Docker image '${TARGET_DOCKER_TAG}'."
+    source ./build-functions/docker-functions.sh
+    push_image_to_registry "${TARGET_DOCKER_TAG}"
 
     if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
-      echo "⏫ Pushing '${TARGET_DOCKER_SHORT_TAG}'"
-      $DRY docker push "${TARGET_DOCKER_SHORT_TAG}"
-      echo "✅ Finished pushing the Docker image '${TARGET_DOCKER_SHORT_TAG}'."
+      push_image_to_registry "${TARGET_DOCKER_SHORT_TAG}"
+      push_image_to_registry "${TARGET_DOCKER_LATEST_TAG}"
     fi
   fi
 done
