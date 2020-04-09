@@ -156,7 +156,9 @@ fi
 ###
 # Determining the value for DOCKER_FROM
 ###
-DOCKER_FROM="${DOCKER_FROM-python:3.7-alpine}"
+if [ -z "$DOCKER_FROM"]; then
+  DOCKER_FROM="python:3.7-alpine"
+fi
 
 ###
 # Variables for labelling the docker image
