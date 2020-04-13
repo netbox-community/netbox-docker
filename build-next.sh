@@ -30,5 +30,10 @@ CURL="curl -sS"
 # Querying the Github API to fetch all branches
 NEXT=$($CURL "${URL_RELEASES}" | jq -r "$JQ_NEXT")
 
-# shellcheck disable=SC2068
-./build.sh "${NEXT}" $@
+if [ -n "$NEXT" ]; then
+  # shellcheck disable=SC2068
+  ./build.sh "${NEXT}" $@
+else
+  echo "No branch matching 'develop-*' found"
+  echo "::set-output name=skipped::true"
+fi
