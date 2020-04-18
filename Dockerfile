@@ -75,7 +75,7 @@ WORKDIR /opt/netbox/netbox
 # container startup.
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
-RUN mkdir static && chmod g+w static media
+RUN mkdir static && chmod -R g+w static media
 
 ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
