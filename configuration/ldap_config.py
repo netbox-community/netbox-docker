@@ -37,6 +37,9 @@ AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', read_secret(
 # Set a string template that describes any user’s distinguished name based on the username.
 AUTH_LDAP_USER_DN_TEMPLATE = os.environ.get('AUTH_LDAP_USER_DN_TEMPLATE', None)
 
+# Enable STARTTLS for ldap authentication.
+AUTH_LDAP_START_TLS = os.environ.get('AUTH_LDAP_START_TLS', '')
+
 # Include this setting if you want to ignore certificate errors. This might be needed to accept a self-signed cert.
 # Note that this is a NetBox-specific setting which sets:
 #     ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
