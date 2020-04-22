@@ -52,7 +52,7 @@ There is a more complete [_Getting Started_ guide on our wiki][wiki-getting-star
 ```bash
 git clone -b release https://github.com/netbox-community/netbox-docker.git
 cd netbox-docker
-tee netbox-docker.override.yml <<EOF
+tee docker-compose.override.yml <<EOF
 version: '3.4'
 services:
   nginx:
