@@ -7,47 +7,46 @@ import sys
 
 virtual_machines = load_yaml('/opt/netbox/initializers/virtual_machines.yml')
 
-if virtual_machines is None:
-  sys.exit()
+if not virtual_machines is None:
 
-required_assocs = {
-  'cluster': (Cluster, 'name')
-}
+  required_assocs = {
+    'cluster': (Cluster, 'name')
+  }
 
-optional_assocs = {
-  'tenant': (Tenant, 'name'),
-  'platform': (Platform, 'name'),
-  'role': (DeviceRole, 'name')
-}
+  optional_assocs = {
+    'tenant': (Tenant, 'name'),
+    'platform': (Platform, 'name'),
+    'role': (DeviceRole, 'name')
+  }
 
-for params in virtual_machines:
-  custom_fields = params.pop('custom_fields', None)
+  for params in virtual_machines:
+    custom_fields = params.pop('custom_fields', None)
 
-  for assoc, details in required_assocs.items():
-    model, field = details
-    query = { field: params.pop(assoc) }
-
-    params[assoc] = model.objects.get(**query)
-
-  for assoc, details in optional_assocs.items():
-    if assoc in params:
+    for assoc, details in required_assocs.items():
       model, field = details
       query = { field: params.pop(assoc) }
 
       params[assoc] = model.objects.get(**query)
 
-  virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
+    for assoc, details in optional_assocs.items():
+      if assoc in params:
+        model, field = details
+        query = { field: params.pop(assoc) }
 
-  if created:
-    if custom_fields is not None:
-      for cf_name, cf_value in custom_fields.items():
-        custom_field = CustomField.objects.get(name=cf_name)
-        custom_field_value = CustomFieldValue.objects.create(
-          field=custom_field,
-          obj=virtual_machine,
-          value=cf_value
-        )
+        params[assoc] = model.objects.get(**query)
 
-        virtual_machine.custom_field_values.add(custom_field_value)
+    virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
 
-    print("🖥️ Created virtual machine", virtual_machine.name)
+    if created:
+      if custom_fields is not None:
+        for cf_name, cf_value in custom_fields.items():
+          custom_field = CustomField.objects.get(name=cf_name)
+          custom_field_value = CustomFieldValue.objects.create(
+            field=custom_field,
+            obj=virtual_machine,
+            value=cf_value
+          )
+
+          virtual_machine.custom_field_values.add(custom_field_value)
+
+      print("🖥️ Created virtual machine", virtual_machine.name)

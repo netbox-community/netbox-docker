@@ -4,23 +4,22 @@ import sys
 
 platforms = load_yaml('/opt/netbox/initializers/platforms.yml')
 
-if platforms is None:
-  sys.exit()
+if not platforms is None:
 
-optional_assocs = {
-  'manufacturer': (Manufacturer, 'name'),
-}
+  optional_assocs = {
+    'manufacturer': (Manufacturer, 'name'),
+  }
 
-for params in platforms:
+  for params in platforms:
 
-  for assoc, details in optional_assocs.items():
-    if assoc in params:
-      model, field = details
-      query = { field: params.pop(assoc) }
+    for assoc, details in optional_assocs.items():
+      if assoc in params:
+        model, field = details
+        query = { field: params.pop(assoc) }
 
-      params[assoc] = model.objects.get(**query)
+        params[assoc] = model.objects.get(**query)
 
-  platform, created = Platform.objects.get_or_create(**params)
+    platform, created = Platform.objects.get_or_create(**params)
 
-  if created:
-    print("💾 Created platform", platform.name)
+    if created:
+      print("💾 Created platform", platform.name)

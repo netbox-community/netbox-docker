@@ -14,41 +14,40 @@ def get_class_for_class_path(class_path):
 
 customfields = load_yaml('/opt/netbox/initializers/custom_fields.yml')
 
-if customfields is None:
-  sys.exit()
+if not customfields is None:
 
-for cf_name, cf_details in customfields.items():
-  custom_field, created = CustomField.objects.get_or_create(name = cf_name)
+  for cf_name, cf_details in customfields.items():
+    custom_field, created = CustomField.objects.get_or_create(name = cf_name)
 
-  if created:
-    if cf_details.get('default', 0):
-      custom_field.default = cf_details['default']
+    if created:
+      if cf_details.get('default', 0):
+        custom_field.default = cf_details['default']
 
-    if cf_details.get('description', 0):
-      custom_field.description = cf_details['description']
+      if cf_details.get('description', 0):
+        custom_field.description = cf_details['description']
 
-    if cf_details.get('label', 0):
-      custom_field.label = cf_details['label']
+      if cf_details.get('label', 0):
+        custom_field.label = cf_details['label']
 
-    for object_type in cf_details.get('on_objects', []):
-      custom_field.obj_type.add(get_class_for_class_path(object_type))
+      for object_type in cf_details.get('on_objects', []):
+        custom_field.obj_type.add(get_class_for_class_path(object_type))
 
-    if cf_details.get('required', 0):
-      custom_field.required = cf_details['required']
+      if cf_details.get('required', 0):
+        custom_field.required = cf_details['required']
 
-    if cf_details.get('type', 0):
-      custom_field.type = cf_details['type']
+      if cf_details.get('type', 0):
+        custom_field.type = cf_details['type']
 
-    if cf_details.get('weight', 0):
-      custom_field.weight = cf_details['weight']
+      if cf_details.get('weight', 0):
+        custom_field.weight = cf_details['weight']
 
-    custom_field.save()
+      custom_field.save()
 
-    for idx, choice_details in enumerate(cf_details.get('choices', [])):
-      choice, _ = CustomFieldChoice.objects.get_or_create(
-        field=custom_field,
-        value=choice_details['value'],
-        defaults={'weight': idx * 10}
-      )
+      for idx, choice_details in enumerate(cf_details.get('choices', [])):
+        choice, _ = CustomFieldChoice.objects.get_or_create(
+          field=custom_field,
+          value=choice_details['value'],
+          defaults={'weight': idx * 10}
+        )
 
-    print("🔧 Created custom field", cf_name)
+      print("🔧 Created custom field", cf_name)

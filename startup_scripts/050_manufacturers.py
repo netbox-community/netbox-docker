@@ -4,11 +4,10 @@ import sys
 
 manufacturers = load_yaml('/opt/netbox/initializers/manufacturers.yml')
 
-if manufacturers is None:
-  sys.exit()
+if not manufacturers is None:
 
-for params in manufacturers:
-  manufacturer, created = Manufacturer.objects.get_or_create(**params)
+  for params in manufacturers:
+    manufacturer, created = Manufacturer.objects.get_or_create(**params)
 
-  if created:
-    print("🏭 Created Manufacturer", manufacturer.name)
+    if created:
+      print("🏭 Created Manufacturer", manufacturer.name)

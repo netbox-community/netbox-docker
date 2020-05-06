@@ -6,46 +6,45 @@ import sys
 
 device_types = load_yaml('/opt/netbox/initializers/device_types.yml')
 
-if device_types is None:
-  sys.exit()
+if not device_types is None:
 
-required_assocs = {
-  'manufacturer': (Manufacturer, 'name')
-}
+  required_assocs = {
+    'manufacturer': (Manufacturer, 'name')
+  }
 
-optional_assocs = {
-  'region': (Region, 'name'),
-  'tenant': (Tenant, 'name')
-}
+  optional_assocs = {
+    'region': (Region, 'name'),
+    'tenant': (Tenant, 'name')
+  }
 
-for params in device_types:
-  custom_fields = params.pop('custom_fields', None)
+  for params in device_types:
+    custom_fields = params.pop('custom_fields', None)
 
-  for assoc, details in required_assocs.items():
-    model, field = details
-    query = { field: params.pop(assoc) }
-
-    params[assoc] = model.objects.get(**query)
-
-  for assoc, details in optional_assocs.items():
-    if assoc in params:
+    for assoc, details in required_assocs.items():
       model, field = details
       query = { field: params.pop(assoc) }
 
       params[assoc] = model.objects.get(**query)
 
-  device_type, created = DeviceType.objects.get_or_create(**params)
+    for assoc, details in optional_assocs.items():
+      if assoc in params:
+        model, field = details
+        query = { field: params.pop(assoc) }
 
-  if created:
-    if custom_fields is not None:
-      for cf_name, cf_value in custom_fields.items():
-        custom_field = CustomField.objects.get(name=cf_name)
-        custom_field_value = CustomFieldValue.objects.create(
-          field=custom_field,
-          obj=device_type,
-          value=cf_value
-        )
+        params[assoc] = model.objects.get(**query)
 
-        device_type.custom_field_values.add(custom_field_value)
+    device_type, created = DeviceType.objects.get_or_create(**params)
 
-    print("🔡 Created device type", device_type.manufacturer, device_type.model)
+    if created:
+      if custom_fields is not None:
+        for cf_name, cf_value in custom_fields.items():
+          custom_field = CustomField.objects.get(name=cf_name)
+          custom_field_value = CustomFieldValue.objects.create(
+            field=custom_field,
+            obj=device_type,
+            value=cf_value
+          )
+
+          device_type.custom_field_values.add(custom_field_value)
+
+      print("🔡 Created device type", device_type.manufacturer, device_type.model)
