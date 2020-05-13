@@ -6,11 +6,11 @@ import socket
 # Based on https://github.com/netbox-community/netbox/blob/develop/netbox/netbox/configuration.example.py
 
 # Read secret from file
-def read_secret(secret_name):
+def read_secret(secret_name, default=''):
     try:
         f = open('/run/secrets/' + secret_name, 'r', encoding='utf-8')
     except EnvironmentError:
-        return ''
+        return default
     else:
         with f:
             return f.readline().strip()
@@ -33,7 +33,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(' ')
 DATABASE = {
     'NAME': os.environ.get('DB_NAME', 'netbox'),         # Database name
     'USER': os.environ.get('DB_USER', ''),               # PostgreSQL username
-    'PASSWORD': os.environ.get('DB_PASSWORD', read_secret('db_password')),
+    'PASSWORD': read_secret('db_password', os.environ.get('DB_PASSWORD', '')),
                                                          # PostgreSQL password
     'HOST': os.environ.get('DB_HOST', 'localhost'),      # Database server
     'PORT': os.environ.get('DB_PORT', ''),               # Database port (leave blank for default)
@@ -47,14 +47,14 @@ DATABASE = {
 # For optimal security, SECRET_KEY should be at least 50 characters in length and contain a mix of letters, numbers, and
 # symbols. NetBox will not run without this defined. For more information, see
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SECRET_KEY
-SECRET_KEY = os.environ.get('SECRET_KEY', read_secret('secret_key'))
+SECRET_KEY = read_secret('secret_key', os.environ.get('SECRET_KEY', ''))
 
 # Redis database settings. The Redis database is used for caching and background processing such as webhooks
 REDIS = {
     'webhooks': {
         'HOST': os.environ.get('REDIS_HOST', 'localhost'),
         'PORT': int(os.environ.get('REDIS_PORT', 6379)),
-        'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
+        'PASSWORD':  read_secret('redis_password', os.environ.get('REDIS_PASSWORD', '')),
         'DATABASE': int(os.environ.get('REDIS_DATABASE', 0)),
         'DEFAULT_TIMEOUT': int(os.environ.get('REDIS_TIMEOUT', 300)),
         'SSL': os.environ.get('REDIS_SSL', 'False').lower() == 'true',
@@ -62,7 +62,7 @@ REDIS = {
     'caching': {
         'HOST': os.environ.get('REDIS_CACHE_HOST', os.environ.get('REDIS_HOST', 'localhost')),
         'PORT': int(os.environ.get('REDIS_CACHE_PORT', os.environ.get('REDIS_PORT', 6379))),
-        'PASSWORD': os.environ.get('REDIS_CACHE_PASSWORD', os.environ.get('REDIS_PASSWORD', read_secret('redis_cache_password'))),
+        'PASSWORD': read_secret('redis_cache_password', os.environ.get('REDIS_CACHE_PASSWORD', read_secret('redis_password', os.environ.get('REDIS_PASSWORD', '')))),
         'DATABASE': int(os.environ.get('REDIS_CACHE_DATABASE', 1)),
         'DEFAULT_TIMEOUT': int(os.environ.get('REDIS_CACHE_TIMEOUT', os.environ.get('REDIS_TIMEOUT', 300))),
         'SSL': os.environ.get('REDIS_CACHE_SSL', os.environ.get('REDIS_SSL', 'False')).lower() == 'true',
@@ -116,7 +116,7 @@ EMAIL = {
     'SERVER': os.environ.get('EMAIL_SERVER', 'localhost'),
     'PORT': int(os.environ.get('EMAIL_PORT', 25)),
     'USERNAME': os.environ.get('EMAIL_USERNAME', ''),
-    'PASSWORD': os.environ.get('EMAIL_PASSWORD', read_secret('email_password')),
+    'PASSWORD': read_secret('email_password', os.environ.get('EMAIL_PASSWORD', '')),
     'TIMEOUT': int(os.environ.get('EMAIL_TIMEOUT', 10)),  # seconds
     'FROM_EMAIL': os.environ.get('EMAIL_FROM', ''),
 }
@@ -155,7 +155,7 @@ METRICS_ENABLED = os.environ.get('METRICS_ENABLED', 'False').lower() == 'true'
 
 # Credentials that NetBox will use to access live devices.
 NAPALM_USERNAME = os.environ.get('NAPALM_USERNAME', '')
-NAPALM_PASSWORD = os.environ.get('NAPALM_PASSWORD', read_secret('napalm_password'))
+NAPALM_PASSWORD = read_secret('napalm_password', os.environ.get('NAPALM_PASSWORD', ''))
 
 # NAPALM timeout (in seconds). (Default: 30)
 NAPALM_TIMEOUT = int(os.environ.get('NAPALM_TIMEOUT', 30))
