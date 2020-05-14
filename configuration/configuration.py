@@ -51,7 +51,15 @@ SECRET_KEY = os.environ.get('SECRET_KEY', read_secret('secret_key'))
 
 # Redis database settings. The Redis database is used for caching and background processing such as webhooks
 REDIS = {
-    'webhooks': {
+    'tasks': {
+        'HOST': os.environ.get('REDIS_HOST', 'localhost'),
+        'PORT': int(os.environ.get('REDIS_PORT', 6379)),
+        'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
+        'DATABASE': int(os.environ.get('REDIS_DATABASE', 0)),
+        'DEFAULT_TIMEOUT': int(os.environ.get('REDIS_TIMEOUT', 300)),
+        'SSL': os.environ.get('REDIS_SSL', 'False').lower() == 'true',
+    },
+    'webhooks': { # legacy setting, can be removed after Netbox seizes support for it
         'HOST': os.environ.get('REDIS_HOST', 'localhost'),
         'PORT': int(os.environ.get('REDIS_PORT', 6379)),
         'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
