@@ -257,8 +257,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       # Asuming non Github builds should always proceed
       SHOULD_BUILD="true"
       BUILD_REASON="${BUILD_REASON} interactive"
-    fi
-    if [ "$DOCKER_REGISTRY" = "docker.io" ] && [ "$SHOULD_BUILD" = "false" ]; then
+    elsif [ "$DOCKER_REGISTRY" = "docker.io" ]; then
       source ./build-functions/get-public-image-config.sh
       IFS=':' read -ra DOCKER_FROM_SPLIT <<< "${DOCKER_FROM}"
       if ! [[ ${DOCKER_FROM_SPLIT[0]} =~ .*/.* ]]; then
