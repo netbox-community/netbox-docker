@@ -156,7 +156,7 @@ fi
 ###
 # Determining the value for DOCKER_FROM
 ###
-if [ -z "$DOCKER_FROM"]; then
+if [ -z "$DOCKER_FROM" ]; then
   DOCKER_FROM="python:3.7-alpine"
 fi
 
@@ -257,7 +257,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       # Asuming non Github builds should always proceed
       SHOULD_BUILD="true"
       BUILD_REASON="${BUILD_REASON} interactive"
-    elsif [ "$DOCKER_REGISTRY" = "docker.io" ]; then
+    elif [ "$DOCKER_REGISTRY" = "docker.io" ]; then
       source ./build-functions/get-public-image-config.sh
       IFS=':' read -ra DOCKER_FROM_SPLIT <<< "${DOCKER_FROM}"
       if ! [[ ${DOCKER_FROM_SPLIT[0]} =~ .*/.* ]]; then
