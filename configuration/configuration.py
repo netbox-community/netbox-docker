@@ -119,10 +119,10 @@ EMAIL = {
     'PASSWORD': os.environ.get('EMAIL_PASSWORD', read_secret('email_password')),
     'TIMEOUT': int(os.environ.get('EMAIL_TIMEOUT', 10)),  # seconds
     'FROM_EMAIL': os.environ.get('EMAIL_FROM', ''),
-    'USE_SSL': os.environ.get('EMAIL_USE_SSL', 'False'),
-    'USE_TLS': os.environ.get('EMAIL_USE_TLS', 'False'),
-    'SSL_CERTFILE': os.environ.get('EMAIL_SSL_CERTFILE', '')
-    'SSL_KEYFILE': os.environ.get('EMAIL_SSL_KEYFILE', '')
+    'USE_SSL': os.environ.get('EMAIL_USE_SSL', 'False').lower() == 'true',
+    'USE_TLS': os.environ.get('EMAIL_USE_TLS', 'False').lower() == 'true',
+    'SSL_CERTFILE': os.environ.get('EMAIL_SSL_CERTFILE', ''),
+    'SSL_KEYFILE': os.environ.get('EMAIL_SSL_KEYFILE', ''),
 }
 
 # Enforcement of unique IP space can be toggled on a per-VRF basis.
