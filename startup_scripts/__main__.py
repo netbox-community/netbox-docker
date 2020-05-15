@@ -13,6 +13,11 @@ with scandir(dirname(abspath(__file__))) as it:
   for f in sorted(it, key = filename):
     if f.name.startswith('__') or not f.is_file():
       continue
-      
-    print(f"Running {f.path}")
-    runpy.run_path(f.path)
+
+    print(f"▶️ Running the startup script {f.path}")
+    try:
+      runpy.run_path(f.path)
+    except SystemExit as e:
+      if e.code is not None and e.code != 0:
+        print(f"‼️ The startup script {f.path} returned with code {e.code}, exiting.")
+        raise
