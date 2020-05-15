@@ -15,7 +15,8 @@ jobs:
         build_cmd:
         - ./build-latest.sh
         - PRERELEASE=true ./build-latest.sh
-        - ./build-branches.sh
+        - ./build-next.sh
+        - ./build.sh develop
         docker_from:
         - '' # use the default of the DOCKERFILE
         - python:3.7-alpine
