@@ -51,7 +51,15 @@ SECRET_KEY = os.environ.get('SECRET_KEY', read_secret('secret_key'))
 
 # Redis database settings. The Redis database is used for caching and background processing such as webhooks
 REDIS = {
-    'webhooks': {
+    'tasks': {
+        'HOST': os.environ.get('REDIS_HOST', 'localhost'),
+        'PORT': int(os.environ.get('REDIS_PORT', 6379)),
+        'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
+        'DATABASE': int(os.environ.get('REDIS_DATABASE', 0)),
+        'DEFAULT_TIMEOUT': int(os.environ.get('REDIS_TIMEOUT', 300)),
+        'SSL': os.environ.get('REDIS_SSL', 'False').lower() == 'true',
+    },
+    'webhooks': { # legacy setting, can be removed after Netbox seizes support for it
         'HOST': os.environ.get('REDIS_HOST', 'localhost'),
         'PORT': int(os.environ.get('REDIS_PORT', 6379)),
         'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
@@ -119,6 +127,10 @@ EMAIL = {
     'PASSWORD': os.environ.get('EMAIL_PASSWORD', read_secret('email_password')),
     'TIMEOUT': int(os.environ.get('EMAIL_TIMEOUT', 10)),  # seconds
     'FROM_EMAIL': os.environ.get('EMAIL_FROM', ''),
+    'USE_SSL': os.environ.get('EMAIL_USE_SSL', 'False').lower() == 'true',
+    'USE_TLS': os.environ.get('EMAIL_USE_TLS', 'False').lower() == 'true',
+    'SSL_CERTFILE': os.environ.get('EMAIL_SSL_CERTFILE', ''),
+    'SSL_KEYFILE': os.environ.get('EMAIL_SSL_KEYFILE', ''),
 }
 
 # Enforcement of unique IP space can be toggled on a per-VRF basis.

@@ -14,14 +14,15 @@ jobs:
         build_cmd:
         - ./build-latest.sh
         - PRERELEASE=true ./build-latest.sh
-        - ./build-branches.sh
+        - ./build-next.sh
+        - ./build.sh develop
       fail-fast: false
     runs-on: ubuntu-latest
     name: Builds new Netbox Docker Images
     steps:
     - id: git-checkout
       name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - id: docker-build
       name: Build the image with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
