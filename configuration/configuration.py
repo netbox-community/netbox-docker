@@ -1,6 +1,7 @@
 import os
 import re
 import socket
+import ast
 
 # For reference see http://netbox.readthedocs.io/en/latest/configuration/mandatory-settings/
 # Based on https://github.com/netbox-community/netbox/blob/develop/netbox/netbox/configuration.example.py
@@ -144,7 +145,10 @@ EXEMPT_VIEW_PERMISSIONS = list(filter(None, os.environ.get('EXEMPT_VIEW_PERMISSI
 
 # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
 #   https://docs.djangoproject.com/en/1.11/topics/logging/
-LOGGING = {}
+if "LOGGING" in os.environ:
+    LOGGING = ast.literal_eval(os.environ.get('LOGGING'))
+else:
+    LOGGING = {}
 
 # Setting this to True will permit only authenticated users to access any part of NetBox. By default, anonymous users
 # are permitted to access most data in NetBox (excluding secrets) but not make any changes.
