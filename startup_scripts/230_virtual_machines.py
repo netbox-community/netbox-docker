@@ -1,4 +1,5 @@
 from dcim.models import Site, Platform, DeviceRole
+from ipam.models import IPAddress
 from virtualization.models import Cluster, VirtualMachine
 from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
@@ -17,7 +18,9 @@ required_assocs = {
 optional_assocs = {
   'tenant': (Tenant, 'name'),
   'platform': (Platform, 'name'),
-  'role': (DeviceRole, 'name')
+  'role': (DeviceRole, 'name'),
+  'primary_ip4': (IPAddress, 'address'),
+  'primary_ip6': (IPAddress, 'address')
 }
 
 for params in virtual_machines:
