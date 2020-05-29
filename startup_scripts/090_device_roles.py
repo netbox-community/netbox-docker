@@ -1,5 +1,6 @@
 from dcim.models import DeviceRole
-from utilities.forms import COLOR_CHOICES
+from utilities.choices import ColorChoices
+
 from startup_script_utils import load_yaml
 import sys
 
@@ -13,7 +14,7 @@ for params in device_roles:
   if 'color' in params:
     color = params.pop('color')
 
-    for color_tpl in COLOR_CHOICES:
+    for color_tpl in ColorChoices:
       if color in color_tpl:
         params['color'] = color_tpl[0]
 
