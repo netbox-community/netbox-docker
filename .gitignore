@@ -2,3 +2,4 @@
 .netbox
 .initializers
 docker-compose.override.yml
+*.pem
