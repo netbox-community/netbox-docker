@@ -11,7 +11,13 @@ def filename(f):
 
 with scandir(dirname(abspath(__file__))) as it:
   for f in sorted(it, key = filename):
-    if f.name.startswith('__') or not f.is_file():
+    if not f.is_file():
+      continue
+
+    if f.name.startswith('__'):
+      continue
+
+    if not f.name.endswith('.py'):
       continue
 
     print(f"▶️ Running the startup script {f.path}")
