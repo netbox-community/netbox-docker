@@ -199,6 +199,17 @@ REPORTS_ROOT = os.environ.get('REPORTS_ROOT', '/etc/netbox/reports')
 # this setting is derived from the installed location.
 SCRIPTS_ROOT = os.environ.get('SCRIPTS_ROOT', '/etc/netbox/scripts')
 
+# The backend storage engine for handling uploaded files (e.g. image attachments). NetBox supports integration with
+# the django-storages package, which provides backends for several popular file storage services. If not configured,
+# local filesystem storage will be used.
+# The configuration parameters for the specified storage backend are defined under the STORAGE_CONFIG setting.
+STORAGE_BACKEND = os.environ.get('STORAGE_BACKEND', None)
+
+# A dictionary of configuration parameters for the storage backend configured as STORAGE_BACKEND. The specific
+# parameters to be used here are specific to each backend; see the django-storages documentation for more detail.
+# If STORAGE_BACKEND is not defined, this setting will be ignored.
+STORAGE_CONFIG = os.environ.get('STORAGE_CONFIG', None)
+
 # Time zone (default: UTC)
 TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
 
