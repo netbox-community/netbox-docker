@@ -208,7 +208,9 @@ STORAGE_BACKEND = os.environ.get('STORAGE_BACKEND', None)
 # A dictionary of configuration parameters for the storage backend configured as STORAGE_BACKEND. The specific
 # parameters to be used here are specific to each backend; see the django-storages documentation for more detail.
 # If STORAGE_BACKEND is not defined, this setting will be ignored.
-STORAGE_CONFIG = os.environ.get('STORAGE_CONFIG', None)
+if STORAGE_BACKEND:
+    import ast
+    STORAGE_CONFIG = ast.literal_eval(os.environ.get('STORAGE_CONFIG', "{}"))
 
 # Time zone (default: UTC)
 TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
