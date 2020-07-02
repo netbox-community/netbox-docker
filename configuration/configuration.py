@@ -1,6 +1,7 @@
 import os
 import re
 import socket
+import json
 
 # For reference see http://netbox.readthedocs.io/en/latest/configuration/mandatory-settings/
 # Based on https://github.com/netbox-community/netbox/blob/develop/netbox/netbox/configuration.example.py
@@ -214,3 +215,8 @@ TIME_FORMAT = os.environ.get('TIME_FORMAT', 'g:i a')
 SHORT_TIME_FORMAT = os.environ.get('SHORT_TIME_FORMAT', 'H:i:s')
 DATETIME_FORMAT = os.environ.get('DATETIME_FORMAT', 'N j, Y g:i a')
 SHORT_DATETIME_FORMAT = os.environ.get('SHORT_DATETIME_FORMAT', 'Y-m-d H:i')
+
+
+# Provide a list of plugins as "plug1,plug2,..."
+PLUGINS = list(filter(lambda x: x != '', os.environ.get('PLUGINS', '').split(',')))
+PLUGINS_CONFIG = json.loads(os.environ.get('PLUGINS_CONFIG', '{}'))
