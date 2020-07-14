@@ -33,7 +33,7 @@ Before opening an issue on Github, please join the [Network To Code][ntc-slack] 
 
 Then there is currently one extra tags for each of the above tags:
 
-* `-ldap`: Contains additional dependencies and configurations for connecting Netbox to an LDAP directroy.
+* `-ldap`: Contains additional dependencies and configurations for connecting Netbox to an LDAP directory.
   [Learn more about that in our wiki][netbox-docker-ldap].
 
 New images are built and published automatically every ~24h.
