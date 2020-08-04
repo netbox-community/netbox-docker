@@ -174,7 +174,23 @@ NAPALM_TIMEOUT = int(os.environ.get('NAPALM_TIMEOUT', 30))
 
 # NAPALM optional arguments (see http://napalm.readthedocs.io/en/latest/support/#optional-arguments). Arguments must
 # be provided as a dictionary.
+
+# Environment variables prefixed with NAPALM_ARGS_ will be merged into a dictionary
+# eg. NAPALM_ARGS_var1=foo, NAPALM_ARGS_var2=bar will result in a dict of
+# { 'var1': 'foo', 'var2': 'bar' }
+NAPALM_ARGS_PREFIX = 'NAPALM_ARGS_'
 NAPALM_ARGS = {}
+for k, v in os.environ.items():
+    if k.startswith(NAPALM_ARGS_PREFIX):
+        k = k.replace(NAPALM_ARGS_PREFIX, '')
+        if v.lower() in ['true', 'false']:
+            v = bool(v)
+        else:
+            try:
+                v = int(v)
+            except ValueError:
+                pass
+        NAPALM_ARGS[k] = v
 
 # Determine how many objects to display per page within a list. (Default: 50)
 PAGINATE_COUNT = int(os.environ.get('PAGINATE_COUNT', 50))
