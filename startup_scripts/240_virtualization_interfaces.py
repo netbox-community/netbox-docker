@@ -1,5 +1,4 @@
-from dcim.models import Interface
-from virtualization.models import VirtualMachine
+from virtualization.models import VirtualMachine, VMInterface
 from extras.models import CustomField, CustomFieldValue
 from startup_script_utils import load_yaml
 import sys
@@ -22,7 +21,7 @@ for params in interfaces:
 
     params[assoc] = model.objects.get(**query)
 
-  interface, created = Interface.objects.get_or_create(**params)
+  interface, created = VMInterface.objects.get_or_create(**params)
 
   if created:
     if custom_fields is not None:
