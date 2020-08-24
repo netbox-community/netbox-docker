@@ -12,7 +12,7 @@ for username, user_details in users.items():
   if not User.objects.filter(username=username):
     user = User.objects.create_user(
       username = username,
-      password = user_details.get('password', 0) or User.objects.make_random_password)
+      password = user_details.get('password', 0) or User.objects.make_random_password())
 
     print("👤 Created user",username)
 
