@@ -60,14 +60,17 @@ AUTH_LDAP_GROUP_SEARCH = LDAPSearch(AUTH_LDAP_GROUP_SEARCH_BASEDN, ldap.SCOPE_SU
 AUTH_LDAP_GROUP_TYPE = _import_group_type(environ.get('AUTH_LDAP_GROUP_TYPE', 'GroupOfNamesType'))
 
 # Define a group required to login.
-AUTH_LDAP_REQUIRE_GROUP = environ.get('AUTH_LDAP_REQUIRE_GROUP_DN', '')
+AUTH_LDAP_REQUIRE_GROUP = os.environ.get('AUTH_LDAP_REQUIRE_GROUP_DN')
 
 # Define special user types using groups. Exercise great caution when assigning superuser status.
-AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-    "is_active": environ.get('AUTH_LDAP_REQUIRE_GROUP_DN', ''),
-    "is_staff": environ.get('AUTH_LDAP_IS_ADMIN_DN', ''),
-    "is_superuser": environ.get('AUTH_LDAP_IS_SUPERUSER_DN', '')
-}
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
+
+if AUTH_LDAP_REQUIRE_GROUP is not None:
+    AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+        "is_active": os.environ.get('AUTH_LDAP_REQUIRE_GROUP_DN', ''),
+        "is_staff": os.environ.get('AUTH_LDAP_IS_ADMIN_DN', ''),
+        "is_superuser": os.environ.get('AUTH_LDAP_IS_SUPERUSER_DN', '')
+    }
 
 # For more granular permissions, we can map LDAP groups to Django groups.
 AUTH_LDAP_FIND_GROUP_PERMS = environ.get('AUTH_LDAP_FIND_GROUP_PERMS', 'True').lower() == 'true'
