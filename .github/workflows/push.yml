@@ -20,7 +20,7 @@ jobs:
         docker_from:
         - '' # use the default of the build script
         - python:3.8-alpine
-        # - python:3.9-rc-alpine # disable until Netbox's unit tests work
+        - python:3.9-rc-alpine
       fail-fast: false
     runs-on: ubuntu-latest
     name: Builds new Netbox Docker Images
