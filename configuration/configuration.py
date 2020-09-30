@@ -187,6 +187,14 @@ PAGINATE_COUNT = int(os.environ.get('PAGINATE_COUNT', 50))
 # prefer IPv4 instead.
 PREFER_IPV4 = os.environ.get('PREFER_IPV4', 'False').lower() == 'true'
 
+# Remote authentication support
+REMOTE_AUTH_ENABLED = os.environ.get('REMOTE_AUTH_ENABLED', 'False').lower() == 'true'
+REMOTE_AUTH_BACKEND = os.environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend')
+REMOTE_AUTH_HEADER = os.environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
+REMOTE_AUTH_AUTO_CREATE_USER = os.environ.get('REMOTE_AUTH_AUTO_CREATE_USER', 'True').lower() == 'true'
+REMOTE_AUTH_DEFAULT_GROUPS = list(filter(None, os.environ.get('REMOTE_AUTH_DEFAULT_GROUPS', '').split(' ')))
+REMOTE_AUTH_DEFAULT_PERMISSIONS = os.environ.get('REMOTE_AUTH_DEFAULT_PERMISSIONS', '{}')
+
 # This determines how often the GitHub API is called to check the latest release of NetBox in seconds. Must be at least 1 hour.
 RELEASE_CHECK_TIMEOUT = os.environ.get('RELEASE_CHECK_TIMEOUT', 24 * 3600)
 
