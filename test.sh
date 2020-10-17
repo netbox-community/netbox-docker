@@ -80,7 +80,7 @@ echo "🐳🐳🐳 Start testing '${IMAGE}'"
 trap test_cleanup EXIT ERR
 test_setup
 
-#test_netbox_unit_tests
+test_netbox_unit_tests
 test_initializers
 
 echo "🐳🐳🐳 Done testing '${IMAGE}'"
