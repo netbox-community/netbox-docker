@@ -1,6 +1,5 @@
 import os
 import re
-import socket
 
 # For reference see http://netbox.readthedocs.io/en/latest/configuration/mandatory-settings/
 # Based on https://github.com/netbox-community/netbox/blob/develop/netbox/netbox/configuration.example.py
