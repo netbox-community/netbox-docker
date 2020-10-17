@@ -1,8 +1,8 @@
-from dcim.models import DeviceType, Manufacturer, Region
-from tenancy.models import Tenant
-from extras.models import CustomField, CustomFieldValue
-from startup_script_utils import load_yaml
 import sys
+
+from dcim.models import DeviceType, Manufacturer, Region
+from startup_script_utils import *
+from tenancy.models import Tenant
 
 device_types = load_yaml('/opt/netbox/initializers/device_types.yml')
 
@@ -19,7 +19,7 @@ optional_assocs = {
 }
 
 for params in device_types:
-  custom_fields = params.pop('custom_fields', None)
+  custom_field_data = pop_custom_fields(params)
 
   for assoc, details in required_assocs.items():
     model, field = details
@@ -37,15 +37,6 @@ for params in device_types:
   device_type, created = DeviceType.objects.get_or_create(**params)
 
   if created:
-    if custom_fields is not None:
-      for cf_name, cf_value in custom_fields.items():
-        custom_field = CustomField.objects.get(name=cf_name)
-        custom_field_value = CustomFieldValue.objects.create(
-          field=custom_field,
-          obj=device_type,
-          value=cf_value
-        )
-
-        device_type.custom_field_values.add(custom_field_value)
+    set_custom_fields_values(device_type, custom_field_data)
 
     print("🔡 Created device type", device_type.manufacturer, device_type.model)

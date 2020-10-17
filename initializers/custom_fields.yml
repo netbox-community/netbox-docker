@@ -37,7 +37,7 @@
 #   weight: 10
 #   on_objects:
 #   - tenancy.models.Tenant
-# select_field:
+# legacy_select_field:
 #   type: select
 #   label: Choose between items
 #   required: false
@@ -56,6 +56,21 @@
 #     weight: 50
 #   - value: Fourth Item
 #     weight: 40
+# select_field:
+#   type: select
+#   label: Choose between items
+#   required: false
+#   filter_logic: exact
+#   weight: 30
+#   default: First Item
+#   on_objects:
+#   - dcim.models.Device
+#   choices:
+#   - First Item
+#   - Second Item
+#   - Third Item
+#   - Fifth Item
+#   - Fourth Item
 # select_field_auto_weight:
 #    type: select
 #    label: Choose between items
@@ -65,18 +80,17 @@
 #    on_objects:
 #     - dcim.models.Device
 #    choices:
-#     - value: A
-#     - value: B
-#     - value: C
-#     - value: "D like deprecated"
-#       weight: 999
-#     - value: E
+#     - A
+#     - B
+#     - C
+#     - E
+#     - D like deprecated
 # boolean_field:
 #   type: boolean
 #   label: Yes Or No?
 #   required: true
 #   filter_logic: loose
-#   default: "false" # important: but "false" in quotes!
+#   default: "false" # important: put "false" in quotes!
 #   weight: 90
 #   on_objects:
 #   - dcim.models.Device

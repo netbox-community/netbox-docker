@@ -20,7 +20,7 @@
 #   type: 4-post-cabinet
 #   width: 19
 #   u_height: 47
-#   custom_fields:
+#   custom_field_data:
 #     text_field: Description
 # - site: AMS 2
 #   name: rack-02
@@ -28,7 +28,7 @@
 #   type: 4-post-cabinet
 #   width: 19
 #   u_height: 47
-#   custom_fields:
+#   custom_field_data:
 #     text_field: Description
 # - site: SING 1
 #   name: rack-03
@@ -37,5 +37,5 @@
 #   type: 4-post-cabinet
 #   width: 19
 #   u_height: 47
-#   custom_fields:
+#   custom_field_data:
 #     text_field: Description

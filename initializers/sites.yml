@@ -4,29 +4,29 @@
 #   status: active
 #   facility: Amsterdam 1
 #   asn: 12345
-#   custom_fields:
-#     text_field: Description
+#   custom_field_data:
+#     text_field: Description for AMS1
 # - name: AMS 2
 #   slug: ams2
 #   region: Downtown
 #   status: active
 #   facility: Amsterdam 2
 #   asn: 54321
-#   custom_fields:
-#     text_field: Description
+#   custom_field_data:
+#     text_field: Description for AMS2
 # - name: AMS 3
 #   slug: ams3
 #   region: Suburbs
 #   status: active
 #   facility: Amsterdam 3
 #   asn: 67890
-#   custom_fields:
-#     text_field: Description
+#   custom_field_data:
+#     text_field: Description for AMS3
 # - name: SING 1
 #   slug: sing1
 #   region: Singapore
 #   status: active
 #   facility: Singapore 1
 #   asn: 09876
-#   custom_fields:
-#     text_field: Description
+#   custom_field_data:
+#     text_field: Description for SING1
