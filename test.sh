@@ -1,12 +1,29 @@
 #!/bin/bash
+# Runs the original Netbox unit tests and tests whether all initializers work.
+# Usage:
+#   ./test.sh latest
+#   ./test.sh v2.9.7
+#   ./test.sh develop-2.10
+#   IMAGE='netboxcommunity/netbox:latest'        ./test.sh
+#   IMAGE='netboxcommunity/netbox:v2.9.7'        ./test.sh
+#   IMAGE='netboxcommunity/netbox:develop-2.10'  ./test.sh
+#   export IMAGE='netboxcommunity/netbox:latest';       ./test.sh
+#   export IMAGE='netboxcommunity/netbox:v2.9.7';       ./test.sh
+#   export IMAGE='netboxcommunity/netbox:develop-2.10'; ./test.sh
 
 # exit when a command exits with an exit code != 0
 set -e
 
-# version is used by `docker-compose.yml` do determine the tag
+# IMAGE is used by `docker-compose.yml` do determine the tag
 # of the Docker Image that is to be used
-export IMAGE="${IMAGE-netboxcommunity/netbox:latest}"
+if [ "${1}x" != "x" ]; then
+  # Use the command line argument
+  export IMAGE="netboxcommunity/netbox:${1}"
+else
+  export IMAGE="${IMAGE-netboxcommunity/netbox:latest}"
+fi
 
+# Ensure that an IMAGE is defined
 if [ -z "${IMAGE}" ]; then
   echo "⚠️ No image defined"
 
@@ -63,7 +80,7 @@ echo "🐳🐳🐳 Start testing '${IMAGE}'"
 trap test_cleanup EXIT ERR
 test_setup
 
-test_netbox_unit_tests
+#test_netbox_unit_tests
 test_initializers
 
 echo "🐳🐳🐳 Done testing '${IMAGE}'"
