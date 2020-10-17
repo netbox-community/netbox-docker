@@ -37,25 +37,6 @@
 #   weight: 10
 #   on_objects:
 #   - tenancy.models.Tenant
-# legacy_select_field:
-#   type: select
-#   label: Choose between items
-#   required: false
-#   filter_logic: exact
-#   weight: 30
-#   on_objects:
-#   - dcim.models.Device
-#   choices:
-#   - value: First Item
-#     weight: 10
-#   - value: Second Item
-#     weight: 20
-#   - value: Third Item
-#     weight: 30
-#   - value: Fifth Item
-#     weight: 50
-#   - value: Fourth Item
-#     weight: 40
 # select_field:
 #   type: select
 #   label: Choose between items
