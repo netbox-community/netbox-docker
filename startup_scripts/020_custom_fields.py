@@ -45,7 +45,7 @@ for cf_name, cf_details in customfields.items():
     if cf_details.get('choices', False):
       custom_field.choices = []
 
-      for _, choice_detail in enumerate(cf_details.get('choices', [])):
+      for choice_detail in enumerate(cf_details.get('choices', [])):
         if isinstance(choice_detail, str):
           custom_field.choices.append(choice_detail)
         else:  # legacy mode
