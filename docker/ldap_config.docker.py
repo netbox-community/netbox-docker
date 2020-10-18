@@ -53,7 +53,7 @@ with scandir(_CONFIG_DIR) as it:
     if f.name == f'{_MAIN_CONFIG}.py':
       continue
 
-    module_name = f"{_MODULE}.{f.name[:-len('.py')]}"
+    module_name = f"{_MODULE}.{f.name[:-len('.py')]}".replace(".", "_")
 
     _import(module_name, f.path)
 
