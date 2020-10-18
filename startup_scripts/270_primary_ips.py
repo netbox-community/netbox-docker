@@ -19,13 +19,13 @@ def link_primary_ip(assets, asset_model):
           params[assoc] = model.objects.get(**query)
         except model.DoesNotExist:
           primary_ip_fields -= {assoc}
-          print(f"⚠️ IP Address {query[field]} not found")
+          print(f"⚠️ IP Address '{query[field]}' not found")
 
     asset = asset_model.objects.get(name=params['name'])
     for field in primary_ip_fields:
       if getattr(asset, field) != params[field]:
         setattr(asset, field, params[field])
-        print(f"🧬 Linked primary IP {params[field].address} on {asset.name}")
+        print(f"🔗 Define primary IP '{params[field].address}' on '{asset.name}'")
     asset.save()
 
 devices = load_yaml('/opt/netbox/initializers/devices.yml')
