@@ -29,6 +29,8 @@
 #   rack: rack-02
 #   face: front
 #   position: 2
+#   primary_ip4: 10.1.1.2/24
+#   primary_ip6: 2001:db8:a000:1::2/64
 #   custom_fields:
 #     text_field: Description
 # - name: server03

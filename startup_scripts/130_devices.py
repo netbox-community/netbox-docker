@@ -1,5 +1,4 @@
 from dcim.models import Site, Rack, DeviceRole, DeviceType, Device, Platform
-from ipam.models import IPAddress
 from virtualization.models import Cluster
 from tenancy.models import Tenant
 from extras.models import CustomField, CustomFieldValue
@@ -21,13 +20,14 @@ optional_assocs = {
   'tenant': (Tenant, 'name'),
   'platform': (Platform, 'name'),
   'rack': (Rack, 'name'),
-  'cluster': (Cluster, 'name'),
-  'primary_ip4': (IPAddress, 'address'),
-  'primary_ip6': (IPAddress, 'address')
+  'cluster': (Cluster, 'name')
 }
 
 for params in devices:
   custom_fields = params.pop('custom_fields', None)
+  # primary ips are handled later in `270_primary_ips.py`
+  params.pop('primary_ip4', None)
+  params.pop('primary_ip6', None)
 
   for assoc, details in required_assocs.items():
     model, field = details

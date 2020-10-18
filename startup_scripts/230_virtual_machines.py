@@ -22,6 +22,9 @@ optional_assocs = {
 
 for params in virtual_machines:
   custom_fields = params.pop('custom_fields', None)
+  # primary ips are handled later in `270_primary_ips.py`
+  params.pop('primary_ip4', None)
+  params.pop('primary_ip6', None)
 
   for assoc, details in required_assocs.items():
     model, field = details
