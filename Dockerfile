@@ -61,12 +61,12 @@ ARG NETBOX_PATH
 COPY ${NETBOX_PATH} /opt/netbox
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
-COPY configuration/gunicorn_config.py /etc/netbox/config/
+COPY docker/gunicorn_config.py /etc/netbox/
 COPY docker/nginx.conf /etc/netbox-nginx/nginx.conf
 COPY docker/docker-entrypoint.sh /opt/netbox/docker-entrypoint.sh
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
-COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/ /etc/netbox/config/
 
 WORKDIR /opt/netbox/netbox
 
@@ -79,7 +79,7 @@ RUN mkdir static && chmod -R g+w static media
 
 ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
 
-CMD ["gunicorn", "-c /etc/netbox/config/gunicorn_config.py", "netbox.wsgi"]
+CMD ["gunicorn", "-c /etc/netbox/gunicorn_config.py", "netbox.wsgi"]
 
 LABEL ORIGINAL_TAG="" \
       NETBOX_GIT_BRANCH="" \
@@ -122,4 +122,3 @@ RUN apk add --no-cache \
       util-linux
 
 COPY docker/ldap_config.docker.py /opt/netbox/netbox/netbox/ldap_config.py
-COPY configuration/ldap_config.py /etc/netbox/config/ldap_config.py
