@@ -5,6 +5,6 @@ docker-compose.override.yml
 *.pem
 configuration/*
 !configuration/configuration.py
-!configuration/example.py
+!configuration/extra.py
 configuration/ldap/*
 !configuration/ldap/ldap_config.py

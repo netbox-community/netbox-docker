@@ -1,3 +1,9 @@
+####
+## We recommend to not edit this file.
+## Create separate files to overwrite the settings.
+## See `extra.py` as an example.
+####
+
 import re
 
 from os.path import dirname, abspath, join
