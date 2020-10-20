@@ -6,7 +6,7 @@ import socket
 # Based on https://github.com/netbox-community/netbox/blob/develop/netbox/netbox/configuration.example.py
 
 # Read secret from file
-def read_secret(secret_name, default=''):
+def read_secret(secret_name, default=None):
     try:
         f = open('/run/secrets/' + secret_name, 'r', encoding='utf-8')
     except EnvironmentError:
@@ -54,7 +54,7 @@ REDIS = {
     'tasks': {
         'HOST': os.environ.get('REDIS_HOST', 'localhost'),
         'PORT': int(os.environ.get('REDIS_PORT', 6379)),
-        'PASSWORD': os.environ.get('REDIS_PASSWORD', read_secret('redis_password')),
+        'PASSWORD': read_secret('redis_password', os.environ.get('REDIS_PASSWORD', ''),
         'DATABASE': int(os.environ.get('REDIS_DATABASE', 0)),
         'DEFAULT_TIMEOUT': int(os.environ.get('REDIS_TIMEOUT', 300)),
         'SSL': os.environ.get('REDIS_SSL', 'False').lower() == 'true',
@@ -62,7 +62,7 @@ REDIS = {
     'webhooks': { # legacy setting, can be removed after Netbox seizes support for it
         'HOST': os.environ.get('REDIS_HOST', 'localhost'),
         'PORT': int(os.environ.get('REDIS_PORT', 6379)),
-        'PASSWORD': read_secret('redis_password', os.environ.get('REDIS_PASSWORD', '')),
+        'PASSWORD': read_secret('redis_password', os.environ.get('REDIS_PASSWORD', ''),
         'DATABASE': int(os.environ.get('REDIS_DATABASE', 0)),
         'DEFAULT_TIMEOUT': int(os.environ.get('REDIS_TIMEOUT', 300)),
         'SSL': os.environ.get('REDIS_SSL', 'False').lower() == 'true',
