@@ -35,7 +35,7 @@ def _import(module_name, path):
 
 _main_config_path = abspath(f'{_CONFIG_DIR}/{_MAIN_CONFIG}.py')
 if isfile(_main_config_path):
-  _import(f'{_MODULE}.configuration', _main_config_path)
+  _import(f'{_MODULE}.{_MAIN_CONFIG}', _main_config_path)
 else:
   print(f"⚠️ Main configuration '{_main_config_path}' not found.")
 
