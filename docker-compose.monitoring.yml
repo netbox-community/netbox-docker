@@ -1,0 +1,63 @@
+version: '3.4'
+services:
+  # nginx
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter
+    depends_on:
+    - nginx
+    command:
+    - -nginx.scrape-uri
+    - http://nginx:8081/stub_status
+
+  # postgres
+  postgres-exporter:
+    image: wrouesnel/postgres_exporter:v0.8.0
+    depends_on:
+    - postgres
+    env_file: env/postgres-exporter.env
+
+  # redis
+  redis-worker-exporter:
+    image: oliver006/redis_exporter
+    depends_on:
+    - redis
+    env_file: env/redis-worker-exporter.env
+  redis-cache-exporter:
+    image: oliver006/redis_exporter
+    depends_on:
+    - redis-cache
+    env_file: env/redis-cache-exporter.env
+
+  # prometheus
+  prometheus:
+    image: prom/prometheus:v2.22.0
+    depends_on:
+    - postgres-exporter
+    - redis-cache-exporter
+    - redis-worker-exporter
+    - nginx-exporter
+    - netbox
+    ports:
+    - 9090
+    volumes:
+    - ./monitoring/prometheus/:/etc/prometheus/
+    - prometheus-data:/prometheus/data
+
+  # grafana
+  grafana:
+    image: grafana/grafana:7.2.1
+    depends_on:
+    - prometheus
+    ports:
+    - 3000
+    volumes:
+    - ./monitoring/grafana/plugins/:/var/lib/grafana/plugins/:z,ro
+    - ./monitoring/grafana/provisioning/:/etc/grafana/provisioning/:z,ro
+    - ./monitoring/grafana/dashboards/:/etc/grafana/dashboards/:z,ro
+    - grafana-data:/var/lib/grafana
+
+volumes:
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
