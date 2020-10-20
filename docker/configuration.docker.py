@@ -54,7 +54,6 @@ with scandir(_CONFIG_DIR) as it:
       continue
 
     module_name = f"{_MODULE}.{f.name[:-len('.py')]}".replace(".", "_")
-
     _import(module_name, f.path)
 
 if len(_loaded_configurations) == 0:

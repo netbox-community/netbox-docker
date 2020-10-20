@@ -41,7 +41,7 @@ ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS', '*').split(' ')
 DATABASE = {
     'NAME': environ.get('DB_NAME', 'netbox'),            # Database name
     'USER': environ.get('DB_USER', ''),                  # PostgreSQL username
-    'PASSWORD': environ.get('DB_PASSWORD', _read_secret('db_password')),
+    'PASSWORD': _read_secret('db_password', environ.get('DB_PASSWORD', '')),
                                                          # PostgreSQL password
     'HOST': environ.get('DB_HOST', 'localhost'),         # Database server
     'PORT': environ.get('DB_PORT', ''),                  # Database port (leave blank for default)
@@ -58,14 +58,14 @@ REDIS = {
     'tasks': {
         'HOST': environ.get('REDIS_HOST', 'localhost'),
         'PORT': int(environ.get('REDIS_PORT', 6379)),
-        'PASSWORD': environ.get('REDIS_PASSWORD', _read_secret('redis_password')),
+        'PASSWORD': _read_secret('redis_password', environ.get('REDIS_PASSWORD', '')),
         'DATABASE': int(environ.get('REDIS_DATABASE', 0)),
         'SSL': environ.get('REDIS_SSL', 'False').lower() == 'true',
     },
     'caching': {
         'HOST': environ.get('REDIS_CACHE_HOST', environ.get('REDIS_HOST', 'localhost')),
         'PORT': int(environ.get('REDIS_CACHE_PORT', environ.get('REDIS_PORT', 6379))),
-        'PASSWORD': environ.get('REDIS_CACHE_PASSWORD', environ.get('REDIS_PASSWORD', _read_secret('redis_cache_password'))),
+        'PASSWORD': _read_secret('redis_cache_password', environ.get('REDIS_CACHE_PASSWORD', environ.get('REDIS_PASSWORD', ''))),
         'DATABASE': int(environ.get('REDIS_CACHE_DATABASE', 1)),
         'SSL': environ.get('REDIS_CACHE_SSL', environ.get('REDIS_SSL', 'False')).lower() == 'true',
     },
@@ -75,7 +75,7 @@ REDIS = {
 # For optimal security, SECRET_KEY should be at least 50 characters in length and contain a mix of letters, numbers, and
 # symbols. NetBox will not run without this defined. For more information, see
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-SECRET_KEY
-SECRET_KEY = environ.get('SECRET_KEY', _read_secret('secret_key'))
+SECRET_KEY = _read_secret('secret_key', environ.get('SECRET_KEY'))
 
 
 #########################
@@ -130,7 +130,7 @@ EMAIL = {
     'SERVER': environ.get('EMAIL_SERVER', 'localhost'),
     'PORT': int(environ.get('EMAIL_PORT', 25)),
     'USERNAME': environ.get('EMAIL_USERNAME', ''),
-    'PASSWORD': environ.get('EMAIL_PASSWORD', _read_secret('email_password')),
+    'PASSWORD': _read_secret('email_password', environ.get('EMAIL_PASSWORD', '')),
     'USE_SSL': environ.get('EMAIL_USE_SSL', 'False').lower() == 'true',
     'USE_TLS': environ.get('EMAIL_USE_TLS', 'False').lower() == 'true',
     'SSL_CERTFILE': environ.get('EMAIL_SSL_CERTFILE', ''),
@@ -176,7 +176,7 @@ METRICS_ENABLED = environ.get('METRICS_ENABLED', 'False').lower() == 'true'
 
 # Credentials that NetBox will uses to authenticate to devices when connecting via NAPALM.
 NAPALM_USERNAME = environ.get('NAPALM_USERNAME', '')
-NAPALM_PASSWORD = environ.get('NAPALM_PASSWORD', _read_secret('napalm_password'))
+NAPALM_PASSWORD = _read_secret('napalm_password', environ.get('NAPALM_PASSWORD', ''))
 
 # NAPALM timeout (in seconds). (Default: 30)
 NAPALM_TIMEOUT = int(environ.get('NAPALM_TIMEOUT', 30))
