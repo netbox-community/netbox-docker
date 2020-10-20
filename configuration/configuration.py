@@ -203,6 +203,13 @@ REPORTS_ROOT = os.environ.get('REPORTS_ROOT', '/etc/netbox/reports')
 # this setting is derived from the installed location.
 SCRIPTS_ROOT = os.environ.get('SCRIPTS_ROOT', '/etc/netbox/scripts')
 
+# Remote authentication support
+REMOTE_AUTH_ENABLED = os.environ.get('REMOTE_AUTH_ENABLED', 'False').lower() == 'true'
+REMOTE_AUTH_BACKEND = os.environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend')
+REMOTE_AUTH_HEADER = os.environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
+REMOTE_AUTH_AUTO_CREATE_USER = os.environ.get('REMOTE_AUTH_AUTO_CREATE_USER', 'True').lower() == 'true'
+REMOTE_AUTH_DEFAULT_GROUPS = list(filter(None, os.environ.get('REMOTE_AUTH_DEFAULT_GROUPS', '').split(' ')))
+
 # Time zone (default: UTC)
 TIME_ZONE = os.environ.get('TIME_ZONE', 'UTC')
 
