@@ -3,3 +3,8 @@
 .initializers
 docker-compose.override.yml
 *.pem
+configuration/*
+!configuration/configuration.py
+!configuration/example.py
+configuration/ldap/*
+!configuration/ldap/ldap_config.py
