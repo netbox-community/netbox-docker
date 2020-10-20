@@ -205,12 +205,11 @@ RACK_ELEVATION_DEFAULT_UNIT_HEIGHT = int(environ.get('RACK_ELEVATION_DEFAULT_UNI
 RACK_ELEVATION_DEFAULT_UNIT_WIDTH = int(environ.get('RACK_ELEVATION_DEFAULT_UNIT_WIDTH', 220))
 
 # Remote authentication support
-REMOTE_AUTH_ENABLED = False
-# REMOTE_AUTH_BACKEND = 'netbox.authentication.RemoteUserBackend'
-# REMOTE_AUTH_HEADER = 'HTTP_REMOTE_USER'
-# REMOTE_AUTH_AUTO_CREATE_USER = True
-# REMOTE_AUTH_DEFAULT_GROUPS = []
-# REMOTE_AUTH_DEFAULT_PERMISSIONS = {}
+REMOTE_AUTH_ENABLED = environ.get('REMOTE_AUTH_ENABLED', 'False').lower() == 'true'
+REMOTE_AUTH_BACKEND = environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend')
+REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
+REMOTE_AUTH_AUTO_CREATE_USER = environ.get('REMOTE_AUTH_AUTO_CREATE_USER', 'True').lower() == 'true'
+REMOTE_AUTH_DEFAULT_GROUPS = list(filter(None, environ.get('REMOTE_AUTH_DEFAULT_GROUPS', '').split(' ')))
 
 # This determines how often the GitHub API is called to check the latest release of NetBox. Must be at least 1 hour.
 RELEASE_CHECK_TIMEOUT = int(environ.get('RELEASE_CHECK_TIMEOUT', 24 * 3600))
@@ -235,13 +234,6 @@ SCRIPTS_ROOT = environ.get('SCRIPTS_ROOT', '/etc/netbox/scripts')
 # local file storage instead. (This can be useful for enabling authentication on a standby instance with read-only
 # database access.) Note that the user as which NetBox runs must have read and write permissions to this path.
 SESSION_FILE_PATH = environ.get('REPORTS_ROOT', None)
-
-# Remote authentication support
-REMOTE_AUTH_ENABLED = environ.get('REMOTE_AUTH_ENABLED', 'False').lower() == 'true'
-REMOTE_AUTH_BACKEND = environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend')
-REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
-REMOTE_AUTH_AUTO_CREATE_USER = environ.get('REMOTE_AUTH_AUTO_CREATE_USER', 'True').lower() == 'true'
-REMOTE_AUTH_DEFAULT_GROUPS = list(filter(None, environ.get('REMOTE_AUTH_DEFAULT_GROUPS', '').split(' ')))
 
 # Time zone (default: UTC)
 TIME_ZONE = environ.get('TIME_ZONE', 'UTC')
