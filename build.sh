@@ -216,7 +216,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     TARGET_DOCKER_TAG="${TARGET_DOCKER_TAG}-${DOCKER_TARGET}"
   fi
   if [ -n "${GH_ACTION}" ]; then
-    echo "::set-env name=FINAL_DOCKER_TAG::${TARGET_DOCKER_TAG}"
+    echo "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG}" >> $GITHUB_ENV
     echo "::set-output name=skipped::false"
   fi
 
