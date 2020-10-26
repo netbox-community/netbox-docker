@@ -18,9 +18,6 @@ services:
     - netbox-nginx-config:/etc/netbox-nginx:z
     - netbox-static-files:/opt/netbox/netbox/static:z
     - netbox-media-files:/opt/netbox/netbox/media:z
-    - type: tmpfs
-      target: /tmp/metrics
-      read_only: false
   netbox-worker:
     <<: *netbox
     depends_on:
@@ -57,7 +54,7 @@ services:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
-    env_file: env/redis-worker.env
+    env_file: env/redis.env
     volumes:
     - netbox-redis-data:/data
   redis-cache:
@@ -65,7 +62,7 @@ services:
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis-cache.env
 
 volumes:

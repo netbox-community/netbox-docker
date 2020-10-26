@@ -1,8 +1,0 @@
-# config file version
-apiVersion: 1
-
-datasources:
-  - name: DS_PROMETHEUS
-    type: prometheus
-    default: true
-    url: http://prometheus:9090

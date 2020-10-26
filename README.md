@@ -79,11 +79,8 @@ The default credentials are:
 ## Documentation
 
 Please refer [to our wiki on Github][netbox-docker-wiki] for further information on how to use this Netbox Docker image properly.
-You'll learn how to read the integrated metrics using [Prometheus][prometheus] and [Grafana][grafana].
-It also covers advanced topics such as using secret files, deployment to Kubernetes as well as NAPALM and LDAP configuration.
+It covers advanced topics such as using files for secrets, deployment to Kubernetes and configuring NAPALM or LDAP.
 
-[prometheus]: https://prometheus.io/
-[grafana]: https://grafana.com/grafana/
 [netbox-docker-wiki]: https://github.com/netbox-community/netbox-docker/wiki/
 
 ## Getting Help
