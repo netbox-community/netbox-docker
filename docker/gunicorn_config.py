@@ -5,4 +5,5 @@ workers = 3
 errorlog = '-'
 accesslog = '-'
 capture_output = False
-loglevel = 'debug'
+loglevel = 'info'
+raw_env = 'prometheus_multiproc_dir=/tmp/metrics'

@@ -79,7 +79,7 @@ The default credentials are:
 ## Documentation
 
 Please refer [to our wiki on Github][netbox-docker-wiki] for further information on how to use this Netbox Docker image properly.
-It covers advanced topics such as using secret files, deployment to Kubernetes as well as NAPALM and LDAP configuration.
+It covers advanced topics such as using files for secrets, deployment to Kubernetes, monitoring and configuring NAPALM or LDAP.
 
 [netbox-docker-wiki]: https://github.com/netbox-community/netbox-docker/wiki/
 

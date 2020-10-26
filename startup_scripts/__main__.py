@@ -9,7 +9,7 @@ this_dir = dirname(abspath(__file__))
 def filename(f):
   return f.name
 
-with scandir(dirname(abspath(__file__))) as it:
+with scandir(this_dir) as it:
   for f in sorted(it, key = filename):
     if not f.is_file():
       continue

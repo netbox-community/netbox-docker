@@ -27,9 +27,11 @@ services:
     - /opt/netbox/netbox/manage.py
     command:
     - rqworker
+
+  # nginx
   nginx:
     command: nginx -c /etc/netbox-nginx/nginx.conf
-    image: nginx:1.17-alpine
+    image: nginx:1.19-alpine
     depends_on:
     - netbox
     ports:
@@ -37,13 +39,17 @@ services:
     volumes:
     - netbox-static-files:/opt/netbox/netbox/static:ro
     - netbox-nginx-config:/etc/netbox-nginx/:ro
+
+  # postgres
   postgres:
-    image: postgres:11-alpine
+    image: postgres:12-alpine
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
+
+  # redis
   redis:
-    image: redis:5-alpine
+    image: redis:6-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
@@ -52,12 +58,13 @@ services:
     volumes:
     - netbox-redis-data:/data
   redis-cache:
-    image: redis:5-alpine
+    image: redis:6-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis-cache.env
+
 volumes:
   netbox-static-files:
     driver: local

@@ -1,10 +1,15 @@
-import importlib.util
-import sys
+from .configuration import read_configurations
 
-try:
-  spec = importlib.util.spec_from_file_location('ldap_config', '/etc/netbox/config/ldap_config.py')
-  module = importlib.util.module_from_spec(spec)
-  spec.loader.exec_module(module)
-  sys.modules['netbox.ldap_config'] = module
-except:
-  raise ImportError('')
+_loaded_configurations = read_configurations(
+  config_dir = '/etc/netbox/config/ldap/',
+  config_module = 'netbox.configuration.ldap',
+  main_config = 'ldap_config')
+
+
+def __getattr__(name):
+  for config in _loaded_configurations:
+    try:
+      return getattr(config, name)
+    except:
+      pass
+  raise AttributeError
