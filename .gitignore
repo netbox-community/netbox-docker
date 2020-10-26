@@ -8,3 +8,4 @@ configuration/*
 !configuration/extra.py
 configuration/ldap/*
 !configuration/ldap/ldap_config.py
+prometheus.yml
