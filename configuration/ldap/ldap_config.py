@@ -71,7 +71,7 @@ AUTH_LDAP_USER_FLAGS_BY_GROUP = {
 
 # For more granular permissions, we can map LDAP groups to Django groups.
 AUTH_LDAP_FIND_GROUP_PERMS = environ.get('AUTH_LDAP_FIND_GROUP_PERMS', 'True').lower() == 'true'
-AUTH_LDAP_MIRROR_GROUPS = environ.get('AUTH_LDAP_MIRROR_GROUPS', None).lower() == 'true'
+AUTH_LDAP_MIRROR_GROUPS = environ.get('AUTH_LDAP_MIRROR_GROUPS', '').lower() == 'true'
 
 # Cache groups for one hour to reduce LDAP traffic
 AUTH_LDAP_CACHE_TIMEOUT = int(environ.get('AUTH_LDAP_CACHE_TIMEOUT', 3600))
