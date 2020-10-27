@@ -17,6 +17,5 @@ def __getattr__(name):
 def __dir__():
   names = []
   for config in _loaded_configurations:
-    for name in config.__dir__():
-      names.append(name)
+    names.extend(config.__dir__())
   return names
