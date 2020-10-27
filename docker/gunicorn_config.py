@@ -6,4 +6,3 @@ errorlog = '-'
 accesslog = '-'
 capture_output = False
 loglevel = 'info'
-raw_env = 'prometheus_multiproc_dir=/tmp/metrics'
