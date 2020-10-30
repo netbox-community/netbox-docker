@@ -233,7 +233,7 @@ SCRIPTS_ROOT = environ.get('SCRIPTS_ROOT', '/etc/netbox/scripts')
 # By default, NetBox will store session data in the database. Alternatively, a file path can be specified here to use
 # local file storage instead. (This can be useful for enabling authentication on a standby instance with read-only
 # database access.) Note that the user as which NetBox runs must have read and write permissions to this path.
-SESSION_FILE_PATH = environ.get('SESSIONS_ROOT', None)
+SESSION_FILE_PATH = environ.get('REPORTS_ROOT', None)
 
 # Time zone (default: UTC)
 TIME_ZONE = environ.get('TIME_ZONE', 'UTC')
