@@ -1,4 +1,4 @@
-from extras.models.custom_fields import CustomField, CustomFieldChoice
+from extras.models.customfields import CustomField, CustomFieldChoice
 
 from startup_script_utils import load_yaml
 import sys
