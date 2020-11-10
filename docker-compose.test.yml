@@ -14,19 +14,9 @@ services:
     - ./configuration:/etc/netbox/config:z,ro
     - ./reports:/etc/netbox/reports:z,ro
     - ./scripts:/etc/netbox/scripts:z,ro
-    - netbox-nginx-config:/etc/netbox-nginx:z
-    - netbox-static-files:/opt/netbox/netbox/static:z
     - netbox-media-files:/opt/netbox/netbox/media:z
-  nginx:
-    command: nginx -c /etc/netbox-nginx/nginx.conf
-    image: nginx:1.19-alpine
-    depends_on:
-    - netbox
     ports:
     - 8080
-    volumes:
-    - netbox-static-files:/opt/netbox/netbox/static:ro
-    - netbox-nginx-config:/etc/netbox-nginx/:ro
   postgres:
     image: postgres:12-alpine
     env_file: env/postgres.env
@@ -45,9 +35,5 @@ services:
     - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis-cache.env
 volumes:
-  netbox-static-files:
-    driver: local
-  netbox-nginx-config:
-    driver: local
   netbox-media-files:
     driver: local

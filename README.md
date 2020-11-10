@@ -56,7 +56,7 @@ cd netbox-docker
 tee docker-compose.override.yml <<EOF
 version: '3.4'
 services:
-  nginx:
+  netbox:
     ports:
       - 8000:8080
 EOF

@@ -49,7 +49,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  DOCKERFILE  The name of Dockerfile to use."
   echo "              Default: Dockerfile"
   echo "  DOCKER_FROM The base image to use."
-  echo "              Default: 'python:3.9-alpine'"
+  echo "              Default: 'alpine:3.13'"
   echo "  DOCKER_TARGET A specific target to build."
   echo "              It's currently not possible to pass multiple targets."
   echo "              Default: main ldap"
@@ -106,7 +106,7 @@ else
 fi
 
 ###
-# Variables for fetching the source
+# Variables for fetching the Netbox source
 ###
 SRC_ORG="${SRC_ORG-netbox-community}"
 SRC_REPO="${SRC_REPO-netbox}"
@@ -115,10 +115,10 @@ URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}.git}"
 NETBOX_PATH="${NETBOX_PATH-.netbox}"
 
 ###
-# Fetching the source
+# Fetching the Netbox source
 ###
 if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
-  echo "🌐 Checking out '${NETBOX_BRANCH}' of netbox from the url '${URL}' into '${NETBOX_PATH}'"
+  echo "🌐 Checking out '${NETBOX_BRANCH}' of Netbox from the url '${URL}' into '${NETBOX_PATH}'"
   if [ ! -d "${NETBOX_PATH}" ]; then
     $DRY git clone -q --depth 10 -b "${NETBOX_BRANCH}" "${URL}" "${NETBOX_PATH}"
   fi
@@ -135,7 +135,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
     $DRY git checkout -qf FETCH_HEAD
     $DRY git prune
   )
-  echo "✅ Checked out netbox"
+  echo "✅ Checked out Netbox"
 fi
 
 ###
@@ -157,7 +157,7 @@ fi
 # Determining the value for DOCKER_FROM
 ###
 if [ -z "$DOCKER_FROM" ]; then
-  DOCKER_FROM="python:3.9-alpine"
+  DOCKER_FROM="alpine:3.13"
 fi
 
 ###
@@ -271,7 +271,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
 
       if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
         SHOULD_BUILD="true"
-        BUILD_REASON="${BUILD_REASON} python"
+        BUILD_REASON="${BUILD_REASON} alpine"
       fi
       if [ "${NETBOX_GIT_REF}" != "${NETBOX_GIT_REF_OLD}" ]; then
         SHOULD_BUILD="true"

@@ -19,7 +19,7 @@ jobs:
         - ./build.sh develop
         docker_from:
         - '' # use the default of the build script
-        # - python:3.10-rc-alpine # disable until dependencies work
+        - alpine:edge
       fail-fast: false
     runs-on: ubuntu-latest
     name: Builds new Netbox Docker Images
