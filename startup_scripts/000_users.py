@@ -1,6 +1,6 @@
 import sys
 
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from startup_script_utils import load_yaml, set_permissions
 from users.models import Token
 

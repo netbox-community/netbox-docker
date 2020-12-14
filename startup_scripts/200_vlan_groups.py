@@ -1,8 +1,8 @@
+import sys
+
 from dcim.models import Site
 from ipam.models import VLANGroup
-from extras.models import CustomField, CustomFieldValue
-from startup_script_utils import load_yaml
-import sys
+from startup_script_utils import *
 
 vlan_groups = load_yaml('/opt/netbox/initializers/vlan_groups.yml')
 
@@ -14,7 +14,7 @@ optional_assocs = {
 }
 
 for params in vlan_groups:
-  custom_fields = params.pop('custom_fields', None)
+  custom_field_data = pop_custom_fields(params)
 
   for assoc, details in optional_assocs.items():
     if assoc in params:
@@ -26,15 +26,6 @@ for params in vlan_groups:
   vlan_group, created = VLANGroup.objects.get_or_create(**params)
 
   if created:
-    if custom_fields is not None:
-      for cf_name, cf_value in custom_fields.items():
-        custom_field = CustomField.objects.get(name=cf_name)
-        custom_field_value = CustomFieldValue.objects.create(
-          field=custom_field,
-          obj=vlan_group,
-          value=cf_value
-        )
-
-        vlan_group.custom_field_values.add(custom_field_value)
+    set_custom_fields_values(vlan_group, custom_field_data)
 
     print("🏘️ Created VLAN Group", vlan_group.name)

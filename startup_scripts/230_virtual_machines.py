@@ -1,9 +1,9 @@
-from dcim.models import Site, Platform, DeviceRole
-from virtualization.models import Cluster, VirtualMachine
-from tenancy.models import Tenant
-from extras.models import CustomField, CustomFieldValue
-from startup_script_utils import load_yaml
 import sys
+
+from dcim.models import Platform, DeviceRole
+from startup_script_utils import *
+from tenancy.models import Tenant
+from virtualization.models import Cluster, VirtualMachine
 
 virtual_machines = load_yaml('/opt/netbox/initializers/virtual_machines.yml')
 
@@ -21,7 +21,8 @@ optional_assocs = {
 }
 
 for params in virtual_machines:
-  custom_fields = params.pop('custom_fields', None)
+  custom_field_data = pop_custom_fields(params)
+
   # primary ips are handled later in `270_primary_ips.py`
   params.pop('primary_ip4', None)
   params.pop('primary_ip6', None)
@@ -42,15 +43,6 @@ for params in virtual_machines:
   virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
 
   if created:
-    if custom_fields is not None:
-      for cf_name, cf_value in custom_fields.items():
-        custom_field = CustomField.objects.get(name=cf_name)
-        custom_field_value = CustomFieldValue.objects.create(
-          field=custom_field,
-          obj=virtual_machine,
-          value=cf_value
-        )
-
-        virtual_machine.custom_field_values.add(custom_field_value)
+    set_custom_fields_values(virtual_machine, custom_field_data)
 
     print("🖥️ Created virtual machine", virtual_machine.name)
