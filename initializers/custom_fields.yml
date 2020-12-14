@@ -52,7 +52,7 @@
 #   - Third Item
 #   - Fifth Item
 #   - Fourth Item
-# select_field_auto_weight:
+# select_field_legacy_format:
 #    type: select
 #    label: Choose between items
 #    required: false
@@ -61,11 +61,12 @@
 #    on_objects:
 #     - dcim.models.Device
 #    choices:
-#     - A
-#     - B
-#     - C
-#     - E
-#     - D like deprecated
+#     - value: A # this is the deprecated format.
+#     - value: B # we only use it for the tests.
+#     - value: C # please see above for the new format.
+#     - value: "D like deprecated"
+#       weight: 999
+#     - value: E
 # boolean_field:
 #   type: boolean
 #   label: Yes Or No?
