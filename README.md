@@ -85,10 +85,12 @@ It covers advanced topics such as using files for secrets, deployment to Kuberne
 
 ## Getting Help
 
-Please join [our Slack channel `#netbox-docker`][netbox-docker-slack] on the [Network To Code Slack][ntc-slack].
-It's free to use and there are almost always people online that can help.
+Feel free to ask questions in our [Github Community][netbox-community] or join [our Slack channel `#netbox-docker`][netbox-docker-slack] on the [Network To Code Slack][ntc-slack],
+which is free to use and where there are almost always people online that can help you in the Slack channel.
 
 If you need help with using Netbox or developing for it or against it's API you may find the `#netbox` channel on the same Slack instance very helpful.
+
+[netbox-community]: https://github.com/netbox-community/netbox-docker/discussions
 
 ## Dependencies
 
