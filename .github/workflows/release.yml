@@ -50,3 +50,34 @@ jobs:
       name: Logout of the Docker Registry
       run: docker logout "${DOCKER_REGISTRY}"
       if: steps.docker-build.outputs.skipped != 'true'
+
+    # Quay.io
+    - id: quayio-docker-build
+      name: Build the image with '${{ matrix.build_cmd }}'
+      run: ${{ matrix.build_cmd }}
+      env:
+        DOCKER_REGISTRY: quay.io
+        GH_ACTION: enable
+    - id: quayio-registry-login
+      name: Login to the Quay.io Registry
+      run: |
+        echo "::add-mask::$QUAYIO_USERNAME"
+        echo "::add-mask::$QUAYIO_PASSWORD"
+        docker login -u "$QUAYIO_USERNAME" --password "${QUAYIO_PASSWORD}" "${DOCKER_REGISTRY}"
+      env:
+        DOCKER_REGISTRY: quay.io
+        QUAYIO_USERNAME: ${{ secrets.quayio_username }}
+        QUAYIO_PASSWORD: ${{ secrets.quayio_password }}
+      if: steps.docker-build.outputs.skipped != 'true'
+    - id: quayio-registry-push
+      name: Push the image
+      run: ${{ matrix.build_cmd }} --push-only
+      env:
+        DOCKER_REGISTRY: quay.io
+      if: steps.docker-build.outputs.skipped != 'true'
+    - id: quayio-registry-logout
+      name: Logout of the Docker Registry
+      run: docker logout "${DOCKER_REGISTRY}"
+      env:
+        DOCKER_REGISTRY: quay.io
+      if: steps.docker-build.outputs.skipped != 'true'
