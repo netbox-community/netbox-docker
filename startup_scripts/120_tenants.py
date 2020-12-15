@@ -1,7 +1,7 @@
-from tenancy.models import Tenant, TenantGroup
-from extras.models import CustomField, CustomFieldValue
-from startup_script_utils import load_yaml
 import sys
+
+from startup_script_utils import *
+from tenancy.models import Tenant, TenantGroup
 
 tenants = load_yaml('/opt/netbox/initializers/tenants.yml')
 
@@ -13,7 +13,7 @@ optional_assocs = {
 }
 
 for params in tenants:
-  custom_fields = params.pop('custom_fields', None)
+  custom_field_data = pop_custom_fields(params)
 
   for assoc, details in optional_assocs.items():
     if assoc in params:
@@ -25,15 +25,6 @@ for params in tenants:
   tenant, created = Tenant.objects.get_or_create(**params)
 
   if created:
-    if custom_fields is not None:
-      for cf_name, cf_value in custom_fields.items():
-        custom_field = CustomField.objects.get(name=cf_name)
-        custom_field_value = CustomFieldValue.objects.create(
-          field=custom_field,
-          obj=tenant,
-          value=cf_value
-        )
-
-        tenant.custom_field_values.add(custom_field_value)
+    set_custom_fields_values(tenant, custom_field_data)
 
     print("👩‍💻 Created Tenant", tenant.name)

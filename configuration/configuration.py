@@ -157,7 +157,7 @@ LOGIN_REQUIRED = environ.get('LOGIN_REQUIRED', 'False').lower() == 'true'
 
 # The length of time (in seconds) for which a user will remain logged into the web UI before being prompted to
 # re-authenticate. (Default: 1209600 [14 days])
-LOGIN_TIMEOUT = environ.get('LOGIN_TIMEOUT', None)
+LOGIN_TIMEOUT = int(environ.get('LOGIN_TIMEOUT', 1209600))
 
 # Setting this to True will display a "maintenance mode" banner at the top of every page.
 MAINTENANCE_MODE = environ.get('MAINTENANCE_MODE', 'False').lower() == 'true'
@@ -233,7 +233,7 @@ SCRIPTS_ROOT = environ.get('SCRIPTS_ROOT', '/etc/netbox/scripts')
 # By default, NetBox will store session data in the database. Alternatively, a file path can be specified here to use
 # local file storage instead. (This can be useful for enabling authentication on a standby instance with read-only
 # database access.) Note that the user as which NetBox runs must have read and write permissions to this path.
-SESSION_FILE_PATH = environ.get('REPORTS_ROOT', None)
+SESSION_FILE_PATH = environ.get('SESSIONS_ROOT', None)
 
 # Time zone (default: UTC)
 TIME_ZONE = environ.get('TIME_ZONE', 'UTC')

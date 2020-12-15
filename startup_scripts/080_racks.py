@@ -1,8 +1,8 @@
-from dcim.models import Site, RackRole, Rack, RackGroup
-from tenancy.models import Tenant
-from extras.models import CustomField, CustomFieldValue
-from startup_script_utils import load_yaml
 import sys
+
+from dcim.models import Site, RackRole, Rack, RackGroup
+from startup_script_utils import *
+from tenancy.models import Tenant
 
 racks = load_yaml('/opt/netbox/initializers/racks.yml')
 
@@ -20,7 +20,7 @@ optional_assocs = {
 }
 
 for params in racks:
-  custom_fields = params.pop('custom_fields', None)
+  custom_field_data = pop_custom_fields(params)
 
   for assoc, details in required_assocs.items():
     model, field = details
@@ -38,15 +38,6 @@ for params in racks:
   rack, created = Rack.objects.get_or_create(**params)
 
   if created:
-    if custom_fields is not None:
-      for cf_name, cf_value in custom_fields.items():
-        custom_field = CustomField.objects.get(name=cf_name)
-        custom_field_value = CustomFieldValue.objects.create(
-          field=custom_field,
-          obj=rack,
-          value=cf_value
-        )
-
-        rack.custom_field_values.add(custom_field_value)
+    set_custom_fields_values(rack, custom_field_data)
 
     print("🔳 Created rack", rack.site, rack.name)

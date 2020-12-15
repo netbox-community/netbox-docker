@@ -3,10 +3,9 @@ import sys
 from dcim.models import Device, Interface
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
-from extras.models import CustomField, CustomFieldValue
 from ipam.models import VRF, IPAddress
 from netaddr import IPNetwork
-from startup_script_utils import load_yaml
+from startup_script_utils import *
 from tenancy.models import Tenant
 from virtualization.models import VirtualMachine, VMInterface
 
@@ -25,9 +24,10 @@ vm_interface_ct = ContentType.objects.filter(Q(app_label='virtualization', model
 interface_ct = ContentType.objects.filter(Q(app_label='dcim', model='interface')).first()
 
 for params in ip_addresses:
+  custom_field_data = pop_custom_fields(params)
+
   vm = params.pop('virtual_machine', None)
   device = params.pop('device', None)
-  custom_fields = params.pop('custom_fields', None)
   params['address'] = IPNetwork(params['address'])
 
   if vm and device:
@@ -55,15 +55,6 @@ for params in ip_addresses:
   ip_address, created = IPAddress.objects.get_or_create(**params)
 
   if created:
-    if custom_fields is not None:
-      for cf_name, cf_value in custom_fields.items():
-        custom_field = CustomField.objects.get(name=cf_name)
-        custom_field_value = CustomFieldValue.objects.create(
-          field=custom_field,
-          obj=ip_address,
-          value=cf_value
-        )
-
-        ip_address.custom_field_values.add(custom_field_value)
+    set_custom_fields_values(ip_address, custom_field_data)
 
     print("🧬 Created IP Address", ip_address.address)
