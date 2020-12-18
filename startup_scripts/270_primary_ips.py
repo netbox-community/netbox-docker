@@ -31,13 +31,14 @@ def link_primary_ip(assets, asset_model):
 devices = load_yaml('/opt/netbox/initializers/devices.yml')
 virtual_machines = load_yaml('/opt/netbox/initializers/virtual_machines.yml')
 
-if devices is None and virtual_machines is None:
-    sys.exit()
-
 optional_assocs = {
     'primary_ip4': (IPAddress, 'address'),
     'primary_ip6': (IPAddress, 'address')
 }
 
-link_primary_ip(devices, Device)
-link_primary_ip(virtual_machines, VirtualMachine)
+if devices is None and virtual_machines is None:
+    sys.exit()
+elif devices is not None:
+  link_primary_ip(devices, Device)
+elif virtual_machines is not None:
+  link_primary_ip(virtual_machines, VirtualMachine)
