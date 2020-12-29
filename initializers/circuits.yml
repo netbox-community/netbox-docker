@@ -1,6 +1,6 @@
 # - cid: Circuit_ID-1
 #   provider: Provider1
 #   type: Internet
-# - name: Circuit_ID-2
+# - cid: Circuit_ID-2
 #   provider: Provider2
 #   type: MPLS
