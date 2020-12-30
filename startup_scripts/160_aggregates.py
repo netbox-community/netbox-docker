@@ -3,6 +3,7 @@ import sys
 from ipam.models import Aggregate, RIR
 from netaddr import IPNetwork
 from startup_script_utils import *
+from tenancy.models import Tenant
 
 aggregates = load_yaml('/opt/netbox/initializers/aggregates.yml')
 
@@ -11,6 +12,10 @@ if aggregates is None:
 
 required_assocs = {
   'rir': (RIR, 'name')
+}
+
+optional_assocs = {
+  'tenant': (Tenant, 'name'),
 }
 
 for params in aggregates:
@@ -23,6 +28,13 @@ for params in aggregates:
     query = { field: params.pop(assoc) }
 
     params[assoc] = model.objects.get(**query)
+
+  for assoc, details in optional_assocs.items():
+    if assoc in params:
+      model, field = details
+      query = { field: params.pop(assoc) }
+
+      params[assoc] = model.objects.get(**query)
 
   aggregate, created = Aggregate.objects.get_or_create(**params)
 
