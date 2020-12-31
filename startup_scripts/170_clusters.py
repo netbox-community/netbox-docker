@@ -3,6 +3,7 @@ import sys
 from dcim.models import Site
 from startup_script_utils import *
 from virtualization.models import Cluster, ClusterType, ClusterGroup
+from tenancy.models import Tenant
 
 clusters = load_yaml('/opt/netbox/initializers/clusters.yml')
 
@@ -15,7 +16,8 @@ required_assocs = {
 
 optional_assocs = {
   'site': (Site, 'name'),
-  'group': (ClusterGroup, 'name')
+  'group': (ClusterGroup, 'name'),
+  'tenant': (Tenant, 'name')
 }
 
 for params in clusters:

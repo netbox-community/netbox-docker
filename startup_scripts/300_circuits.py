@@ -1,4 +1,5 @@
 from circuits.models import Circuit, Provider, CircuitType
+from tenancy.models import Tenant
 from startup_script_utils import *
 import sys
 
@@ -12,6 +13,10 @@ required_assocs = {
   'type': (CircuitType, 'name')
 }
 
+optional_assocs = {
+  'tenant': (Tenant, 'name')
+}
+
 for params in circuits:
   custom_field_data = pop_custom_fields(params)
 
@@ -20,6 +25,13 @@ for params in circuits:
     query = { field: params.pop(assoc) }
 
     params[assoc] = model.objects.get(**query)
+
+  for assoc, details in optional_assocs.items():
+    if assoc in params:
+      model, field = details
+      query = { field: params.pop(assoc) }
+
+      params[assoc] = model.objects.get(**query)
 
   circuit, created = Circuit.objects.get_or_create(**params)
 
