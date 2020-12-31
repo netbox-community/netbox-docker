@@ -1,0 +1,10 @@
+# - name: SSH
+#   protocol: TCP
+#   ports:
+#     - 22
+#   virtual_machine: virtual machine 1
+# - name: FTP
+#   protocol: TCP
+#   ports: 
+#     - 21
+#   device: server01
