@@ -1,6 +1,6 @@
 import sys
 
-from dcim.models import Rack, PowerPanel, PowerFeed
+from dcim.models import Rack, PowerPanel, PowerFeed, Site
 from startup_script_utils import *
 from tenancy.models import Tenant
 
@@ -10,7 +10,8 @@ if power_feeds is None:
   sys.exit()
 
 required_assocs = {
-  'power_panel': (PowerPanel, 'name')
+  'power_panel': (PowerPanel, 'name'),
+  'site': (Site, 'name')
 }
 
 optional_assocs = {
