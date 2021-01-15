@@ -3,8 +3,8 @@
 #   ports:
 #     - 22
 #   virtual_machine: virtual machine 1
-# - name: FTP
-#   protocol: TCP
+# - name: MISC
+#   protocol: UDP
 #   ports: 
-#     - 21
+#     - 4000
 #   device: server01
