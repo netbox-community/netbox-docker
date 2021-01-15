@@ -1,5 +1,4 @@
 # - name: power feed 1
-#   site: AMS 1
 #   power_panel: power panel AMS 1
 #   voltage: 208
 #   amperage: 50
@@ -7,7 +6,6 @@
 #   phase: Single phase
 #   rack: rack-01
 # - name: power feed 2
-#   site: SING 1
 #   power_panel: power panel SING 1
 #   voltage: 208
 #   amperage: 50
