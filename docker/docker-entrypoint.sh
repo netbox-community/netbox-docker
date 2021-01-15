@@ -7,6 +7,9 @@ set -e
 # Allows Netbox to be run as non-root users
 umask 002
 
+# Load correct Python3 env
+source /opt/netbox/venv/bin/activate
+
 # Try to connect to the DB
 DB_WAIT_TIMEOUT=${DB_WAIT_TIMEOUT-3}
 MAX_DB_WAIT_TIME=${MAX_DB_WAIT_TIME-30}
@@ -59,9 +62,6 @@ if [ "$SKIP_STARTUP_SCRIPTS" == "true" ]; then
 else
   echo "import runpy; runpy.run_path('../startup_scripts')" | ./manage.py shell --interface python
 fi
-
-# Copy static files
-./manage.py collectstatic --no-input
 
 echo "✅ Initialisation is done."
 
