@@ -18,9 +18,7 @@ def get_content_type_id(content_type_str):
 
 for hook in webhooks:
   obj_types = hook.pop('object_types')
-  obj_type_ids = []
-  for obj in obj_types:
-    obj_type_ids.append(get_content_type_id(obj))
+  obj_type_ids = [ get_content_type_id(obj) for obj in obj_types ]
   if obj_type_ids is not None:
     webhook = Webhook(**hook)
     if not Webhook.objects.filter(name=webhook.name):
