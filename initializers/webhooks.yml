@@ -10,20 +10,20 @@
 ## Examples:
 
 # - name: device_creation
-  # payload_url: 'https://github.com/netbox-community/netbox-docker'
-  # object_types: 
-    # - device
-    # - cable
-  # type_create: True
+#   payload_url: 'https://github.com/netbox-community/netbox-docker'
+#   object_types: 
+#     - device
+#     - cable
+#   type_create: True
 # - name: device_update
-  # payload_url: 'https://google.com'
-  # object_types: 
-    # - device
-  # type_update: True
-#- name: device_delete
-#  payload_url: 'https://gitlab.com'
-#  object_types: 
-#    - device
-#  type_delete: True
+#   payload_url: 'https://google.com'
+#   object_types: 
+#     - device
+#   type_update: True
+# - name: device_delete
+#   payload_url: 'https://gitlab.com1'
+#   object_types: 
+#     - device
+#   type_delete: True
 
 
