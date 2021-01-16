@@ -42,3 +42,6 @@ elif devices is not None:
   link_primary_ip(devices, Device)
 elif virtual_machines is not None:
   link_primary_ip(virtual_machines, VirtualMachine)
+else:
+  link_primary_ip(devices, Device)
+  link_primary_ip(virtual_machines, VirtualMachine)
