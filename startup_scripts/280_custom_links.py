@@ -14,7 +14,7 @@ def get_content_type_id(content_type_str):
     id = ContentType.objects.get(model=content_type_str).id
     return id
   except ContentType.DoesNotExist:
-    print(" Error determining content type id for user declared var: {0}".format(content_type_str))
+    print("⚠️ Error determining content type id for user declared var: {0}".format(content_type_str))
 
 for link in custom_links:
   content_type = link.pop('content_type')
@@ -23,7 +23,7 @@ for link in custom_links:
     custom_link = CustomLink(**link)
     if not CustomLink.objects.filter(name=custom_link.name):
       custom_link.save()
-      print("  Created Custom Link {0}".format(custom_link.name))
+      print("🖥️  Created Custom Link {0}".format(custom_link.name))
     else:
       print("⚠️ Skipping Custom Link {0}, already exists".format(custom_link.name))
 
