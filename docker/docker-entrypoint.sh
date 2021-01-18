@@ -63,6 +63,9 @@ else
   echo "import runpy; runpy.run_path('../startup_scripts')" | ./manage.py shell --interface python
 fi
 
+# Trace any missing cable paths (not typically needed)
+./manage.py trace_paths --no-input
+
 echo "✅ Initialisation is done."
 
 # Launch whatever is passed by docker
