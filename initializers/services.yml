@@ -1,0 +1,15 @@
+# - name: DNS
+#   protocol: TCP
+#   ports:
+#     - 53
+#   virtual_machine: virtual machine 1
+# - name: DNS
+#   protocol: UDP
+#   ports:
+#     - 53
+#   virtual_machine: virtual machine 1
+# - name: MISC
+#   protocol: UDP
+#   ports: 
+#     - 4000
+#   device: server01
