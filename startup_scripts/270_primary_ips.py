@@ -38,10 +38,7 @@ optional_assocs = {
 
 if devices is None and virtual_machines is None:
     sys.exit()
-elif devices is not None:
+if devices is not None:
   link_primary_ip(devices, Device)
-elif virtual_machines is not None:
-  link_primary_ip(virtual_machines, VirtualMachine)
-else:
-  link_primary_ip(devices, Device)
+if virtual_machines is not None:
   link_primary_ip(virtual_machines, VirtualMachine)
