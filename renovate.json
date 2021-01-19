@@ -1,5 +1,13 @@
 {
   "extends": [
     "config:base"
-  ]
+  ],
+  "enabled": true,
+  "labels": ["maintenance"],
+  "baseBranches": ["develop"],
+  "pip_requirements": {
+    "fileMatch": [
+      "requirements-container.txt"
+    ]
+  }
 }
