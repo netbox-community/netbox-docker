@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    continue-on-error: ${{ matrix.docker_from == 'alpine:edge' }}
     strategy:
       matrix:
         build_cmd:
