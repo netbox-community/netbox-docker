@@ -11,8 +11,7 @@ if custom_links is None:
 
 def get_content_type_id(content_type_str):
   try:
-    id = ContentType.objects.get(model=content_type_str).id
-    return id
+    return ContentType.objects.get(model=content_type_str).id
   except ContentType.DoesNotExist:
     print("⚠️ Error determining content type id for user declared var: {0}".format(content_type_str))
 
