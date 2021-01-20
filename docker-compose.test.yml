@@ -7,6 +7,8 @@ services:
     - redis
     - redis-cache
     env_file: env/netbox.env
+    environment:
+      SKIP_STARTUP_SCRIPTS: ${SKIP_STARTUP_SCRIPTS-false}
     user: '101'
     volumes:
     - ./startup_scripts:/opt/netbox/startup_scripts:z,ro
