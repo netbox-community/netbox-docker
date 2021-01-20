@@ -24,6 +24,3 @@ for link in custom_links:
     if not CustomLink.objects.filter(name=custom_link.name):
       custom_link.save()
       print("🖥️  Created Custom Link {0}".format(custom_link.name))
-    else:
-      print("⚠️ Skipping Custom Link {0}, already exists".format(custom_link.name))
-
