@@ -25,5 +25,3 @@ for hook in webhooks:
       webhook.save()
       webhook.content_types.set(obj_type_ids)
       print("🖥️  Created Webhook {0}".format(webhook.name))
-    else:
-      print("⚠️ Skipping Webhook {0}, already exists".format(webhook.name))
