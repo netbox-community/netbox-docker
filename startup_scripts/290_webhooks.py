@@ -20,8 +20,7 @@ for hook in webhooks:
   obj_types = hook.pop('object_types')
   obj_type_ids = [ get_content_type_id(obj) for obj in obj_types ]
   if obj_type_ids is not None:
-    webhook = Webhook(**hook)
-    if not Webhook.objects.filter(name=webhook.name):
-      webhook.save()
+    webhook, created = Webhook.objects.get_or_create(**hook)
+    if created:
       webhook.content_types.set(obj_type_ids)
       print("🖥️  Created Webhook {0}".format(webhook.name))
