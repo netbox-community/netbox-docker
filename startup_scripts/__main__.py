@@ -20,7 +20,7 @@ with scandir(this_dir) as it:
     if not f.name.endswith('.py'):
       continue
 
-    print(f"▶️ Running the startup script {f.path}")
+    print(f"▶️  Running the startup script {f.path}")
     try:
       runpy.run_path(f.path)
     except SystemExit as e:

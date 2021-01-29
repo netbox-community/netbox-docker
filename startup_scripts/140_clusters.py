@@ -1,27 +1,27 @@
 import sys
 
-from ipam.models import Aggregate, RIR
-from netaddr import IPNetwork
+from dcim.models import Site
 from startup_script_utils import *
+from virtualization.models import Cluster, ClusterType, ClusterGroup
 from tenancy.models import Tenant
 
-aggregates = load_yaml('/opt/netbox/initializers/aggregates.yml')
+clusters = load_yaml('/opt/netbox/initializers/clusters.yml')
 
-if aggregates is None:
+if clusters is None:
   sys.exit()
 
 required_assocs = {
-  'rir': (RIR, 'name')
+  'type': (ClusterType, 'name')
 }
 
 optional_assocs = {
-  'tenant': (Tenant, 'name'),
+  'site': (Site, 'name'),
+  'group': (ClusterGroup, 'name'),
+  'tenant': (Tenant, 'name')
 }
 
-for params in aggregates:
+for params in clusters:
   custom_field_data = pop_custom_fields(params)
-
-  params['prefix'] = IPNetwork(params['prefix'])
 
   for assoc, details in required_assocs.items():
     model, field = details
@@ -36,9 +36,9 @@ for params in aggregates:
 
       params[assoc] = model.objects.get(**query)
 
-  aggregate, created = Aggregate.objects.get_or_create(**params)
+  cluster, created = Cluster.objects.get_or_create(**params)
 
   if created:
-    set_custom_fields_values(aggregate, custom_field_data)
+    set_custom_fields_values(cluster, custom_field_data)
 
-    print("🗞️ Created Aggregate", aggregate.prefix)
+    print("🗄️ Created cluster", cluster.name)

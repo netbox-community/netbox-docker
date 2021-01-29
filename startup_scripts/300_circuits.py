@@ -1,27 +1,24 @@
+from circuits.models import Circuit, Provider, CircuitType
+from tenancy.models import Tenant
+from startup_script_utils import *
 import sys
 
-from ipam.models import Aggregate, RIR
-from netaddr import IPNetwork
-from startup_script_utils import *
-from tenancy.models import Tenant
+circuits = load_yaml('/opt/netbox/initializers/circuits.yml')
 
-aggregates = load_yaml('/opt/netbox/initializers/aggregates.yml')
-
-if aggregates is None:
+if circuits is None:
   sys.exit()
 
 required_assocs = {
-  'rir': (RIR, 'name')
+  'provider': (Provider, 'name'),
+  'type': (CircuitType, 'name')
 }
 
 optional_assocs = {
-  'tenant': (Tenant, 'name'),
+  'tenant': (Tenant, 'name')
 }
 
-for params in aggregates:
+for params in circuits:
   custom_field_data = pop_custom_fields(params)
-
-  params['prefix'] = IPNetwork(params['prefix'])
 
   for assoc, details in required_assocs.items():
     model, field = details
@@ -36,9 +33,9 @@ for params in aggregates:
 
       params[assoc] = model.objects.get(**query)
 
-  aggregate, created = Aggregate.objects.get_or_create(**params)
+  circuit, created = Circuit.objects.get_or_create(**params)
 
   if created:
-    set_custom_fields_values(aggregate, custom_field_data)
+    set_custom_fields_values(circuit, custom_field_data)
 
-    print("🗞️ Created Aggregate", aggregate.prefix)
+    print("⚡ Created Circuit", circuit.cid)

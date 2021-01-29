@@ -65,13 +65,3 @@ If your log is very long, create a Gist instead (and post the link to it): https
 ```text
 LOG LOG LOG
 ```
-
-The output of `docker-compose logs nginx`:
-<!--
-Only if you have gotten a 5xx http error, else delete this section.
-If your log is very long, create a Gist instead (and post the link to it): https://gist.github.com
--->
-
-```text
-LOG LOG LOG
-```

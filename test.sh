@@ -35,7 +35,7 @@ if [ -z "${IMAGE}" ]; then
 fi
 
 # The docker compose command to use
-doco="docker-compose -f docker-compose.test.yml"
+doco="docker-compose --file docker-compose.test.yml --project-name netbox_docker_test_${1}"
 
 INITIALIZERS_DIR=".initializers"
 
@@ -56,7 +56,7 @@ test_setup() {
 
 test_netbox_unit_tests() {
   echo "⏱ Running Netbox Unit Tests"
-  $doco run --rm netbox ./manage.py test
+  SKIP_STARTUP_SCRIPTS=true $doco run --rm netbox ./manage.py test
 }
 
 test_initializers() {

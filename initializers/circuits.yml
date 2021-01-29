@@ -1,0 +1,7 @@
+# - cid: Circuit_ID-1
+#   provider: Provider1
+#   type: Internet
+#   tenant: tenant1
+# - cid: Circuit_ID-2
+#   provider: Provider2
+#   type: MPLS

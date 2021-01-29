@@ -1,24 +1,23 @@
 import sys
 
-from dcim.models import Site
+from dcim.models import Site, RackGroup, PowerPanel
 from startup_script_utils import *
-from virtualization.models import Cluster, ClusterType, ClusterGroup
+from tenancy.models import Tenant
 
-clusters = load_yaml('/opt/netbox/initializers/clusters.yml')
+power_panels = load_yaml('/opt/netbox/initializers/power_panels.yml')
 
-if clusters is None:
+if power_panels is None:
   sys.exit()
 
 required_assocs = {
-  'type': (ClusterType, 'name')
+  'site': (Site, 'name')
 }
 
 optional_assocs = {
-  'site': (Site, 'name'),
-  'group': (ClusterGroup, 'name')
+  'rack_group': (RackGroup, 'name')
 }
 
-for params in clusters:
+for params in power_panels:
   custom_field_data = pop_custom_fields(params)
 
   for assoc, details in required_assocs.items():
@@ -34,9 +33,9 @@ for params in clusters:
 
       params[assoc] = model.objects.get(**query)
 
-  cluster, created = Cluster.objects.get_or_create(**params)
+  power_panel, created = PowerPanel.objects.get_or_create(**params)
 
   if created:
-    set_custom_fields_values(cluster, custom_field_data)
+    set_custom_fields_values(power_panel, custom_field_data)
 
-    print("🗄️ Created cluster", cluster.name)
+    print("⚡ Created Power Panel", power_panel.site, power_panel.name)

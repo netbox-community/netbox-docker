@@ -1,27 +1,24 @@
 import sys
 
-from ipam.models import Aggregate, RIR
-from netaddr import IPNetwork
+from dcim.models import Rack, PowerPanel, PowerFeed
 from startup_script_utils import *
 from tenancy.models import Tenant
 
-aggregates = load_yaml('/opt/netbox/initializers/aggregates.yml')
+power_feeds = load_yaml('/opt/netbox/initializers/power_feeds.yml')
 
-if aggregates is None:
+if power_feeds is None:
   sys.exit()
 
 required_assocs = {
-  'rir': (RIR, 'name')
+  'power_panel': (PowerPanel, 'name')
 }
 
 optional_assocs = {
-  'tenant': (Tenant, 'name'),
+  'rack': (Rack, 'name')
 }
 
-for params in aggregates:
+for params in power_feeds:
   custom_field_data = pop_custom_fields(params)
-
-  params['prefix'] = IPNetwork(params['prefix'])
 
   for assoc, details in required_assocs.items():
     model, field = details
@@ -36,9 +33,9 @@ for params in aggregates:
 
       params[assoc] = model.objects.get(**query)
 
-  aggregate, created = Aggregate.objects.get_or_create(**params)
+  power_feed, created = PowerFeed.objects.get_or_create(**params)
 
   if created:
-    set_custom_fields_values(aggregate, custom_field_data)
+    set_custom_fields_values(power_feed, custom_field_data)
 
-    print("🗞️ Created Aggregate", aggregate.prefix)
+    print("⚡ Created Power Feed", power_feed.name)
