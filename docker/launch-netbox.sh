@@ -7,7 +7,7 @@ load_configuration() {
   MAX_WAIT=10
   WAIT_COUNT=0
   while [ ! -S $UNIT_SOCKET ]; do
-    if [ $WAIT_COUNT -gte $MAX_WAIT ]; then
+    if [ $WAIT_COUNT -ge $MAX_WAIT ]; then
       echo "⚠️ No control socket found; configuration will not be loaded."
       return 1
     fi
