@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clones the Netbox repository with git from Github and builds the Dockerfile
+# Clones the NetBox repository with git from Github and builds the Dockerfile
 
 echo "▶️ $0 $*"
 
@@ -106,7 +106,7 @@ else
 fi
 
 ###
-# Variables for fetching the Netbox source
+# Variables for fetching the NetBox source
 ###
 SRC_ORG="${SRC_ORG-netbox-community}"
 SRC_REPO="${SRC_REPO-netbox}"
@@ -115,10 +115,10 @@ URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}.git}"
 NETBOX_PATH="${NETBOX_PATH-.netbox}"
 
 ###
-# Fetching the Netbox source
+# Fetching the NetBox source
 ###
 if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
-  echo "🌐 Checking out '${NETBOX_BRANCH}' of Netbox from the url '${URL}' into '${NETBOX_PATH}'"
+  echo "🌐 Checking out '${NETBOX_BRANCH}' of NetBox from the url '${URL}' into '${NETBOX_PATH}'"
   if [ ! -d "${NETBOX_PATH}" ]; then
     $DRY git clone -q --depth 10 -b "${NETBOX_BRANCH}" "${URL}" "${NETBOX_PATH}"
   fi
@@ -135,7 +135,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
     $DRY git checkout -qf FETCH_HEAD
     $DRY git prune
   )
-  echo "✅ Checked out Netbox"
+  echo "✅ Checked out NetBox"
 fi
 
 ###

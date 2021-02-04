@@ -1,10 +1,10 @@
 #!/bin/bash
-# Runs on every start of the Netbox Docker container
+# Runs on every start of the NetBox Docker container
 
 # Stop when an error occures
 set -e
 
-# Allows Netbox to be run as non-root users
+# Allows NetBox to be run as non-root users
 umask 002
 
 # Load correct Python3 env

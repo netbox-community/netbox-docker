@@ -1,5 +1,5 @@
 #!/bin/bash
-# Runs the original Netbox unit tests and tests whether all initializers work.
+# Runs the original NetBox unit tests and tests whether all initializers work.
 # Usage:
 #   ./test.sh latest
 #   ./test.sh v2.9.7
@@ -55,7 +55,7 @@ test_setup() {
 }
 
 test_netbox_unit_tests() {
-  echo "⏱ Running Netbox Unit Tests"
+  echo "⏱ Running NetBox Unit Tests"
   SKIP_STARTUP_SCRIPTS=true $doco run --rm netbox ./manage.py test
 }
 

@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Question
     url: https://github.com/netbox-community/netbox-docker/discussions
-    about: The Github Discussions are the right place to ask questions about how to use or do certain things with Netbox Docker.
+    about: The Github Discussions are the right place to ask questions about how to use or do certain things with NetBox Docker.
 
   - name: Chat
     url: http://slack.networktocode.com/
@@ -11,5 +11,5 @@ contact_links:
   - name: Community Wiki
     url: https://github.com/netbox-community/netbox-docker/wiki
     about: |
-      Our wiki contains information for common problems and tips for operating Netbox Docker in production.
+      Our wiki contains information for common problems and tips for operating NetBox Docker in production.
       It's maintained by our excellent community.
