@@ -15,14 +15,14 @@ Before raising an issue here, answer the following questions for yourself, pleas
 * Have you had a look at the rest of the wiki? (https://github.com/netbox-community/netbox-docker/wiki)
 * Have you read the release notes recently (https://github.com/netbox-community/netbox-docker/releases)
 * Are you confident that your feature/change request is related to the Docker image or Docker Compose file this project provides?
-  (Otherwise ask on the Netbox mailing list, please: https://groups.google.com/d/forum/netbox-discuss)
+  (Otherwise ask on the NetBox mailing list, please: https://groups.google.com/d/forum/netbox-discuss)
 * Have you looked through the issues already resolved?
 
 Please try this means to get help before opening an issue here:
 
 * On the networktocode Slack in the #netbox-docker channel: http://slack.networktocode.com/
 * On the networktocode Slack in the #netbox channel: http://slack.networktocode.com/
-* On the Netbox mailing list: https://groups.google.com/d/forum/netbox-discuss
+* On the NetBox mailing list: https://groups.google.com/d/forum/netbox-discuss
 
 Please don't open an issue when you have a PR ready. Just submit the PR, that's good enough.
 

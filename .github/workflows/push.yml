@@ -23,7 +23,7 @@ jobs:
         - alpine:edge
       fail-fast: false
     runs-on: ubuntu-latest
-    name: Builds new Netbox Docker Images
+    name: Builds new NetBox Docker Images
     steps:
     - id: git-checkout
       name: Checkout
