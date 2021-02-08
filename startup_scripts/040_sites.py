@@ -1,32 +1,29 @@
 import sys
 
 from dcim.models import Region, Site
-from startup_script_utils import *
+from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
 from tenancy.models import Tenant
 
-sites = load_yaml('/opt/netbox/initializers/sites.yml')
+sites = load_yaml("/opt/netbox/initializers/sites.yml")
 
 if sites is None:
-  sys.exit()
+    sys.exit()
 
-optional_assocs = {
-  'region': (Region, 'name'),
-  'tenant': (Tenant, 'name')
-}
+optional_assocs = {"region": (Region, "name"), "tenant": (Tenant, "name")}
 
 for params in sites:
-  custom_field_data = pop_custom_fields(params)
+    custom_field_data = pop_custom_fields(params)
 
-  for assoc, details in optional_assocs.items():
-    if assoc in params:
-      model, field = details
-      query = { field: params.pop(assoc) }
+    for assoc, details in optional_assocs.items():
+        if assoc in params:
+            model, field = details
+            query = {field: params.pop(assoc)}
 
-      params[assoc] = model.objects.get(**query)
+            params[assoc] = model.objects.get(**query)
 
-  site, created = Site.objects.get_or_create(**params)
+    site, created = Site.objects.get_or_create(**params)
 
-  if created:
-    set_custom_fields_values(site, custom_field_data)
+    if created:
+        set_custom_fields_values(site, custom_field_data)
 
-    print("📍 Created site", site.name)
+        print("📍 Created site", site.name)

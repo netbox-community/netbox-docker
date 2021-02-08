@@ -1,0 +1,21 @@
+[tool.black]
+line-length = 100
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.venv
+    | \.netbox
+    | \.vscode
+    | configuration
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3

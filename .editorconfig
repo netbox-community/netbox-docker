@@ -7,5 +7,5 @@ charset = utf-8
 indent_style = space
 indent_size = 2
 
-[configuration/**.py]
+[*.py]
 indent_size = 4

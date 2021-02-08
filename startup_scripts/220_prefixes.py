@@ -1,39 +1,39 @@
 import sys
 
 from dcim.models import Site
-from ipam.models import Prefix, VLAN, Role, VRF
+from ipam.models import VLAN, VRF, Prefix, Role
 from netaddr import IPNetwork
-from startup_script_utils import *
+from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
 from tenancy.models import Tenant, TenantGroup
 
-prefixes = load_yaml('/opt/netbox/initializers/prefixes.yml')
+prefixes = load_yaml("/opt/netbox/initializers/prefixes.yml")
 
 if prefixes is None:
-  sys.exit()
+    sys.exit()
 
 optional_assocs = {
-  'site': (Site, 'name'),
-  'tenant': (Tenant, 'name'),
-  'tenant_group': (TenantGroup, 'name'),
-  'vlan': (VLAN, 'name'),
-  'role': (Role, 'name'),
-  'vrf': (VRF, 'name')
+    "site": (Site, "name"),
+    "tenant": (Tenant, "name"),
+    "tenant_group": (TenantGroup, "name"),
+    "vlan": (VLAN, "name"),
+    "role": (Role, "name"),
+    "vrf": (VRF, "name"),
 }
 
 for params in prefixes:
-  custom_field_data = pop_custom_fields(params)
+    custom_field_data = pop_custom_fields(params)
 
-  params['prefix'] = IPNetwork(params['prefix'])
+    params["prefix"] = IPNetwork(params["prefix"])
 
-  for assoc, details in optional_assocs.items():
-    if assoc in params:
-      model, field = details
-      query = { field: params.pop(assoc) }
-      params[assoc] = model.objects.get(**query)
+    for assoc, details in optional_assocs.items():
+        if assoc in params:
+            model, field = details
+            query = {field: params.pop(assoc)}
+            params[assoc] = model.objects.get(**query)
 
-  prefix, created = Prefix.objects.get_or_create(**params)
+    prefix, created = Prefix.objects.get_or_create(**params)
 
-  if created:
-    set_custom_fields_values(prefix, custom_field_data)
+    if created:
+        set_custom_fields_values(prefix, custom_field_data)
 
-    print("📌 Created Prefix", prefix.prefix)
+        print("📌 Created Prefix", prefix.prefix)
