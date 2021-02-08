@@ -4,23 +4,31 @@ FROM ${FROM} as builder
 RUN apk add --no-cache \
       bash \
       build-base \
+      cargo \
       ca-certificates \
       cyrus-sasl-dev \
       graphviz \
       jpeg-dev \
       libevent-dev \
       libffi-dev \
+      libressl-dev \
       libxslt-dev \
+      musl-dev \
       openldap-dev \
       postgresql-dev \
       py3-pip \
       python3-dev \
-      && python3 -m venv /opt/netbox/venv \
-      && /opt/netbox/venv/bin/python3 -m pip install --upgrade pip setuptools
+ && python3 -m venv /opt/netbox/venv \
+ && /opt/netbox/venv/bin/python3 -m pip install --upgrade \
+      pip \
+      setuptools \
+      wheel
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
-RUN /opt/netbox/venv/bin/pip install -r /requirements.txt -r /requirements-container.txt
+RUN /opt/netbox/venv/bin/pip install \
+      -r /requirements.txt \
+      -r /requirements-container.txt
 
 ###
 # Main stage
