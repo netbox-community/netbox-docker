@@ -8,6 +8,7 @@ set -e
 umask 002
 
 # Load correct Python3 env
+# shellcheck disable=SC1091
 source /opt/netbox/venv/bin/activate
 
 # Try to connect to the DB
