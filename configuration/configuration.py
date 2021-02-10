@@ -5,9 +5,8 @@
 ####
 
 import re
-
-from os.path import dirname, abspath, join
 from os import environ
+from os.path import abspath, dirname, join
 
 # For reference see https://netbox.readthedocs.io/en/stable/configuration/
 # Based on https://github.com/netbox-community/netbox/blob/master/netbox/netbox/configuration.example.py
@@ -39,16 +38,16 @@ ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS', '*').split(' ')
 # PostgreSQL database configuration. See the Django documentation for a complete list of available parameters:
 #   https://docs.djangoproject.com/en/stable/ref/settings/#databases
 DATABASE = {
-    'NAME': environ.get('DB_NAME', 'netbox'),            # Database name
-    'USER': environ.get('DB_USER', ''),                  # PostgreSQL username
+    'NAME': environ.get('DB_NAME', 'netbox'),       # Database name
+    'USER': environ.get('DB_USER', ''),             # PostgreSQL username
     'PASSWORD': _read_secret('db_password', environ.get('DB_PASSWORD', '')),
-                                                         # PostgreSQL password
-    'HOST': environ.get('DB_HOST', 'localhost'),         # Database server
-    'PORT': environ.get('DB_PORT', ''),                  # Database port (leave blank for default)
+                                                    # PostgreSQL password
+    'HOST': environ.get('DB_HOST', 'localhost'),    # Database server
+    'PORT': environ.get('DB_PORT', ''),             # Database port (leave blank for default)
     'OPTIONS': {'sslmode': environ.get('DB_SSLMODE', 'prefer')},
-                                                         # Database connection SSLMODE
+                                                    # Database connection SSLMODE
     'CONN_MAX_AGE': int(environ.get('DB_CONN_MAX_AGE', '300')),
-                                                         # Max database connection age
+                                                    # Max database connection age
 }
 
 # Redis database settings. Redis is used for caching and for queuing background tasks such as webhook events. A separate

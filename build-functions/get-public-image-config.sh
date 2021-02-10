@@ -45,16 +45,16 @@ _get_image_configuration() {
     --silent \
     --location \
     --header "Authorization: Bearer $token" \
-    "https://registry-1.docker.io/v2/$image/blobs/$digest" \
-    | jq -r ".config.Labels.\"$label\""
+    "https://registry-1.docker.io/v2/$image/blobs/$digest" |
+    jq -r ".config.Labels.\"$label\""
 }
 
 _get_token() {
   local image=$1
   curl \
     --silent \
-    "https://auth.docker.io/token?scope=repository:$image:pull&service=registry.docker.io" \
-    | jq -r '.token'
+    "https://auth.docker.io/token?scope=repository:$image:pull&service=registry.docker.io" |
+    jq -r '.token'
 }
 
 _get_digest() {
@@ -65,8 +65,8 @@ _get_digest() {
     --silent \
     --header "Accept: application/vnd.docker.distribution.manifest.v2+json" \
     --header "Authorization: Bearer $token" \
-    "https://registry-1.docker.io/v2/$image/manifests/$tag" \
-    | jq -r '.config.digest'
+    "https://registry-1.docker.io/v2/$image/manifests/$tag" |
+    jq -r '.config.digest'
 }
 
 _get_layers() {
@@ -77,6 +77,6 @@ _get_layers() {
     --silent \
     --header "Accept: application/vnd.docker.distribution.manifest.v2+json" \
     --header "Authorization: Bearer $token" \
-    "https://registry-1.docker.io/v2/$image/manifests/$tag" \
-    | jq -r '.layers[].digest'
+    "https://registry-1.docker.io/v2/$image/manifests/$tag" |
+    jq -r '.layers[].digest'
 }

@@ -18,8 +18,8 @@ RUN apk add --no-cache \
       postgresql-dev \
       py3-pip \
       python3-dev \
- && python3 -m venv /opt/netbox/venv \
- && /opt/netbox/venv/bin/python3 -m pip install --upgrade \
+  && python3 -m venv /opt/netbox/venv \
+  && /opt/netbox/venv/bin/python3 -m pip install --upgrade \
       pip \
       setuptools \
       wheel

@@ -9,6 +9,29 @@ on:
       - release
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Checks syntax of our code
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+    - name: Lint Code Base
+      uses: github/super-linter@v3
+      env:
+        DEFAULT_BRANCH: develop
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SUPPRESS_POSSUM: true
+        LINTER_RULES_PATH: /
+        VALIDATE_ALL_CODEBASE: false
+        VALIDATE_DOCKERFILE: false
+        FILTER_REGEX_EXCLUDE: (.*/)?(LICENSE|configuration/.*)
+
+        EDITORCONFIG_FILE_NAME: .ecrc
+        DOCKERFILE_HADOLINT_FILE_NAME: .hadolint.yaml
+        MARKDOWN_CONFIG_FILE: .markdown-lint.yml
+        PYTHON_BLACK_CONFIG_FILE: pyproject.toml
+        PYTHON_FLAKE8_CONFIG_FILE: .flake8
+        PYTHON_ISORT_CONFIG_FILE: pyproject.toml
   build:
     continue-on-error: ${{ matrix.docker_from == 'alpine:edge' }}
     strategy:

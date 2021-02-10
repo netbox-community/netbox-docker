@@ -28,7 +28,7 @@ if [ -z "${IMAGE}" ]; then
   echo "⚠️ No image defined"
 
   if [ -z "${DEBUG}" ]; then
-    exit 1;
+    exit 1
   else
     echo "⚠️ Would 'exit 1' here, but DEBUG is '${DEBUG}'."
   fi
@@ -49,7 +49,7 @@ test_setup() {
   (
     cd initializers
     for script in *.yml; do
-      sed -E 's/^# //' "${script}" > "../${INITIALIZERS_DIR}/${script}"
+      sed -E 's/^# //' "${script}" >"../${INITIALIZERS_DIR}/${script}"
     done
   )
 }
