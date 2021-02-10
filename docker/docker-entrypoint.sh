@@ -1,13 +1,14 @@
 #!/bin/bash
-# Runs on every start of the Netbox Docker container
+# Runs on every start of the NetBox Docker container
 
 # Stop when an error occures
 set -e
 
-# Allows Netbox to be run as non-root users
+# Allows NetBox to be run as non-root users
 umask 002
 
 # Load correct Python3 env
+# shellcheck disable=SC1091
 source /opt/netbox/venv/bin/activate
 
 # Try to connect to the DB
@@ -17,7 +18,7 @@ CUR_DB_WAIT_TIME=0
 while ! ./manage.py migrate 2>&1 && [ "${CUR_DB_WAIT_TIME}" -lt "${MAX_DB_WAIT_TIME}" ]; do
   echo "⏳ Waiting on DB... (${CUR_DB_WAIT_TIME}s / ${MAX_DB_WAIT_TIME}s)"
   sleep "${DB_WAIT_TIMEOUT}"
-  CUR_DB_WAIT_TIME=$(( CUR_DB_WAIT_TIME + DB_WAIT_TIMEOUT ))
+  CUR_DB_WAIT_TIME=$((CUR_DB_WAIT_TIME + DB_WAIT_TIMEOUT))
 done
 if [ "${CUR_DB_WAIT_TIME}" -ge "${MAX_DB_WAIT_TIME}" ]; then
   echo "❌ Waited ${MAX_DB_WAIT_TIME}s or more for the DB to become ready."
@@ -35,17 +36,17 @@ else
     SUPERUSER_EMAIL='admin@example.com'
   fi
   if [ -f "/run/secrets/superuser_password" ]; then
-    SUPERUSER_PASSWORD="$(< /run/secrets/superuser_password)"
+    SUPERUSER_PASSWORD="$(</run/secrets/superuser_password)"
   elif [ -z ${SUPERUSER_PASSWORD+x} ]; then
     SUPERUSER_PASSWORD='admin'
   fi
   if [ -f "/run/secrets/superuser_api_token" ]; then
-    SUPERUSER_API_TOKEN="$(< /run/secrets/superuser_api_token)"
+    SUPERUSER_API_TOKEN="$(</run/secrets/superuser_api_token)"
   elif [ -z ${SUPERUSER_API_TOKEN+x} ]; then
     SUPERUSER_API_TOKEN='0123456789abcdef0123456789abcdef01234567'
   fi
 
-  ./manage.py shell --interface python << END
+  ./manage.py shell --interface python <<END
 from django.contrib.auth.models import User
 from users.models import Token
 if not User.objects.filter(username='${SUPERUSER_NAME}'):

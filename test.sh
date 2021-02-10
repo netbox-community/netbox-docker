@@ -1,5 +1,5 @@
 #!/bin/bash
-# Runs the original Netbox unit tests and tests whether all initializers work.
+# Runs the original NetBox unit tests and tests whether all initializers work.
 # Usage:
 #   ./test.sh latest
 #   ./test.sh v2.9.7
@@ -28,7 +28,7 @@ if [ -z "${IMAGE}" ]; then
   echo "⚠️ No image defined"
 
   if [ -z "${DEBUG}" ]; then
-    exit 1;
+    exit 1
   else
     echo "⚠️ Would 'exit 1' here, but DEBUG is '${DEBUG}'."
   fi
@@ -49,13 +49,13 @@ test_setup() {
   (
     cd initializers
     for script in *.yml; do
-      sed -E 's/^# //' "${script}" > "../${INITIALIZERS_DIR}/${script}"
+      sed -E 's/^# //' "${script}" >"../${INITIALIZERS_DIR}/${script}"
     done
   )
 }
 
 test_netbox_unit_tests() {
-  echo "⏱ Running Netbox Unit Tests"
+  echo "⏱ Running NetBox Unit Tests"
   SKIP_STARTUP_SCRIPTS=true $doco run --rm netbox ./manage.py test
 }
 

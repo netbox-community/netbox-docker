@@ -1,13 +1,15 @@
 blank_issues_enabled: false
 contact_links:
-  - name: The \#netbox-docker Slack channel
-    url: http://slack.networktocode.com/
-    about: It's usually the quickest way to seek help when you're in trouble with regards to Netbox Docker.
-    
-  - name: Github Discussions
+  - name: Question
     url: https://github.com/netbox-community/netbox-docker/discussions
-    about: This is the right place to ask questions about how to use or do certain things with Netbox Docker.
+    about: The Github Discussions are the right place to ask questions about how to use or do certain things with NetBox Docker.
 
-  - name: Have you had a look at our Wiki?
+  - name: Chat
+    url: http://slack.networktocode.com/
+    about: 'Usually the quickest way to seek help with small issues is to join our #netbox-docker Slack channel.'
+
+  - name: Community Wiki
     url: https://github.com/netbox-community/netbox-docker/wiki
-    about: Our wiki contains information for common problems and tips for operating Netbox Docker in production.
+    about: |
+      Our wiki contains information for common problems and tips for operating NetBox Docker in production.
+      It's maintained by our excellent community.

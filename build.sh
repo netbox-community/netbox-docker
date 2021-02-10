@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clones the Netbox repository with git from Github and builds the Dockerfile
+# Clones the NetBox repository with git from Github and builds the Dockerfile
 
 echo "▶️ $0 $*"
 
@@ -106,7 +106,7 @@ else
 fi
 
 ###
-# Variables for fetching the Netbox source
+# Variables for fetching the NetBox source
 ###
 SRC_ORG="${SRC_ORG-netbox-community}"
 SRC_REPO="${SRC_REPO-netbox}"
@@ -115,10 +115,10 @@ URL="${URL-https://github.com/${SRC_ORG}/${SRC_REPO}.git}"
 NETBOX_PATH="${NETBOX_PATH-.netbox}"
 
 ###
-# Fetching the Netbox source
+# Fetching the NetBox source
 ###
-if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
-  echo "🌐 Checking out '${NETBOX_BRANCH}' of Netbox from the url '${URL}' into '${NETBOX_PATH}'"
+if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
+  echo "🌐 Checking out '${NETBOX_BRANCH}' of NetBox from the url '${URL}' into '${NETBOX_PATH}'"
   if [ ! -d "${NETBOX_PATH}" ]; then
     $DRY git clone -q --depth 10 -b "${NETBOX_BRANCH}" "${URL}" "${NETBOX_PATH}"
   fi
@@ -135,7 +135,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ] ; then
     $DRY git checkout -qf FETCH_HEAD
     $DRY git prune
   )
-  echo "✅ Checked out Netbox"
+  echo "✅ Checked out NetBox"
 fi
 
 ###
@@ -174,9 +174,18 @@ PROJECT_VERSION="${PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]
 
 # Get the Git information from the netbox directory
 if [ -d "${NETBOX_PATH}/.git" ]; then
-  NETBOX_GIT_REF=$(cd "${NETBOX_PATH}"; git rev-parse HEAD)
-  NETBOX_GIT_BRANCH=$(cd "${NETBOX_PATH}"; git rev-parse --abbrev-ref HEAD)
-  NETBOX_GIT_URL=$(cd "${NETBOX_PATH}"; git remote get-url origin)
+  NETBOX_GIT_REF=$(
+    cd "${NETBOX_PATH}"
+    git rev-parse HEAD
+  )
+  NETBOX_GIT_BRANCH=$(
+    cd "${NETBOX_PATH}"
+    git rev-parse --abbrev-ref HEAD
+  )
+  NETBOX_GIT_URL=$(
+    cd "${NETBOX_PATH}"
+    git remote get-url origin
+  )
 fi
 
 ###
@@ -186,19 +195,22 @@ DOCKER_REGISTRY="${DOCKER_REGISTRY-docker.io}"
 DOCKER_ORG="${DOCKER_ORG-netboxcommunity}"
 DOCKER_REPO="${DOCKER_REPO-netbox}"
 case "${NETBOX_BRANCH}" in
-  master)
-    TAG="${TAG-latest}";;
-  develop)
-    TAG="${TAG-snapshot}";;
-  *)
-    TAG="${TAG-$NETBOX_BRANCH}";;
+master)
+  TAG="${TAG-latest}"
+  ;;
+develop)
+  TAG="${TAG-snapshot}"
+  ;;
+*)
+  TAG="${TAG-$NETBOX_BRANCH}"
+  ;;
 esac
 
 ###
 # Determine targets to build
 ###
 DEFAULT_DOCKER_TARGETS=("main" "ldap")
-DOCKER_TARGETS=( "${DOCKER_TARGET:-"${DEFAULT_DOCKER_TARGETS[@]}"}")
+DOCKER_TARGETS=("${DOCKER_TARGET:-"${DEFAULT_DOCKER_TARGETS[@]}"}")
 echo "🏭 Building the following targets:" "${DOCKER_TARGETS[@]}"
 
 ###
@@ -216,7 +228,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     TARGET_DOCKER_TAG="${TARGET_DOCKER_TAG}-${DOCKER_TARGET}"
   fi
   if [ -n "${GH_ACTION}" ]; then
-    echo "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG}" >> $GITHUB_ENV
+    echo "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG}" >>"$GITHUB_ENV"
     echo "::set-output name=skipped::false"
   fi
 
@@ -242,7 +254,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   ###
   # Proceeding to buils stage, except if `--push-only` is passed
   ###
-  if [ "${2}" != "--push-only" ] ; then
+  if [ "${2}" != "--push-only" ]; then
     ###
     # Checking if the build is necessary,
     # meaning build only if one of those values changed:
@@ -259,7 +271,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       BUILD_REASON="${BUILD_REASON} interactive"
     elif [ "$DOCKER_REGISTRY" = "docker.io" ]; then
       source ./build-functions/get-public-image-config.sh
-      IFS=':' read -ra DOCKER_FROM_SPLIT <<< "${DOCKER_FROM}"
+      IFS=':' read -ra DOCKER_FROM_SPLIT <<<"${DOCKER_FROM}"
       if ! [[ ${DOCKER_FROM_SPLIT[0]} =~ .*/.* ]]; then
         # Need to use "library/..." for images the have no two part name
         DOCKER_FROM_SPLIT[0]="library/${DOCKER_FROM_SPLIT[0]}"
@@ -295,8 +307,8 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       -t "${TARGET_DOCKER_TAG}"
     )
     if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
-      DOCKER_BUILD_ARGS+=( -t "${TARGET_DOCKER_SHORT_TAG}" )
-      DOCKER_BUILD_ARGS+=( -t "${TARGET_DOCKER_LATEST_TAG}" )
+      DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_SHORT_TAG}")
+      DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_LATEST_TAG}")
     fi
 
     # --label
@@ -323,22 +335,22 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       )
     fi
     if [ -n "${BUILD_REASON}" ]; then
-      BUILD_REASON=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<< "$BUILD_REASON")
-      DOCKER_BUILD_ARGS+=( --label "BUILD_REASON=${BUILD_REASON}" )
+      BUILD_REASON=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$BUILD_REASON")
+      DOCKER_BUILD_ARGS+=(--label "BUILD_REASON=${BUILD_REASON}")
     fi
 
     # --build-arg
-    DOCKER_BUILD_ARGS+=(   --build-arg "NETBOX_PATH=${NETBOX_PATH}" )
+    DOCKER_BUILD_ARGS+=(--build-arg "NETBOX_PATH=${NETBOX_PATH}")
 
     if [ -n "${DOCKER_FROM}" ]; then
-      DOCKER_BUILD_ARGS+=( --build-arg "FROM=${DOCKER_FROM}" )
+      DOCKER_BUILD_ARGS+=(--build-arg "FROM=${DOCKER_FROM}")
     fi
     if [ -n "${HTTP_PROXY}" ]; then
-      DOCKER_BUILD_ARGS+=( --build-arg "http_proxy=${HTTP_PROXY}" )
-      DOCKER_BUILD_ARGS+=( --build-arg "https_proxy=${HTTPS_PROXY}" )
+      DOCKER_BUILD_ARGS+=(--build-arg "http_proxy=${HTTP_PROXY}")
+      DOCKER_BUILD_ARGS+=(--build-arg "https_proxy=${HTTPS_PROXY}")
     fi
     if [ -n "${NO_PROXY}" ]; then
-      DOCKER_BUILD_ARGS+=( --build-arg "no_proxy=${NO_PROXY}" )
+      DOCKER_BUILD_ARGS+=(--build-arg "no_proxy=${NO_PROXY}")
     fi
 
     ###
@@ -360,7 +372,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   ###
   # Pushing the docker images if either `--push` or `--push-only` are passed
   ###
-  if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ] ; then
+  if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ]; then
     source ./build-functions/docker-functions.sh
     push_image_to_registry "${TARGET_DOCKER_TAG}"
 

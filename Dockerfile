@@ -4,23 +4,31 @@ FROM ${FROM} as builder
 RUN apk add --no-cache \
       bash \
       build-base \
+      cargo \
       ca-certificates \
       cyrus-sasl-dev \
       graphviz \
       jpeg-dev \
       libevent-dev \
       libffi-dev \
+      libressl-dev \
       libxslt-dev \
+      musl-dev \
       openldap-dev \
       postgresql-dev \
       py3-pip \
       python3-dev \
-      && python3 -m venv /opt/netbox/venv \
-      && /opt/netbox/venv/bin/python3 -m pip install --upgrade pip setuptools
+  && python3 -m venv /opt/netbox/venv \
+  && /opt/netbox/venv/bin/python3 -m pip install --upgrade \
+      pip \
+      setuptools \
+      wheel
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
-RUN /opt/netbox/venv/bin/pip install -r /requirements.txt -r /requirements-container.txt
+RUN /opt/netbox/venv/bin/pip install \
+      -r /requirements.txt \
+      -r /requirements-container.txt
 
 ###
 # Main stage
@@ -81,8 +89,8 @@ LABEL ORIGINAL_TAG="" \
 # Also https://microbadger.com/labels
       org.label-schema.schema-version="1.0" \
       org.label-schema.build-date="" \
-      org.label-schema.name="Netbox Docker" \
-      org.label-schema.description="A container based distribution of Netbox, the free and open IPAM and DCIM solution." \
+      org.label-schema.name="NetBox Docker" \
+      org.label-schema.description="A container based distribution of NetBox, the free and open IPAM and DCIM solution." \
       org.label-schema.vendor="The netbox-docker contributors." \
       org.label-schema.url="https://github.com/netbox-community/netbox-docker" \
       org.label-schema.usage="https://github.com/netbox-community/netbox-docker/wiki" \
@@ -91,8 +99,8 @@ LABEL ORIGINAL_TAG="" \
       org.label-schema.version="snapshot" \
 # See https://github.com/opencontainers/image-spec/blob/master/annotations.md#pre-defined-annotation-keys
       org.opencontainers.image.created="" \
-      org.opencontainers.image.title="Netbox Docker" \
-      org.opencontainers.image.description="A container based distribution of Netbox, the free and open IPAM and DCIM solution." \
+      org.opencontainers.image.title="NetBox Docker" \
+      org.opencontainers.image.description="A container based distribution of NetBox, the free and open IPAM and DCIM solution." \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.authors="The netbox-docker contributors." \
       org.opencontainers.image.vendor="The netbox-docker contributors." \
