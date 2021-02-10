@@ -97,35 +97,10 @@ If you need help with using NetBox or developing for it or against it's API you 
 
 This project relies only on *Docker* and *docker-compose* meeting these requirements:
 
-* The *Docker version* must be at least `17.05`.
-* The *docker-compose version* must be at least `1.17.0`.
+* The *Docker version* must be at least `19.03`.
+* The *docker-compose version* must be at least `1.28.0`.
 
 To check the version installed on your system run `docker --version` and `docker-compose --version`.
-
-## Use a Specific NetBox Version
-
-The `docker-compose.yml` file is prepared to run a specific version of NetBox, instead of `latest`.
-To use this feature, set and export the environment-variable `VERSION` before launching `docker-compose`, as shown below.
-`VERSION` may be set to the name of
-[any tag of the `netboxcommunity/netbox` Docker image on Docker Hub][netbox-dockerhub] or [Quay.io][netbox-quayio].
-
-```bash
-export VERSION=v2.7.1
-docker-compose pull netbox
-docker-compose up -d
-```
-
-You can also build a specific version of the NetBox Docker image yourself.
-`VERSION` can be any valid [git ref][git-ref] in that case.
-
-```bash
-export VERSION=v2.7.1
-./build.sh $VERSION
-docker-compose up -d
-```
-
-[git-ref]: https://git-scm.com/book/en/v2/Git-Internals-Git-References
-[netbox-github]: https://github.com/netbox-community/netbox/releases
 
 ## Breaking Changes
 
