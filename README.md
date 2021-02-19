@@ -5,8 +5,6 @@
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/netbox-community/netbox-docker)
 ![Github release workflow](https://img.shields.io/github/workflow/status/netbox-community/netbox-docker/release)
 ![Docker Pulls](https://img.shields.io/docker/pulls/netboxcommunity/netbox)
-[![MicroBadger Layers](https://img.shields.io/microbadger/layers/netboxcommunity/netbox)][netbox-docker-microbadger]
-[![MicroBadger Size](https://img.shields.io/microbadger/image-size/netboxcommunity/netbox)][netbox-docker-microbadger]
 [![GitHub license](https://img.shields.io/github/license/netbox-community/netbox-docker)][netbox-docker-license]
 
 [The Github repository](netbox-docker-github) houses the components needed to build NetBox as a Docker container.
