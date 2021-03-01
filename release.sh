@@ -1,7 +1,6 @@
 #!/bin/bash
 
-DEFAULT_REPO="cimnine/netbox-docker"
-# DEFAULT_REPO=netbox-community/netbox-docker
+DEFAULT_REPO=netbox-community/netbox-docker
 REPO="${REPO-${DEFAULT_REPO}}"
 
 echomoji() {
