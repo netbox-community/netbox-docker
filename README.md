@@ -11,15 +11,17 @@
 Images are built using this code and are released to [Docker Hub][netbox-dockerhub] and [Quay.io][netbox-quayio] once a day.
 
 Do you have any questions?
-Before opening an issue on Github, please join the [Network To Code][ntc-slack] Slack and ask for help in our [`#netbox-docker`][netbox-docker-slack] channel.
+Before opening an issue on Github,
+please join the [our Slack][netbox-docker-slack] and ask for help in the [`#netbox-docker`][netbox-docker-slack-channel] channel.
 
 [github-stargazers]: https://github.com/netbox-community/netbox-docker/stargazers
 [github-release]: https://github.com/netbox-community/netbox-docker/releases
 [netbox-docker-microbadger]: https://microbadger.com/images/netboxcommunity/netbox
 [netbox-dockerhub]: https://hub.docker.com/r/netboxcommunity/netbox/
 [netbox-docker-github]: https://github.com/netbox-community/netbox-docker/
-[ntc-slack]: http://slack.networktocode.com/
-[netbox-docker-slack]: https://slack.com/app_redirect?channel=netbox-docker&team=T09LQ7E9E
+[netbox-docker-slack]: https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
+[netbox-docker-slack-channel]: https://netdev-community.slack.com/archives/C01P0GEVBU7
+[netbox-slack-channel]: https://netdev-community.slack.com/archives/C01P0FRSXRV
 [netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/release/LICENSE
 [netbox-quayio]: https://quay.io/repository/netboxcommunity/netbox
 
@@ -84,10 +86,12 @@ It covers advanced topics such as using files for secrets, deployment to Kuberne
 
 ## Getting Help
 
-Feel free to ask questions in our [Github Community][netbox-community] or join [our Slack channel `#netbox-docker`][netbox-docker-slack] on the [Network To Code Slack][ntc-slack],
+Feel free to ask questions in our [Github Community][netbox-community]
+or [join our Slack][netbox-docker-slack] and ask [in our channel `#netbox-docker`][netbox-docker-slack-channel],
 which is free to use and where there are almost always people online that can help you in the Slack channel.
 
-If you need help with using NetBox or developing for it or against it's API you may find the `#netbox` channel on the same Slack instance very helpful.
+If you need help with using NetBox or developing for it or against it's API
+you may find [the `#netbox` channel][netbox-slack-channel] on the same Slack instance very helpful.
 
 [netbox-community]: https://github.com/netbox-community/netbox-docker/discussions
 
