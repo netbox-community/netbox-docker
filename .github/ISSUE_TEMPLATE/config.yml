@@ -5,7 +5,7 @@ contact_links:
     about: The Github Discussions are the right place to ask questions about how to use or do certain things with NetBox Docker.
 
   - name: Chat
-    url: http://slack.networktocode.com/
+    url: https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
     about: 'Usually the quickest way to seek help with small issues is to join our #netbox-docker Slack channel.'
 
   - name: Community Wiki
