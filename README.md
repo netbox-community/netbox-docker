@@ -134,8 +134,7 @@ It runs NetBox's own unit tests and ensures that all initializers work:
 IMAGE=netboxcommunity/netbox:latest ./test.sh
 ```
 
-## About
+## Support
 
-This repository is currently maintained and funded by [nxt][nxt].
-
-[nxt]: https://nxt.engineering/en/
+This repository is currently maintained by the community.
+Please consider sponsoring the maintainers of this project.
