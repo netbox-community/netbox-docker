@@ -1,9 +1,6 @@
 name: push
 
 on:
-  push:
-    branches-ignore:
-      - release
   pull_request:
     branches-ignore:
       - release
@@ -47,6 +44,9 @@ jobs:
         docker_from:
         - '' # use the default of the build script
         - alpine:edge
+        platform:
+        - linux/amd64
+        - linux/arm64
       fail-fast: false
     runs-on: ubuntu-latest
     name: Builds new NetBox Docker Images
@@ -54,12 +54,22 @@ jobs:
     - id: git-checkout
       name: Checkout
       uses: actions/checkout@v2
+    - id: qemu-setup
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - id: buildx-setup
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        install: true
     - id: docker-build
       name: Build the image from '${{ matrix.docker_from }}' with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
       env:
         DOCKER_FROM: ${{ matrix.docker_from }}
         GH_ACTION: enable
+        BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
+        PLATFORMS: ${{ matrix.platform }}
     - id: docker-test
       name: Test the image
       run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh

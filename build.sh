@@ -30,7 +30,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "                When <branch>=master:  latest"
   echo "                When <branch>=develop: snapshot"
   echo "                Else:                  same as <branch>"
-  echo "  DOCKER_REGISTRY The Docker repository's registry (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
+  echo "  DOCKER_REGISTRY  The Docker repository's registry (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
   echo "              Used for tagging the image."
   echo "              Default: docker.io"
   echo "  DOCKER_ORG  The Docker repository's organisation (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
@@ -42,7 +42,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  DOCKER_TAG  The name of the tag which is applied to the image."
   echo "              Useful for pushing into another registry than hub.docker.com."
   echo "              Default: \${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}:\${TAG}"
-  echo "  DOCKER_SHORT_TAG The name of the short tag which is applied to the"
+  echo "  DOCKER_SHORT_TAG  The name of the short tag which is applied to the"
   echo "              image. This is used to tag all patch releases to their"
   echo "              containing version e.g. v2.5.1 -> v2.5"
   echo "              Default: \${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}:<MAJOR>.<MINOR>"
@@ -53,6 +53,9 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  DOCKER_TARGET A specific target to build."
   echo "              It's currently not possible to pass multiple targets."
   echo "              Default: main ldap"
+  echo "  BUILDX_PLATFORMS  If defined, the image will be build for the given platform(s)."
+  echo "              Example: linux/amd64,linux/arm64"
+  echo "              Default: linux/amd64"
   echo "  HTTP_PROXY  The proxy to use for http requests."
   echo "              Example: http://proxy.domain.tld:3128"
   echo "              Default: undefined"
@@ -87,6 +90,10 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  SRC_ORG=cimnine DOCKER_ORG=cimnine ${0} feature-x"
   echo "              This will fetch the 'feature-x' branch from https://github.com/cimnine/netbox.git,"
   echo "              build a Docker Image and tag it 'cimnine/netbox:feature-x'."
+  echo "  PLATFORMS=linux/amd64,linux/arm64 ${0} master"
+  echo "              This will fetch the latest 'master' branch, build a Docker Image and tag it"
+  echo "              'netboxcommunity/netbox:latest'."
+  echo "              It will produce an ARM64 and an AMD64 version of the image."
 
   if [ "${1}x" == "x" ]; then
     exit 1
@@ -260,56 +267,75 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   fi
 
   ###
-  # Proceeding to buils stage, except if `--push-only` is passed
+  # If `--push-only` is passed, just push and then quit
   ###
-  if [ "${2}" != "--push-only" ]; then
-    ###
-    # Checking if the build is necessary,
-    # meaning build only if one of those values changed:
-    # - Python base image digest (Label: PYTHON_BASE_DIGEST)
-    # - netbox git ref (Label: NETBOX_GIT_REF)
-    # - netbox-docker git ref (Label: org.label-schema.vcs-ref)
-    ###
-    # Load information from registry (only for docker.io)
-    SHOULD_BUILD="false"
-    BUILD_REASON=""
-    if [ -z "${GH_ACTION}" ]; then
-      # Asuming non Github builds should always proceed
-      SHOULD_BUILD="true"
-      BUILD_REASON="${BUILD_REASON} interactive"
-    elif [ "$DOCKER_REGISTRY" = "docker.io" ]; then
-      source ./build-functions/get-public-image-config.sh
-      IFS=':' read -ra DOCKER_FROM_SPLIT <<<"${DOCKER_FROM}"
-      if ! [[ ${DOCKER_FROM_SPLIT[0]} =~ .*/.* ]]; then
-        # Need to use "library/..." for images the have no two part name
-        DOCKER_FROM_SPLIT[0]="library/${DOCKER_FROM_SPLIT[0]}"
-      fi
-      PYTHON_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
-      mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
-      NETBOX_GIT_REF_OLD=$(get_image_label NETBOX_GIT_REF "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
-      GIT_REF_OLD=$(get_image_label org.label-schema.vcs-ref "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+  if [ "${2}" == "--push-only" ]; then
+    source ./build-functions/docker-functions.sh
+    push_image_to_registry "${TARGET_DOCKER_TAG}"
 
-      if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
-        SHOULD_BUILD="true"
-        BUILD_REASON="${BUILD_REASON} alpine"
-      fi
-      if [ "${NETBOX_GIT_REF}" != "${NETBOX_GIT_REF_OLD}" ]; then
-        SHOULD_BUILD="true"
-        BUILD_REASON="${BUILD_REASON} netbox"
-      fi
-      if [ "${GIT_REF}" != "${GIT_REF_OLD}" ]; then
-        SHOULD_BUILD="true"
-        BUILD_REASON="${BUILD_REASON} netbox-docker"
-      fi
-    else
-      SHOULD_BUILD="true"
-      BUILD_REASON="${BUILD_REASON} no-check"
+    if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
+      push_image_to_registry "${TARGET_DOCKER_SHORT_TAG}"
+      push_image_to_registry "${TARGET_DOCKER_LATEST_TAG}"
     fi
+    exit 1
+  fi
+
+  ###
+  # Checking if the build is necessary,
+  # meaning build only if one of those values changed:
+  # - Python base image digest (Label: PYTHON_BASE_DIGEST)
+  # - netbox git ref (Label: NETBOX_GIT_REF)
+  # - netbox-docker git ref (Label: org.label-schema.vcs-ref)
+  ###
+  # Load information from registry (only for docker.io)
+  SHOULD_BUILD="false"
+  BUILD_REASON=""
+  if [ -z "${GH_ACTION}" ]; then
+    # Asuming non Github builds should always proceed
+    SHOULD_BUILD="true"
+    BUILD_REASON="${BUILD_REASON} interactive"
+  elif [ "$DOCKER_REGISTRY" = "docker.io" ]; then
+    source ./build-functions/get-public-image-config.sh
+    IFS=':' read -ra DOCKER_FROM_SPLIT <<<"${DOCKER_FROM}"
+    if ! [[ ${DOCKER_FROM_SPLIT[0]} =~ .*/.* ]]; then
+      # Need to use "library/..." for images the have no two part name
+      DOCKER_FROM_SPLIT[0]="library/${DOCKER_FROM_SPLIT[0]}"
+    fi
+    PYTHON_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
+    mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+    NETBOX_GIT_REF_OLD=$(get_image_label NETBOX_GIT_REF "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+    GIT_REF_OLD=$(get_image_label org.label-schema.vcs-ref "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+
+    if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
+      SHOULD_BUILD="true"
+      BUILD_REASON="${BUILD_REASON} alpine"
+    fi
+    if [ "${NETBOX_GIT_REF}" != "${NETBOX_GIT_REF_OLD}" ]; then
+      SHOULD_BUILD="true"
+      BUILD_REASON="${BUILD_REASON} netbox"
+    fi
+    if [ "${GIT_REF}" != "${GIT_REF_OLD}" ]; then
+      SHOULD_BUILD="true"
+      BUILD_REASON="${BUILD_REASON} netbox-docker"
+    fi
+  else
+    SHOULD_BUILD="true"
+    BUILD_REASON="${BUILD_REASON} no-check"
+  fi
+
+  ###
+  # Building the docker image
+  ###
+  if [ "${SHOULD_BUILD}" != "true" ]; then
+    echo "Build skipped because sources didn't change"
+    echo "::set-output name=skipped::true"
+  else
     ###
     # Composing all arguments for `docker build`
     ###
     DOCKER_BUILD_ARGS=(
       --pull
+      --output
       --target "${DOCKER_TARGET}"
       -f "${DOCKERFILE}"
       -t "${TARGET_DOCKER_TAG}"
@@ -362,32 +388,42 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       DOCKER_BUILD_ARGS+=(--build-arg "no_proxy=${NO_PROXY}")
     fi
 
+    # --platform
+    DOCKER_BUILD_ARGS+=(--platform "${PLATFORMS-linux/amd64}")
+
+    # --cache-from / --cache-to
+    DOCKER_BUILD_ARGS+=("--cache-from=type=registry,ref=${TARGET_DOCKER_TAG}-cache,mode=max")
+    DOCKER_BUILD_ARGS+=("--cache-to=type=registry,ref=${TARGET_DOCKER_TAG}-cache,mode=max")
+
     ###
-    # Building the docker image
+    # Pushing the docker images if `--push` is passed
     ###
-    if [ "${SHOULD_BUILD}" == "true" ]; then
-      echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG}'."
-      echo "    Build reason set to: ${BUILD_REASON}"
-      $DRY docker build "${DOCKER_BUILD_ARGS[@]}" .
-      echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG}'"
-      echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG}'"
-      $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
-    else
-      echo "Build skipped because sources didn't change"
-      echo "::set-output name=skipped::true"
+    if [ "${2}" == "--push" ]; then
+      DOCKER_BUILD_ARGS+=(--push)
     fi
-  fi
 
-  ###
-  # Pushing the docker images if either `--push` or `--push-only` are passed
-  ###
-  if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ]; then
-    source ./build-functions/docker-functions.sh
-    push_image_to_registry "${TARGET_DOCKER_TAG}"
+    if [ -z "${BUILDX_BUILDER_NAME}" ]; then
+      echo "👷  Creating new Buildx Builder"
+      BUILDX_BUILDER_NAME=$($DRY docker buildx create)
+      BUILDX_BUILDER_CREATED="yes"
+    fi
 
-    if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
-      push_image_to_registry "${TARGET_DOCKER_SHORT_TAG}"
-      push_image_to_registry "${TARGET_DOCKER_LATEST_TAG}"
+    echo "🐳  Building the Docker image '${TARGET_DOCKER_TAG}' on '${BUILDX_BUILDER_NAME}'."
+    echo "    Build reason set to: ${BUILD_REASON}"
+
+    $DRY docker buildx \
+      --builder "${BUILDX_BUILDER_NAME}" \
+      build \
+      "${DOCKER_BUILD_ARGS[@]}" \
+      .
+
+    echo "✅  Finished building the Docker images '${TARGET_DOCKER_TAG}'"
+    echo "🔎  Inspecting labels on '${TARGET_DOCKER_TAG}'"
+    $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
+
+    if [ "${BUILDX_BUILDER_CREATED}" == "yes" ]; then
+      echo "👷  Removing Buildx Builder '${BUILDX_BUILDER_NAME}'"
+      $DRY docker buildx rm "${BUILDX_BUILDER_NAME}"
     fi
   fi
 done

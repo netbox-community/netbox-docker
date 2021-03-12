@@ -1,9 +1,9 @@
 name: release
 
 on:
-  push:
-    branches:
-      - release
+  release:
+    types:
+      - published
   schedule:
     - cron: '45 5 * * *'
 
@@ -16,6 +16,9 @@ jobs:
         - PRERELEASE=true ./build-latest.sh
         - ./build.sh feature
         - ./build.sh develop
+        platform:
+        - linux/amd64
+        - linux/arm64
       fail-fast: false
     runs-on: ubuntu-latest
     name: Builds new NetBox Docker Images
@@ -23,11 +26,24 @@ jobs:
     - id: git-checkout
       name: Checkout
       uses: actions/checkout@v2
+    - id: qemu-setup
+      name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - id: buildx-setup
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        install: true
+    - id: buildx-platforms
+      name: Available platforms
+      run: echo ${{ steps.buildx-setup.outputs.platforms }}
     - id: docker-build
       name: Build the image with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
       env:
         GH_ACTION: enable
+        BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
+        PLATFORMS: ${{ matrix.platform }}
     - id: docker-test
       name: Test the image
       run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
