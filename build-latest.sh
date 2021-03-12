@@ -3,6 +3,8 @@
 
 echo "▶️ $0 $*"
 
+source ./build-functions/gh-functions.sh
+
 ###
 # Checking for the presence of GITHUB_OAUTH_CLIENT_ID
 # and GITHUB_OAUTH_CLIENT_SECRET
@@ -67,10 +69,7 @@ if [ "${PRERELEASE}" == "true" ]; then
 
     echo "❎ Latest unstable version '${VERSION}' is not higher than the latest stable version '$STABLE_VERSION'."
     if [ -z "$DEBUG" ]; then
-      if [ -n "${GH_ACTION}" ]; then
-        echo "::set-output name=skipped::true"
-      fi
-
+      gh_echo "::set-output name=skipped::true"
       exit 0
     else
       echo "⚠️ Would exit here with code '0', but DEBUG is enabled."
