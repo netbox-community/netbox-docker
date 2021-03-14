@@ -1,7 +1,7 @@
 name: push
 
 on:
-  pull_request:
+  push:
     branches-ignore:
       - release
 
@@ -65,7 +65,7 @@ jobs:
       with:
         path: |
           .buildx-cache
-        key: ${{ steps.get-version.outputs.version }}-push-${{ matrix.platform }}-${{ hashFiles('Dockerfile','requirements-container.txt','.netbox/requirements.txt') }}
+        key: ${{ steps.get-version.outputs.version }}-push-${{ matrix.platform }}-${{ hashFiles('Dockerfile','requirements-container.txt') }}
         restore-keys: |
           ${{ steps.get-version.outputs.version }}-push-
           ${{ steps.get-version.outputs.version }}-
