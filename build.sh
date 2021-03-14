@@ -275,7 +275,6 @@ echo "🏭  Building the following targets:" "${DOCKER_TARGETS[@]}"
 ###
 # Build each target
 ###
-export DOCKER_BUILDKIT=${DOCKER_BUILDKIT-1}
 for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   echo "🏗  Building the target '${DOCKER_TARGET}'"
 
@@ -379,121 +378,121 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   if [ "${SHOULD_BUILD}" != "true" ]; then
     echo "⏯  Build skipped because sources didn't change"
     echo "::set-output name=skipped::true"
-  else
-    ###
-    # Composing all arguments for `docker build`
-    ###
-    DOCKER_BUILD_ARGS=(
-      --pull
-      --target "${DOCKER_TARGET}"
-      -f "${DOCKERFILE}"
-      -t "${TARGET_DOCKER_TAG}"
-    )
-    if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
-      DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_SHORT_TAG}")
-      DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_LATEST_TAG}")
-    fi
+    continue
+  fi
 
-    # --label
+  ###
+  # Composing all arguments for `docker build`
+  ###
+  DOCKER_BUILD_ARGS=(
+    --pull
+    --target "${DOCKER_TARGET}"
+    -f "${DOCKERFILE}"
+    -t "${TARGET_DOCKER_TAG}"
+  )
+  if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
+    DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_SHORT_TAG}")
+    DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_LATEST_TAG}")
+  fi
+
+  # --label
+  DOCKER_BUILD_ARGS+=(
+    --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
+
+    --label "org.label-schema.build-date=${BUILD_DATE}"
+    --label "org.opencontainers.image.created=${BUILD_DATE}"
+
+    --label "org.label-schema.version=${PROJECT_VERSION}"
+    --label "org.opencontainers.image.version=${PROJECT_VERSION}"
+  )
+  if [ -d ".git" ]; then
     DOCKER_BUILD_ARGS+=(
-      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
-
-      --label "org.label-schema.build-date=${BUILD_DATE}"
-      --label "org.opencontainers.image.created=${BUILD_DATE}"
-
-      --label "org.label-schema.version=${PROJECT_VERSION}"
-      --label "org.opencontainers.image.version=${PROJECT_VERSION}"
+      --label "org.label-schema.vcs-ref=${GIT_REF}"
+      --label "org.opencontainers.image.revision=${GIT_REF}"
     )
-    if [ -d ".git" ]; then
-      DOCKER_BUILD_ARGS+=(
-        --label "org.label-schema.vcs-ref=${GIT_REF}"
-        --label "org.opencontainers.image.revision=${GIT_REF}"
-      )
-    fi
-    if [ -d "${NETBOX_PATH}/.git" ]; then
-      DOCKER_BUILD_ARGS+=(
-        --label "NETBOX_GIT_BRANCH=${NETBOX_GIT_BRANCH}"
-        --label "NETBOX_GIT_REF=${NETBOX_GIT_REF}"
-        --label "NETBOX_GIT_URL=${NETBOX_GIT_URL}"
-      )
-    fi
-    if [ -n "${BUILD_REASON}" ]; then
-      BUILD_REASON=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$BUILD_REASON")
-      DOCKER_BUILD_ARGS+=(--label "BUILD_REASON=${BUILD_REASON}")
-    fi
+  fi
+  if [ -d "${NETBOX_PATH}/.git" ]; then
+    DOCKER_BUILD_ARGS+=(
+      --label "NETBOX_GIT_BRANCH=${NETBOX_GIT_BRANCH}"
+      --label "NETBOX_GIT_REF=${NETBOX_GIT_REF}"
+      --label "NETBOX_GIT_URL=${NETBOX_GIT_URL}"
+    )
+  fi
+  if [ -n "${BUILD_REASON}" ]; then
+    BUILD_REASON=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$BUILD_REASON")
+    DOCKER_BUILD_ARGS+=(--label "BUILD_REASON=${BUILD_REASON}")
+  fi
 
-    # --build-arg
-    DOCKER_BUILD_ARGS+=(--build-arg "NETBOX_PATH=${NETBOX_PATH}")
+  # --build-arg
+  DOCKER_BUILD_ARGS+=(--build-arg "NETBOX_PATH=${NETBOX_PATH}")
 
-    if [ -n "${DOCKER_FROM}" ]; then
-      DOCKER_BUILD_ARGS+=(--build-arg "FROM=${DOCKER_FROM}")
+  if [ -n "${DOCKER_FROM}" ]; then
+    DOCKER_BUILD_ARGS+=(--build-arg "FROM=${DOCKER_FROM}")
+  fi
+  if [ -n "${HTTP_PROXY}" ]; then
+    DOCKER_BUILD_ARGS+=(--build-arg "http_proxy=${HTTP_PROXY}")
+    DOCKER_BUILD_ARGS+=(--build-arg "https_proxy=${HTTPS_PROXY}")
+  fi
+  if [ -n "${NO_PROXY}" ]; then
+    DOCKER_BUILD_ARGS+=(--build-arg "no_proxy=${NO_PROXY}")
+  fi
+
+  # --platform
+  DOCKER_BUILD_ARGS+=(--platform "${BUILDX_PLATFORMS-linux/amd64}")
+
+  # --cache-from / --cache-to
+  if [ -n "${BUILDX_PULL_REMOTE_CACHE}" ]; then
+    echo "📥  Pulling cache from '${CACHE_TO_DOCKER_TAG}' before build"
+    DOCKER_BUILD_ARGS+=("--cache-from=type=registry,ref=${CACHE_FROM_DOCKER_TAG},mode=max")
+  else
+    DOCKER_BUILD_ARGS+=("--cache-from=type=local,src=${BUILDX_LOCAL_CACHE-.buildx-cache},mode=max")
+  fi
+  if [ -n "${BUILDX_PUSH_REMOTE_CACHE}" ]; then
+    echo "📤  Pushing cache to '${CACHE_TO_DOCKER_TAG}' after build"
+    DOCKER_BUILD_ARGS+=("--cache-to=type=registry,ref=${CACHE_TO_DOCKER_TAG},mode=max")
+  else
+    DOCKER_BUILD_ARGS+=("--cache-to=type=local,dest=${BUILDX_LOCAL_CACHE-.buildx-cache},mode=max")
+  fi
+
+  ###
+  # Pushing the docker images if `--push` is passed
+  ###
+  if [ "${2}" == "--push" ]; then
+    # output type=docker does not work with pushing
+    DOCKER_BUILD_ARGS+=(
+      --output=type=image
+      --push
+    )
+  else
+    DOCKER_BUILD_ARGS+=(
+      --output=type=docker
+    )
+  fi
+
+  if [ -z "${BUILDX_BUILDER_NAME}" ]; then
+    BUILDX_BUILDER_NAME="$(basename "${PWD}")"
+    if ! docker buildx ls | grep --quiet --word-regexp "${BUILDX_BUILDER_NAME}"; then
+      echo "👷  Creating new Buildx Builder '${BUILDX_BUILDER_NAME}'"
+      $DRY docker buildx create --name "${BUILDX_BUILDER_NAME}"
+      BUILDX_BUILDER_CREATED="yes"
     fi
-    # shellcheck disable=SC2031
-    if [ -n "${HTTP_PROXY}" ]; then
-      DOCKER_BUILD_ARGS+=(--build-arg "http_proxy=${HTTP_PROXY}")
-      DOCKER_BUILD_ARGS+=(--build-arg "https_proxy=${HTTPS_PROXY}")
-    fi
-    if [ -n "${NO_PROXY}" ]; then
-      DOCKER_BUILD_ARGS+=(--build-arg "no_proxy=${NO_PROXY}")
-    fi
+  fi
 
-    # --platform
-    DOCKER_BUILD_ARGS+=(--platform "${BUILDX_PLATFORMS-linux/amd64}")
+  echo "🐳  Building the Docker image '${TARGET_DOCKER_TAG}' on '${BUILDX_BUILDER_NAME}'."
+  echo "    Build reason set to: ${BUILD_REASON}"
 
-    # --cache-from / --cache-to
-    if [ -n "${BUILDX_PULL_REMOTE_CACHE}" ]; then
-      echo "📥  Pulling cache from '${CACHE_TO_DOCKER_TAG}' before build"
-      DOCKER_BUILD_ARGS+=("--cache-from=type=registry,ref=${CACHE_FROM_DOCKER_TAG},mode=max")
-    else
-      DOCKER_BUILD_ARGS+=("--cache-from=type=local,src=${BUILDX_LOCAL_CACHE-.buildx-cache},mode=max")
-    fi
-    if [ -n "${BUILDX_PUSH_REMOTE_CACHE}" ]; then
-      echo "📤  Pushing cache to '${CACHE_TO_DOCKER_TAG}' after build"
-      DOCKER_BUILD_ARGS+=("--cache-to=type=registry,ref=${CACHE_TO_DOCKER_TAG},mode=max")
-    else
-      DOCKER_BUILD_ARGS+=("--cache-to=type=local,dest=${BUILDX_LOCAL_CACHE-.buildx-cache},mode=max")
-    fi
+  $DRY docker buildx \
+    --builder "${BUILDX_BUILDER_NAME}" \
+    build \
+    "${DOCKER_BUILD_ARGS[@]}" \
+    .
 
-    ###
-    # Pushing the docker images if `--push` is passed
-    ###
-    if [ "${2}" == "--push" ]; then
-      # output type=docker does not work with pushing
-      DOCKER_BUILD_ARGS+=(
-        --output=type=image
-        --push
-      )
-    else
-      DOCKER_BUILD_ARGS+=(
-        --output=type=docker
-      )
-    fi
+  echo "✅  Finished building the Docker images '${TARGET_DOCKER_TAG}'"
+  echo "🔎  Inspecting labels on '${TARGET_DOCKER_TAG}'"
+  $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
 
-    if [ -z "${BUILDX_BUILDER_NAME}" ]; then
-      BUILDX_BUILDER_NAME="$(basename "${PWD}")"
-      if ! docker buildx ls | grep --quiet --word-regexp "${BUILDX_BUILDER_NAME}"; then
-        echo "👷  Creating new Buildx Builder '${BUILDX_BUILDER_NAME}'"
-        $DRY docker buildx create --name "${BUILDX_BUILDER_NAME}"
-        BUILDX_BUILDER_CREATED="yes"
-      fi
-    fi
-
-    echo "🐳  Building the Docker image '${TARGET_DOCKER_TAG}' on '${BUILDX_BUILDER_NAME}'."
-    echo "    Build reason set to: ${BUILD_REASON}"
-
-    $DRY docker buildx \
-      --builder "${BUILDX_BUILDER_NAME}" \
-      build \
-      "${DOCKER_BUILD_ARGS[@]}" \
-      .
-
-    echo "✅  Finished building the Docker images '${TARGET_DOCKER_TAG}'"
-    echo "🔎  Inspecting labels on '${TARGET_DOCKER_TAG}'"
-    $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
-
-    if [ -n "${BUILDX_REMOVE_BUILDER}" ] && [ "${BUILDX_BUILDER_CREATED}" == "yes" ]; then
-      echo "👷  Removing Buildx Builder '${BUILDX_BUILDER_NAME}'"
-      $DRY docker buildx rm "${BUILDX_BUILDER_NAME}"
-    fi
+  if [ -n "${BUILDX_REMOVE_BUILDER}" ] && [ "${BUILDX_BUILDER_CREATED}" == "yes" ]; then
+    echo "👷  Removing Buildx Builder '${BUILDX_BUILDER_NAME}'"
+    $DRY docker buildx rm "${BUILDX_BUILDER_NAME}"
   fi
 done
