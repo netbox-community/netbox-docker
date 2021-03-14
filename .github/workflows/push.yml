@@ -54,6 +54,21 @@ jobs:
     - id: git-checkout
       name: Checkout
       uses: actions/checkout@v2
+    - id: get-version
+      name: Get Version of NetBox Docker
+      run: |
+        echo "::set-output name=version::$(cat VERSION)"
+      shell: bash
+    - id: setup-cache
+      name: NetBox Docker Buildx Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          .buildx-cache
+        key: ${{ steps.get-version.outputs.version }}-push-${{ matrix.platform }}-${{ hashFiles('Dockerfile','requirements-container.txt','.netbox/requirements.txt') }}
+        restore-keys: |
+          ${{ steps.get-version.outputs.version }}-push-
+          ${{ steps.get-version.outputs.version }}-
     - id: qemu-setup
       name: Set up QEMU
       uses: docker/setup-qemu-action@v1
@@ -69,7 +84,7 @@ jobs:
         DOCKER_FROM: ${{ matrix.docker_from }}
         GH_ACTION: enable
         BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
-        PLATFORMS: ${{ matrix.platform }}
+        BUILDX_PLATFORMS: ${{ matrix.platform }}
     - id: docker-test
       name: Test the image
       run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
