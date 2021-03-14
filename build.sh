@@ -6,94 +6,108 @@ echo "▶️ $0 $*"
 set -e
 
 if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
-  echo "Usage: ${0} <branch> [--push|--push-only]"
-  echo "  branch       The branch or tag to build. Required."
-  echo "  --push       Pushes the built Docker image to the registry."
-  echo "  --push-only  Only pushes the Docker image to the registry, but does not build it."
-  echo ""
-  echo "You can use the following ENV variables to customize the build:"
-  echo "  SRC_ORG     Which fork of netbox to use (i.e. github.com/\${SRC_ORG}/\${SRC_REPO})."
-  echo "              Default: netbox-community"
-  echo "  SRC_REPO    The name of the repository to use (i.e. github.com/\${SRC_ORG}/\${SRC_REPO})."
-  echo "              Default: netbox"
-  echo "  URL         Where to fetch the code from."
-  echo "              Must be a git repository. Can be private."
-  echo "              Default: https://github.com/\${SRC_ORG}/\${SRC_REPO}.git"
-  echo "  NETBOX_PATH The path where netbox will be checkout out."
-  echo "              Must not be outside of the netbox-docker repository (because of Docker)!"
-  echo "              Default: .netbox"
-  echo "  SKIP_GIT    If defined, git is not invoked and \${NETBOX_PATH} will not be altered."
-  echo "              This may be useful, if you are manually managing the NETBOX_PATH."
-  echo "              Default: undefined"
-  echo "  TAG         The version part of the docker tag."
-  echo "              Default:"
-  echo "                When <branch>=master:  latest"
-  echo "                When <branch>=develop: snapshot"
-  echo "                Else:                  same as <branch>"
-  echo "  DOCKER_REGISTRY  The Docker repository's registry (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
-  echo "              Used for tagging the image."
-  echo "              Default: docker.io"
-  echo "  DOCKER_ORG  The Docker repository's organisation (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
-  echo "              Used for tagging the image."
-  echo "              Default: netboxcommunity"
-  echo "  DOCKER_REPO The Docker repository's name (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
-  echo "              Used for tagging the image."
-  echo "              Default: netbox"
-  echo "  DOCKER_TAG  The name of the tag which is applied to the image."
-  echo "              Useful for pushing into another registry than hub.docker.com."
-  echo "              Default: \${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}:\${TAG}"
-  echo "  DOCKER_SHORT_TAG  The name of the short tag which is applied to the"
-  echo "              image. This is used to tag all patch releases to their"
-  echo "              containing version e.g. v2.5.1 -> v2.5"
-  echo "              Default: \${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}:<MAJOR>.<MINOR>"
-  echo "  DOCKERFILE  The name of Dockerfile to use."
-  echo "              Default: Dockerfile"
-  echo "  DOCKER_FROM The base image to use."
-  echo "              Default: 'alpine:3.14'"
-  echo "  DOCKER_TARGET A specific target to build."
-  echo "              It's currently not possible to pass multiple targets."
-  echo "              Default: main ldap"
-  echo "  BUILDX_PLATFORMS  If defined, the image will be build for the given platform(s)."
-  echo "              Example: linux/amd64,linux/arm64"
-  echo "              Default: linux/amd64"
-  echo "  HTTP_PROXY  The proxy to use for http requests."
-  echo "              Example: http://proxy.domain.tld:3128"
-  echo "              Default: undefined"
-  echo "  NO_PROXY    Comma-separated list of domain extensions proxy should not be used for."
-  echo "              Example: .domain1.tld,.domain2.tld"
-  echo "              Default: undefined"
-  echo "  DEBUG       If defined, the script does not stop when certain checks are unsatisfied."
-  echo "              Default: undefined"
-  echo "  DRY_RUN     Prints all build statements instead of running them."
-  echo "              Default: undefined"
-  echo "  GH_ACTION   If defined, special 'echo' statements are enabled that set the"
-  echo "              following environment variables in Github Actions:"
-  echo "              - FINAL_DOCKER_TAG: The final value of the DOCKER_TAG env variable"
-  echo "              Default: undefined"
-  echo ""
-  echo "Examples:"
-  echo "  ${0} master"
-  echo "              This will fetch the latest 'master' branch, build a Docker Image and tag it"
-  echo "              'netboxcommunity/netbox:latest'."
-  echo "  ${0} develop"
-  echo "              This will fetch the latest 'develop' branch, build a Docker Image and tag it"
-  echo "              'netboxcommunity/netbox:snapshot'."
-  echo "  ${0} v2.6.6"
-  echo "              This will fetch the 'v2.6.6' tag, build a Docker Image and tag it"
-  echo "              'netboxcommunity/netbox:v2.6.6' and 'netboxcommunity/netbox:v2.6'."
-  echo "  ${0} develop-2.7"
-  echo "              This will fetch the 'develop-2.7' branch, build a Docker Image and tag it"
-  echo "              'netboxcommunity/netbox:develop-2.7'."
-  echo "  SRC_ORG=cimnine ${0} feature-x"
-  echo "              This will fetch the 'feature-x' branch from https://github.com/cimnine/netbox.git,"
-  echo "              build a Docker Image and tag it 'netboxcommunity/netbox:feature-x'."
-  echo "  SRC_ORG=cimnine DOCKER_ORG=cimnine ${0} feature-x"
-  echo "              This will fetch the 'feature-x' branch from https://github.com/cimnine/netbox.git,"
-  echo "              build a Docker Image and tag it 'cimnine/netbox:feature-x'."
-  echo "  PLATFORMS=linux/amd64,linux/arm64 ${0} master"
-  echo "              This will fetch the latest 'master' branch, build a Docker Image and tag it"
-  echo "              'netboxcommunity/netbox:latest'."
-  echo "              It will produce an ARM64 and an AMD64 version of the image."
+cat <<END_OF_DOCS
+Usage: ${0} <branch> [--push|--push-only]
+  branch       The branch or tag to build. Required.
+  --push       Pushes the built Docker image to the registry.
+  --push-only  Only pushes the Docker image to the registry, but does not build it.
+
+You can use the following ENV variables to customize the build:
+  SRC_ORG     Which fork of netbox to use (i.e. github.com/\${SRC_ORG}/\${SRC_REPO}).
+              Default: netbox-community
+  SRC_REPO    The name of the repository to use (i.e. github.com/\${SRC_ORG}/\${SRC_REPO}).
+              Default: netbox
+  URL         Where to fetch the code from.
+              Must be a git repository. Can be private.
+              Default: https://github.com/\${SRC_ORG}/\${SRC_REPO}.git
+  NETBOX_PATH The path where netbox will be checkout out.
+              Must not be outside of the netbox-docker repository (because of Docker)!
+              Default: .netbox
+  SKIP_GIT    If defined, git is not invoked and \${NETBOX_PATH} will not be altered.
+              This may be useful, if you are manually managing the NETBOX_PATH.
+              Default: undefined
+  TAG         The version part of the docker tag.
+              Default:
+                When <branch>=master:  latest
+                When <branch>=develop: snapshot
+                Else:                  same as <branch>
+  DOCKER_REGISTRY  The Docker repository's registry (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')
+              Used for tagging the image.
+              Default: docker.io
+  DOCKER_ORG  The Docker repository's organisation (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')
+              Used for tagging the image.
+              Default: netboxcommunity
+  DOCKER_REPO The Docker repository's name (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')
+              Used for tagging the image.
+              Default: netbox
+  DOCKER_TAG  The name of the tag which is applied to the image.
+              Useful for pushing into another registry than hub.docker.com.
+              Default: \${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}:\${TAG}
+  DOCKER_SHORT_TAG  The name of the short tag which is applied to the
+              image. This is used to tag all patch releases to their
+              containing version e.g. v2.5.1 -> v2.5
+              Default: \${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}:<MAJOR>.<MINOR>
+  DOCKERFILE  The name of Dockerfile to use.
+              Default: Dockerfile
+  DOCKER_FROM The base image to use.
+              Default: 'alpine:3.14'
+  DOCKER_TARGET  A specific target to build.
+              It's currently not possible to pass multiple targets.
+              Default: main ldap
+  BUILDX_PLATFORMS  Specifies the platform(s) to build the image for.
+              Example: linux/amd64,linux/arm64
+              Default: linux/amd64
+  BUILDX_BUILDER_NAME  If defined, the image build will be assigned to the given builder.
+              If you specify this variable, make sure that the builder exists.
+              If this value is not defined, a new builx builder with the directory name of the
+              current directory (i.e. '$(basename "${PWD}")') is created.
+              Example: clever_lovelace
+              Default: undefined
+  BUILDX_KEEP_BUILDER  If defined and if BUILDX_BUILDER_NAME is undefined, then the
+              buildx builder created by this script is not removed.
+              This is useful if you want to re-use the builder in a later build on the
+              same system.
+              By default, all buildx builders created by this script are removed at the end.
+              Default: undefined
+  HTTP_PROXY  The proxy to use for http requests.
+              Example: http://proxy.domain.tld:3128
+              Default: undefined
+  NO_PROXY    Comma-separated list of domain extensions proxy should not be used for.
+              Example: .domain1.tld,.domain2.tld
+              Default: undefined
+  DEBUG       If defined, the script does not stop when certain checks are unsatisfied.
+              Default: undefined
+  DRY_RUN     Prints all build statements instead of running them.
+              Default: undefined
+  GH_ACTION   If defined, special 'echo' statements are enabled that set the
+              following environment variables in Github Actions:
+              - FINAL_DOCKER_TAG: The final value of the DOCKER_TAG env variable
+              Default: undefined
+
+Examples:
+  ${0} master
+              This will fetch the latest 'master' branch, build a Docker Image and tag it
+              'netboxcommunity/netbox:latest'.
+  ${0} develop
+              This will fetch the latest 'develop' branch, build a Docker Image and tag it
+              'netboxcommunity/netbox:snapshot'.
+  ${0} v2.6.6
+              This will fetch the 'v2.6.6' tag, build a Docker Image and tag it
+              'netboxcommunity/netbox:v2.6.6' and 'netboxcommunity/netbox:v2.6'.
+  ${0} develop-2.7
+              This will fetch the 'develop-2.7' branch, build a Docker Image and tag it
+              'netboxcommunity/netbox:develop-2.7'.
+  SRC_ORG=cimnine ${0} feature-x
+              This will fetch the 'feature-x' branch from https://github.com/cimnine/netbox.git,
+              build a Docker Image and tag it 'netboxcommunity/netbox:feature-x'.
+  SRC_ORG=cimnine DOCKER_ORG=cimnine ${0} feature-x
+              This will fetch the 'feature-x' branch from https://github.com/cimnine/netbox.git,
+              build a Docker Image and tag it 'cimnine/netbox:feature-x'.
+  PLATFORMS=linux/amd64,linux/arm64 ${0} master
+              This will fetch the latest 'master' branch, build a Docker Image and tag it
+              'netboxcommunity/netbox:latest'.
+              It will produce an ARM64 and an AMD64 version of the image.
+END_OF_DOCS
 
   if [ "${1}x" == "x" ]; then
     exit 1
@@ -392,8 +406,8 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     DOCKER_BUILD_ARGS+=(--platform "${BUILDX_PLATFORMS-linux/amd64}")
 
     # --cache-from / --cache-to
-    DOCKER_BUILD_ARGS+=("--cache-from=type=registry,ref=${TARGET_DOCKER_TAG}-cache,mode=max")
-    DOCKER_BUILD_ARGS+=("--cache-to=type=registry,ref=${TARGET_DOCKER_TAG}-cache,mode=max")
+    # DOCKER_BUILD_ARGS+=("--cache-from=type=registry,ref=${TARGET_DOCKER_TAG}-cache,mode=max")
+    # DOCKER_BUILD_ARGS+=("--cache-to=type=registry,ref=${TARGET_DOCKER_TAG}-cache,mode=max")
 
     ###
     # Pushing the docker images if `--push` is passed
@@ -403,13 +417,12 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     fi
 
     if [ -z "${BUILDX_BUILDER_NAME}" ]; then
-      echo "👷  Creating new Buildx Builder"
-      if [ -z "${DRY_RUN}" ]; then
-        BUILDX_BUILDER_NAME=$(docker buildx create)
-      else
-        BUILDX_BUILDER_NAME="DRY_RUN_NEW_BUIDLER"
+      BUILDX_BUILDER_NAME="$(basename "${PWD}")"
+      if ! docker buildx ls | grep --quiet --word-regexp "${BUILDX_BUILDER_NAME}"; then
+        echo "👷  Creating new Buildx Builder '${BUILDX_BUILDER_NAME}'"
+        $DRY docker buildx create --name "${BUILDX_BUILDER_NAME}"
+        BUILDX_BUILDER_CREATED="yes"
       fi
-      BUILDX_BUILDER_CREATED="yes"
     fi
 
     echo "🐳  Building the Docker image '${TARGET_DOCKER_TAG}' on '${BUILDX_BUILDER_NAME}'."
@@ -425,7 +438,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     echo "🔎  Inspecting labels on '${TARGET_DOCKER_TAG}'"
     $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
 
-    if [ "${BUILDX_BUILDER_CREATED}" == "yes" ]; then
+    if [ -z "${BUILDX_KEEP_BUILDER}" ] && [ "${BUILDX_BUILDER_CREATED}" == "yes" ]; then
       echo "👷  Removing Buildx Builder '${BUILDX_BUILDER_NAME}'"
       $DRY docker buildx rm "${BUILDX_BUILDER_NAME}"
     fi
