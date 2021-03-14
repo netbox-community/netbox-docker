@@ -389,7 +389,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     fi
 
     # --platform
-    DOCKER_BUILD_ARGS+=(--platform "${PLATFORMS-linux/amd64}")
+    DOCKER_BUILD_ARGS+=(--platform "${BUILDX_PLATFORMS-linux/amd64}")
 
     # --cache-from / --cache-to
     DOCKER_BUILD_ARGS+=("--cache-from=type=registry,ref=${TARGET_DOCKER_TAG}-cache,mode=max")
