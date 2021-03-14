@@ -335,7 +335,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     ###
     DOCKER_BUILD_ARGS=(
       --pull
-      --output
+      --output=type=image
       --target "${DOCKER_TARGET}"
       -f "${DOCKERFILE}"
       -t "${TARGET_DOCKER_TAG}"
@@ -404,7 +404,11 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
 
     if [ -z "${BUILDX_BUILDER_NAME}" ]; then
       echo "👷  Creating new Buildx Builder"
-      BUILDX_BUILDER_NAME=$($DRY docker buildx create)
+      if [ -z "${DRY_RUN}" ]; then
+        BUILDX_BUILDER_NAME=$(docker buildx create)
+      else
+        BUILDX_BUILDER_NAME="DRY_RUN_NEW_BUIDLER"
+      fi
       BUILDX_BUILDER_CREATED="yes"
     fi
 
