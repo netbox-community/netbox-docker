@@ -35,6 +35,9 @@ services:
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT-5432}:5432"
+    restart: always
 
   # redis
   redis:
@@ -46,6 +49,9 @@ services:
     env_file: env/redis.env
     volumes:
     - netbox-redis-data:/data
+    ports:
+      - "${REDIS_PORT-6379}:6379"
+    restart: always
   redis-cache:
     image: redis:6-alpine
     command:
