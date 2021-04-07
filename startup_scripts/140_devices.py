@@ -1,6 +1,6 @@
 import sys
 
-from dcim.models import Device, DeviceRole, DeviceType, Platform, Rack, Site
+from dcim.models import Device, DeviceRole, DeviceType, Platform, Rack, Site, Location
 from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
 from tenancy.models import Tenant
 from virtualization.models import Cluster
@@ -21,6 +21,7 @@ optional_assocs = {
     "platform": (Platform, "name"),
     "rack": (Rack, "name"),
     "cluster": (Cluster, "name"),
+    "location": (Location, "name"),
 }
 
 for params in devices:
