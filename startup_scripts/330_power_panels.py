@@ -1,6 +1,6 @@
 import sys
 
-from dcim.models import PowerPanel, RackGroup, Site
+from dcim.models import PowerPanel, Location, Site
 from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
 
 power_panels = load_yaml("/opt/netbox/initializers/power_panels.yml")
@@ -10,7 +10,7 @@ if power_panels is None:
 
 required_assocs = {"site": (Site, "name")}
 
-optional_assocs = {"rack_group": (RackGroup, "name")}
+optional_assocs = {"location": (Location, "name")}
 
 for params in power_panels:
     custom_field_data = pop_custom_fields(params)

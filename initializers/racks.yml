@@ -32,7 +32,7 @@
 #     text_field: Description
 # - site: SING 1
 #   name: rack-03
-#   group: cage 101
+#   location: cage 101
 #   role: Role 3
 #   type: 4-post-cabinet
 #   width: 19
