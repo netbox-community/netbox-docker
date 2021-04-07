@@ -1,6 +1,6 @@
 import sys
 
-from dcim.models import Device, DeviceRole, DeviceType, Platform, Rack, Site, Location
+from dcim.models import Device, DeviceRole, DeviceType, Location, Platform, Rack, Site
 from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
 from tenancy.models import Tenant
 from virtualization.models import Cluster

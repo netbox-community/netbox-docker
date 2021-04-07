@@ -1,6 +1,6 @@
 import sys
 
-from dcim.models import Rack, Location, RackRole, Site
+from dcim.models import Location, Rack, RackRole, Site
 from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
 from tenancy.models import Tenant
 

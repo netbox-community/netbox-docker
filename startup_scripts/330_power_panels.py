@@ -1,6 +1,6 @@
 import sys
 
-from dcim.models import PowerPanel, Location, Site
+from dcim.models import Location, PowerPanel, Site
 from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
 
 power_panels = load_yaml("/opt/netbox/initializers/power_panels.yml")
