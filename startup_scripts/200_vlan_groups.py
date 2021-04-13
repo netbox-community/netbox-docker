@@ -28,7 +28,7 @@ for params in vlan_groups:
             if not ct:
                 print(
                     f"VLAN Group '{params['name']}': ContentType for "
-                    + "app_label = '{app_label}' and model = '{model}' not found"
+                    + f"app_label = '{app_label}' and model = '{model}' not found"
                 )
                 continue
             params["scope_id"] = ct.model_class().objects.get(**query).id
