@@ -21,12 +21,15 @@ for params in vlan_groups:
             # Get model from Contenttype
             scope_type = params.pop("scope_type", None)
             if not scope_type:
-                print("scope_type is missing from VLAN Group")
+                print(f"VLAN Group '{params['name']}': scope_type is missing from VLAN Group")
                 continue
             app_label, model = str(scope_type).split(".")
-            ct = ContentType.objects.get(app_label=app_label, model=model)
+            ct = ContentType.objects.filter(app_label=app_label, model=model).first()
             if not ct:
-                print(f"ContentType for app_label = '{app_label}' and model = '{model}' not found")
+                print(
+                    f"VLAN Group '{params['name']}': ContentType for "
+                    + "app_label = '{app_label}' and model = '{model}' not found"
+                )
                 continue
             params["scope_id"] = ct.model_class().objects.get(**query).id
     vlan_group, created = VLANGroup.objects.get_or_create(**params)
