@@ -42,3 +42,12 @@
 #   position: 3
 #   custom_field_data:
 #     text_field: Description
+# - name: server04
+#   device_role: server
+#   device_type: Other
+#   site: SING 1
+#   location: cage 101
+#   face: front
+#   position: 3
+#   custom_field_data:
+#     text_field: Description

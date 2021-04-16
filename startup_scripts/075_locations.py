@@ -1,9 +1,9 @@
 import sys
 
-from dcim.models import RackGroup, Site
+from dcim.models import Location, Site
 from startup_script_utils import load_yaml
 
-rack_groups = load_yaml("/opt/netbox/initializers/rack_groups.yml")
+rack_groups = load_yaml("/opt/netbox/initializers/locations.yml")
 
 if rack_groups is None:
     sys.exit()
@@ -17,7 +17,7 @@ for params in rack_groups:
         query = {field: params.pop(assoc)}
         params[assoc] = model.objects.get(**query)
 
-    rack_group, created = RackGroup.objects.get_or_create(**params)
+    location, created = Location.objects.get_or_create(**params)
 
     if created:
-        print("🎨 Created rack group", rack_group.name)
+        print("🎨 Created location", location.name)

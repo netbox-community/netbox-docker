@@ -10,12 +10,12 @@
 ## Examples:
 
 # - name: link_to_repo
-#   text: 'Link to Netbox Docker'
-#   url: 'https://github.com/netbox-community/netbox-docker'
+#   link_text: 'Link to Netbox Docker'
+#   link_url: 'https://github.com/netbox-community/netbox-docker'
 #   new_window: False
 #   content_type: device
 # - name: link_to_localhost
-#   text: 'Link to localhost'
-#   url: 'http://localhost'
+#   link_text: 'Link to localhost'
+#   link_url: 'http://localhost'
 #   new_window: True
 #   content_type: device
