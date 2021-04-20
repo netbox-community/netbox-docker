@@ -8,5 +8,6 @@ configuration/*
 !configuration/extra.py
 configuration/ldap/*
 !configuration/ldap/ldap_config.py
+!configuration/ldap/extra.py
 prometheus.yml
 super-linter.log
