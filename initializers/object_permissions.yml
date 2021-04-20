@@ -1,0 +1,22 @@
+#- name: all.ro
+#  description: 'Read Only for All Objects'
+#  enabled: true
+#  # object_types: all
+#  groups:
+#    - applications
+#    - readers
+#  actions:
+#    - view
+#- name: all.rw
+#  description: 'Read/Write for All Objects'
+#  enabled: true
+#  # object_types: all
+#  groups:
+#    - writers
+#  users:
+#    - jdoe
+#  actions:
+#    - add
+#    - change
+#    - delete
+#    - view
