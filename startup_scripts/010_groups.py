@@ -8,11 +8,9 @@ if groups is None:
     sys.exit()
 
 for params in groups:
-    groupname=params['name']
+    groupname = params["name"]
 
-    group, created = AdminGroup.objects.get_or_create(
-        name=groupname
-    )
+    group, created = AdminGroup.objects.get_or_create(name=groupname)
 
     if created:
         print("👥 Created group", groupname)
