@@ -23,7 +23,7 @@ for link in custom_links:
     if link["content_type_id"] is None:
         print(
             "⚠️ Unable to create Custom Link '{0}': The content_type '{1}' is unknown".format(
-                link.name, content_type
+                link.get('name'), content_type
             )
         )
         continue

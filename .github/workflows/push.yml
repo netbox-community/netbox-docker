@@ -14,6 +14,9 @@ jobs:
     name: Checks syntax of our code
     steps:
     - uses: actions/checkout@v2
+      with:
+        # Full git history is needed to get a proper list of changed files within `super-linter`
+        fetch-depth: 0
     - uses: actions/setup-python@v2
     - name: Lint Code Base
       uses: github/super-linter@v3

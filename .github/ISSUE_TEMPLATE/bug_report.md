@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a report about a malfunction of the Docker setup
 title: ''
 labels: ''
 assignees: ''
@@ -9,39 +9,49 @@ assignees: ''
 
 <!--
 
-Before raising an issue here, answer the following questions for yourself, please:
+Please only raise an issue if you're certain that you've found a bug.
+Else, see these other means to get help:
 
-* Did you read through the troubleshooting section? (https://github.com/netbox-community/netbox-docker/wiki/Troubleshooting)
-* Have you had a look at the rest of the wiki? (https://github.com/netbox-community/netbox-docker/wiki)
-* Have you updated to the latest version and tried again? (i.e. `git pull` and `docker-compose pull`)
-* Have you reset the project and tried again? (i.e. `docker-compose down -v`)
-* Are you confident that your problem is related to the Docker image or Docker Compose file this project provides?
-  (Otherwise ask on the NetBox mailing list, please: https://groups.google.com/d/forum/netbox-discuss)
-* Have you looked through the issues already resolved?
+* See our troubleshooting section:
+  https://github.com/netbox-community/netbox-docker/wiki/Troubleshooting
+* Have a look at the rest of the wiki:
+  https://github.com/netbox-community/netbox-docker/wiki
+* Check the release notes:
+  https://github.com/netbox-community/netbox-docker/releases
+* Look through the issues already resolved:
+  https://github.com/netbox-community/netbox-docker/issues?q=is%3Aclosed
 
-Please try this means to get help before opening an issue here:
+If you did not find what you're looking for,
+try the help of our community:
 
-* On the networktocode Slack in the #netbox-docker channel: http://slack.networktocode.com/
-* On the networktocode Slack in the #netbox channel: http://slack.networktocode.com/
-* On the NetBox mailing list: https://groups.google.com/d/forum/netbox-discuss
+* Post to Github Discussions:
+  https://github.com/netbox-community/netbox-docker/discussions
+* Join the `#netbox-docker` channel on our Slack:
+  https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
+* Ask on the NetBox mailing list:
+  https://groups.google.com/d/forum/netbox-discuss
 
-Please don't open an issue when you have a PR ready. Just submit the PR, that's good enough.
+Please don't open an issue to open a PR.
+Just submit the PR, that's good enough.
 
 -->
 
 ## Current Behavior
 
 <!-- describe what you did and how it misbehaved -->
-...
+
+
 
 ## Expected Behavior
 
 <!-- describe what you expected instead -->
-...
+
+
 
 ## Debug Information
 
-<!-- please fill in the following information that might helps us debug your problem more quickly -->
+<!-- please fill in the following information that helps us debug your problem more quickly -->
+
 The output of `docker-compose version`: `XXXXX`
 The output of `docker version`: `XXXXX`
 The output of `git rev-parse HEAD`: `XXXXX`
@@ -59,7 +69,16 @@ The output of `docker inspect netboxcommunity/netbox:latest --format "{{json .Co
 
 The output of `docker-compose logs netbox`:
 <!--
-If your log is very long, create a Gist instead (and post the link to it): https://gist.github.com
+If your log is very long, create a Gist instead and post the link to it: https://gist.github.com
+-->
+
+```text
+LOG LOG LOG
+```
+
+The output of `cat docker-compose.override.yml`:
+<!--
+If this file is very long, create a Gist instead and post the link to it: https://gist.github.com
 -->
 
 ```text
