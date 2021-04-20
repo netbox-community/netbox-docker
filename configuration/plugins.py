@@ -4,10 +4,10 @@
 # To learn how to build images with your required plugins
 # See https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
 
-# PLUGINS = ["netbox_onboarding"]
+# PLUGINS = ["netbox_bgp"]
 
 # PLUGINS_CONFIG = {
-#   "netbox_onboarding": {
+#   "netbox_bgp": {
 #     ADD YOUR SETTINGS HERE
 #   }
 # }
