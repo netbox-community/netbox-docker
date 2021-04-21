@@ -1,7 +1,7 @@
 import sys
 
-from users.models import AdminGroup, AdminUser
 from startup_script_utils import load_yaml
+from users.models import AdminGroup, AdminUser
 
 groups = load_yaml("/opt/netbox/initializers/groups.yml")
 if groups is None:

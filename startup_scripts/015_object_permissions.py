@@ -1,8 +1,8 @@
 import sys
 
-from users.models import ObjectPermission, AdminGroup, AdminUser
-from startup_script_utils import load_yaml
 from django.contrib.contenttypes.models import ContentType
+from startup_script_utils import load_yaml
+from users.models import AdminGroup, AdminUser, ObjectPermission
 
 object_permissions = load_yaml("/opt/netbox/initializers/object_permissions.yml")
 
