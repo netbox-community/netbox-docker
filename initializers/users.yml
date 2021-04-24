@@ -1,10 +1,10 @@
-# - username: technical_user
+# technical_user:
 #   api_token: 0123456789technicaluser789abcdef01234567 # must be looooong!
-# - username: reader
+# reader:
 #   password: reader
-# - username: writer
+# writer:
 #   password: writer
-# - username: jdoe
+# jdoe:
 #   first_name: John
 #   last_name: Doe
 #   api_token: 0123456789jdoe789abcdef01234567jdoe

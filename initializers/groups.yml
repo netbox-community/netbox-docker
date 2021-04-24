@@ -1,9 +1,9 @@
-# - name: applications
+# applications:
 #   users:
 #     - technical_user
-# - name: readers
+# readers:
 #   users:
 #     - reader
-# - name: writers
+# writers:
 #   users:
 #     - writer

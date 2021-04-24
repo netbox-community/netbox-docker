@@ -7,15 +7,13 @@ groups = load_yaml("/opt/netbox/initializers/groups.yml")
 if groups is None:
     sys.exit()
 
-for params in groups:
-    groupname = params["name"]
-
+for groupname, group_details in groups.items():
     group, created = AdminGroup.objects.get_or_create(name=groupname)
 
     if created:
         print("👥 Created group", groupname)
 
-    for username in params.get("users", []):
+    for username in group_details.get("users", []):
         user = AdminUser.objects.get(username=username)
 
         if user:
