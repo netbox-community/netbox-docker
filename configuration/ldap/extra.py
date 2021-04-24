@@ -25,4 +25,4 @@
 # }
 
 # # Sets LDAP Mirror groups variables with example groups
-# AUTH_LDAP_MIRROR_groups = ["netbox-user-ro", "netbox-user-rw", "netbox-user-admin"]
+# AUTH_LDAP_MIRROR_GROUPS = ["netbox-user-ro", "netbox-user-rw", "netbox-user-admin"]
