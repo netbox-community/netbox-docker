@@ -19,11 +19,25 @@ for permission_name, permission_details in object_permissions.items():
         actions=permission_details["actions"],
     )
 
-    # Need to try to pass a list of model_name and app_label for more than the current ALL
-    # object_types = ContentType.objects.filter(app_label__in=permission_details["object_types"])
-    # object_permission.object_types.set(ContentType.objects.filter(app_label__in=permission_details"object_types"]))
-    object_permission.object_types.set(ContentType.objects.all())
-    object_permission.save()
+    if permission_details.get("object_types", 0):
+        object_types = permission_details["object_types"]
+
+        if object_types == "all":
+            object_permission.object_types.set(ContentType.objects.all())
+
+        else:
+            for app_label, models in object_types.items():
+                if models == "all":
+                    app_models = ContentType.objects.filter(app_label=app_label)
+
+                    for app_model in app_models:
+                        object_permission.object_types.add(app_model.id)
+                else:
+                    # There is
+                    for model in models:
+                        object_permission.object_types.add(
+                            ContentType.objects.get(app_label=app_label, model=model)
+                        )
 
     print("🔓 Created object permission", object_permission.name)
 
