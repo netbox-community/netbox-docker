@@ -33,9 +33,7 @@ for permission_name, permission_details in object_permissions.items():
 
             if group:
                 object_permission.groups.add(group)
-                print(
-                    " 👥 Assigned group %s object permission of %s" % (groupname, groupname)
-                )
+                print(" 👥 Assigned group %s object permission of %s" % (groupname, groupname))
 
     if permission_details.get("users", 0):
         for username in permission_details["users"]:
@@ -43,8 +41,6 @@ for permission_name, permission_details in object_permissions.items():
 
             if user:
                 object_permission.users.add(user)
-                print(
-                    " 👤 Assigned user %s object permission of %s" % (username, groupname)
-                )
+                print(" 👤 Assigned user %s object permission of %s" % (username, groupname))
 
     object_permission.save()
