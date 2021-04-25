@@ -14,7 +14,7 @@ for permission_name, permission_details in object_permissions.items():
 
     object_permission, created = ObjectPermission.objects.get_or_create(
         name=permission_name,
-        description=permission_details["description"], 
+        description=permission_details["description"],
         enabled=permission_details["enabled"],
         actions=permission_details["actions"],
     )
@@ -26,7 +26,7 @@ for permission_name, permission_details in object_permissions.items():
     object_permission.save()
 
     print("🔓 Created object permission", object_permission.name)
-    
+
     if permission_details.get("groups", 0):
         for groupname in permission_details["groups"]:
             group = AdminGroup.objects.get(name=groupname)
@@ -34,7 +34,7 @@ for permission_name, permission_details in object_permissions.items():
             if group:
                 object_permission.groups.add(group)
                 print(
-                    " 👥 Assigned group %s object permission of %s" % (groupname, object_permission.name)
+                    " 👥 Assigned group %s object permission of %s" % (groupname, groupname)
                 )
 
     if permission_details.get("users", 0):
@@ -44,7 +44,7 @@ for permission_name, permission_details in object_permissions.items():
             if user:
                 object_permission.users.add(user)
                 print(
-                    " 👤 Assigned user %s object permission of %s" % (username, object_permission.name)
+                    " 👤 Assigned user %s object permission of %s" % (username, groupname)
                 )
 
     object_permission.save()
