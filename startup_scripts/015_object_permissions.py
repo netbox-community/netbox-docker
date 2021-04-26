@@ -43,7 +43,7 @@ for permission_name, permission_details in object_permissions.items():
 
     if permission_details.get("groups", 0):
         for groupname in permission_details["groups"]:
-            group = AdminGroup.objects.get(name=groupname)
+            group = AdminGroup.objects.filter(name=groupname).first()
 
             if group:
                 object_permission.groups.add(group)
@@ -51,7 +51,7 @@ for permission_name, permission_details in object_permissions.items():
 
     if permission_details.get("users", 0):
         for username in permission_details["users"]:
-            user = AdminUser.objects.get(username=username)
+            user = AdminUser.objects.filter(username=username).first()
 
             if user:
                 object_permission.users.add(user)
