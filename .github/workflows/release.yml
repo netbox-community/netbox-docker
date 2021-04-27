@@ -14,7 +14,7 @@ jobs:
         build_cmd:
         - ./build-latest.sh
         - PRERELEASE=true ./build-latest.sh
-        - ./build-next.sh
+        - ./build.sh feature
         - ./build.sh develop
       fail-fast: false
     runs-on: ubuntu-latest
