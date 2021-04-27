@@ -1,7 +1,7 @@
 import sys
 
 from django.contrib.auth.models import User
-from startup_script_utils import load_yaml, set_permissions
+from startup_script_utils import load_yaml
 from users.models import Token
 
 users = load_yaml("/opt/netbox/initializers/users.yml")
@@ -19,6 +19,3 @@ for username, user_details in users.items():
 
         if user_details.get("api_token", 0):
             Token.objects.create(user=user, key=user_details["api_token"])
-
-        yaml_permissions = user_details.get("permissions", [])
-        set_permissions(user.user_permissions, yaml_permissions)

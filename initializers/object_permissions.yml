@@ -1,0 +1,48 @@
+# all.ro:
+#   actions:
+#     - view
+#   description: 'Read Only for All Objects'
+#   enabled: true
+#   groups:
+#     - applications
+#     - readers
+#   object_types: all
+#   users:
+#     - jdoe
+# all.rw:
+#   actions:
+#     - add
+#     - change
+#     - delete
+#     - view
+#   description: 'Read/Write for All Objects'
+#   enabled: true
+#   groups:
+#     - writers
+#   object_types: all
+# network_team.rw:
+#   actions:
+#     - add
+#     - change
+#     - delete
+#     - view
+#   description: "Network Team Permissions"
+#   enabled: true
+#   object_types:
+#     circuits:
+#       - circuit
+#       - circuittermination
+#       - circuittype
+#       - provider
+#     dcim: all
+#     ipam:
+#       - aggregate
+#       - ipaddress
+#       - prefix
+#       - rir
+#       - role
+#       - routetarget
+#       - service
+#       - vlan
+#       - vlangroup
+#       - vrf
