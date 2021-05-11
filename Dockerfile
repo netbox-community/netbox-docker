@@ -58,7 +58,7 @@ WORKDIR /opt
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv
 
 ARG NETBOX_PATH
-COPY ${NETBOX_PATH} /opt/netbox
+COPY ${NETBOX_PATH}/netbox/ /opt/netbox/netbox/
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/docker-entrypoint.sh /opt/netbox/docker-entrypoint.sh
