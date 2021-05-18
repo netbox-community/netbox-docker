@@ -50,7 +50,6 @@ RUN apk add --no-cache \
       postgresql-libs \
       python3 \
       py3-pip \
-      ttf-ubuntu-font-family \
       unit \
       unit-python3
 
