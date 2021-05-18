@@ -20,7 +20,7 @@ services:
     ports:
     - 8080
   postgres:
-    image: postgres:12-alpine
+    image: postgres:13-alpine
     env_file: env/postgres.env
   redis:
     image: redis:6-alpine
