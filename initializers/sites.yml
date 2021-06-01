@@ -20,6 +20,7 @@
 #   status: active
 #   facility: Amsterdam 3
 #   asn: 67890
+#   tenant: tenant1
 #   custom_field_data:
 #     text_field: Description for AMS3
 # - name: SING 1
@@ -28,6 +29,6 @@
 #   status: active
 #   facility: Singapore 1
 #   asn: 09876
-#   tenant: tenant1
+#   tenant: tenant2
 #   custom_field_data:
 #     text_field: Description for SING1
