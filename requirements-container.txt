@@ -1,4 +1,4 @@
 napalm==3.3.0
-ruamel.yaml==0.17.7
+ruamel.yaml==0.17.8
 django-auth-ldap==2.4.0
 django-storages[azure,boto3,dropbox,google,libcloud,sftp]==1.11.1
