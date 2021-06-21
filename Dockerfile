@@ -11,7 +11,7 @@ RUN apk add --no-cache \
       jpeg-dev \
       libevent-dev \
       libffi-dev \
-      libressl-dev \
+      openssl-dev \
       libxslt-dev \
       musl-dev \
       openldap-dev \
@@ -45,7 +45,7 @@ RUN apk add --no-cache \
       libevent \
       libffi \
       libjpeg-turbo \
-      libressl \
+      openssl \
       libxslt \
       postgresql-libs \
       python3 \
