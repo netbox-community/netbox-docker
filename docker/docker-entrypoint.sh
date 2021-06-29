@@ -15,7 +15,7 @@ source /opt/netbox/venv/bin/activate
 DB_WAIT_TIMEOUT=${DB_WAIT_TIMEOUT-3}
 MAX_DB_WAIT_TIME=${MAX_DB_WAIT_TIME-30}
 CUR_DB_WAIT_TIME=0
-while ! ./manage.py migrate 2>&1 && [ "${CUR_DB_WAIT_TIME}" -lt "${MAX_DB_WAIT_TIME}" ]; do
+while ! ./manage.py showmigrations >/dev/null 2>&1 && [ "${CUR_DB_WAIT_TIME}" -lt "${MAX_DB_WAIT_TIME}" ]; do
   echo "⏳ Waiting on DB... (${CUR_DB_WAIT_TIME}s / ${MAX_DB_WAIT_TIME}s)"
   sleep "${DB_WAIT_TIMEOUT}"
   CUR_DB_WAIT_TIME=$((CUR_DB_WAIT_TIME + DB_WAIT_TIMEOUT))
@@ -23,6 +23,19 @@ done
 if [ "${CUR_DB_WAIT_TIME}" -ge "${MAX_DB_WAIT_TIME}" ]; then
   echo "❌ Waited ${MAX_DB_WAIT_TIME}s or more for the DB to become ready."
   exit 1
+fi
+# Check if update is needed
+if ! ./manage.py migrate --check >/dev/null 2>&1; then
+  echo "⚙️ Applying database migrations"
+  ./manage.py migrate --no-input
+  echo "⚙️ Running trace_paths"
+  ./manage.py trace_paths --no-input
+  echo "⚙️ Removing stale content types"
+  ./manage.py remove_stale_contenttypes --no-input
+  echo "⚙️ Removing expired user sessions"
+  ./manage.py clearsessions
+  echo "⚙️ Clearing cache data"
+  ./manage.py invalidate all
 fi
 
 # Create Superuser if required

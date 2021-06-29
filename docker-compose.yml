@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: netboxcommunity/netbox:${VERSION-latest}
+    image: netboxcommunity/netbox:${VERSION-v2.11}
     depends_on:
     - postgres
     - redis
@@ -28,7 +28,7 @@ services:
 
   # postgres
   postgres:
-    image: postgres:12-alpine
+    image: postgres:13-alpine
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
