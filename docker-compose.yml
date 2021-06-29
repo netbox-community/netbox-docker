@@ -25,7 +25,6 @@ services:
     - /opt/netbox/netbox/manage.py
     command:
     - rqworker
-    ports: []
 
   # postgres
   postgres:
