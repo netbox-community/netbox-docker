@@ -48,6 +48,8 @@ DATABASE = {
                                                     # Database connection SSLMODE
     'CONN_MAX_AGE': int(environ.get('DB_CONN_MAX_AGE', '300')),
                                                     # Max database connection age
+    'DISABLE_SERVER_SIDE_CURSORS': environ.get('DB_DISABLE_SERVER_SIDE_CURSORS', 'False').lower() == 'true',
+                                                    # Disable the use of server-side cursors transaction pooling
 }
 
 # Redis database settings. Redis is used for caching and for queuing background tasks such as webhook events. A separate
