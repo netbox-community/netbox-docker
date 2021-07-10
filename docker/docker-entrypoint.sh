@@ -34,8 +34,6 @@ if ! ./manage.py migrate --check >/dev/null 2>&1; then
   ./manage.py remove_stale_contenttypes --no-input
   echo "⚙️ Removing expired user sessions"
   ./manage.py clearsessions
-  echo "⚙️ Clearing cache data"
-  ./manage.py invalidate all
 fi
 
 # Create Superuser if required
