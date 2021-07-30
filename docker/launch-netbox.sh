@@ -51,4 +51,6 @@ exec unitd \
   --pid /opt/unit/unit.pid \
   --log /dev/stdout \
   --state /opt/unit/state/ \
-  --tmp /opt/unit/tmp/
+  --tmp /opt/unit/tmp/ \
+  --user 101 \
+  --group 0
