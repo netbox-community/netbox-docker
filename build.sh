@@ -49,7 +49,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  DOCKERFILE  The name of Dockerfile to use."
   echo "              Default: Dockerfile"
   echo "  DOCKER_FROM The base image to use."
-  echo "              Default: 'alpine:3.13'"
+  echo "              Default: 'alpine:3.14'"
   echo "  DOCKER_TARGET A specific target to build."
   echo "              It's currently not possible to pass multiple targets."
   echo "              Default: main ldap"
@@ -125,7 +125,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
 
   (
     $DRY cd "${NETBOX_PATH}"
-
+    # shellcheck disable=SC2030
     if [ -n "${HTTP_PROXY}" ]; then
       git config http.proxy "${HTTP_PROXY}"
     fi
@@ -157,7 +157,7 @@ fi
 # Determining the value for DOCKER_FROM
 ###
 if [ -z "$DOCKER_FROM" ]; then
-  DOCKER_FROM="alpine:3.13"
+  DOCKER_FROM="alpine:3.14"
 fi
 
 ###
@@ -345,6 +345,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     if [ -n "${DOCKER_FROM}" ]; then
       DOCKER_BUILD_ARGS+=(--build-arg "FROM=${DOCKER_FROM}")
     fi
+    # shellcheck disable=SC2031
     if [ -n "${HTTP_PROXY}" ]; then
       DOCKER_BUILD_ARGS+=(--build-arg "http_proxy=${HTTP_PROXY}")
       DOCKER_BUILD_ARGS+=(--build-arg "https_proxy=${HTTPS_PROXY}")
