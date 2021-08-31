@@ -313,7 +313,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
 
     # --label
     DOCKER_BUILD_ARGS+=(
-      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
+      --label "netbox.original-tag=${TARGET_DOCKER_TAG}"
 
       --label "org.label-schema.build-date=${BUILD_DATE}"
       --label "org.opencontainers.image.created=${BUILD_DATE}"
@@ -329,14 +329,14 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     fi
     if [ -d "${NETBOX_PATH}/.git" ]; then
       DOCKER_BUILD_ARGS+=(
-        --label "NETBOX_GIT_BRANCH=${NETBOX_GIT_BRANCH}"
-        --label "NETBOX_GIT_REF=${NETBOX_GIT_REF}"
-        --label "NETBOX_GIT_URL=${NETBOX_GIT_URL}"
+        --label "netbox.git-branch=${NETBOX_GIT_BRANCH}"
+        --label "netbox.git-ref=${NETBOX_GIT_REF}"
+        --label "netbox.git-url=${NETBOX_GIT_URL}"
       )
     fi
     if [ -n "${BUILD_REASON}" ]; then
       BUILD_REASON=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$BUILD_REASON")
-      DOCKER_BUILD_ARGS+=(--label "BUILD_REASON=${BUILD_REASON}")
+      DOCKER_BUILD_ARGS+=(--label "netbox.build-reason=${BUILD_REASON}")
     fi
 
     # --build-arg

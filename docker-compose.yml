@@ -6,7 +6,6 @@ services:
     - postgres
     - redis
     - redis-cache
-    - netbox-worker
     env_file: env/netbox.env
     user: '101'
     volumes:
@@ -20,12 +19,18 @@ services:
     <<: *netbox
     depends_on:
     - redis
-    entrypoint:
+    - postgres
+    command:
     - /opt/netbox/venv/bin/python
     - /opt/netbox/netbox/manage.py
-    command:
     - rqworker
-    ports: []
+  netbox-housekeeping:
+    <<: *netbox
+    depends_on:
+    - redis
+    - postgres
+    command:
+    - /opt/netbox/housekeeping.sh
 
   # postgres
   postgres:

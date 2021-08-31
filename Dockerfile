@@ -51,7 +51,8 @@ RUN apk add --no-cache \
       python3 \
       py3-pip \
       unit \
-      unit-python3
+      unit-python3 \
+      tini
 
 WORKDIR /opt
 
@@ -63,29 +64,30 @@ COPY ${NETBOX_PATH} /opt/netbox
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/docker-entrypoint.sh /opt/netbox/docker-entrypoint.sh
 COPY docker/launch-netbox.sh /opt/netbox/launch-netbox.sh
+COPY docker/housekeeping.sh /opt/netbox/housekeeping.sh
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
 COPY configuration/ /etc/netbox/config/
 COPY docker/nginx-unit.json /etc/unit/
 
-WORKDIR /opt/netbox/netbox
+WORKDIR /opt/netbox/
 
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
 RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
-      && chmod -R g+w media /opt/unit/ \
-      && cd /opt/netbox/ && /opt/netbox/venv/bin/python -m mkdocs build \
+      && chmod -R g+w /opt/netbox/netbox/media /opt/unit/ \
+      && /opt/netbox/venv/bin/python -m mkdocs build \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
       && SECRET_KEY="dummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
 
-ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/sbin/tini", "--" ]
 
-CMD [ "/opt/netbox/launch-netbox.sh" ]
+CMD [ "/opt/netbox/docker-entrypoint.sh", "/opt/netbox/launch-netbox.sh" ]
 
-LABEL ORIGINAL_TAG="" \
-      NETBOX_GIT_BRANCH="" \
-      NETBOX_GIT_REF="" \
-      NETBOX_GIT_URL="" \
+LABEL netbox.original-tag="" \
+      netbox.git-branch="" \
+      netbox.git-ref="" \
+      netbox.git-url="" \
 # See http://label-schema.org/rc1/#build-time-labels
 # Also https://microbadger.com/labels
       org.label-schema.schema-version="1.0" \

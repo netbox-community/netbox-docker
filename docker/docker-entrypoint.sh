@@ -15,7 +15,7 @@ source /opt/netbox/venv/bin/activate
 DB_WAIT_TIMEOUT=${DB_WAIT_TIMEOUT-3}
 MAX_DB_WAIT_TIME=${MAX_DB_WAIT_TIME-30}
 CUR_DB_WAIT_TIME=0
-while ! ./manage.py showmigrations >/dev/null 2>&1 && [ "${CUR_DB_WAIT_TIME}" -lt "${MAX_DB_WAIT_TIME}" ]; do
+while ! /opt/netbox/netbox/manage.py showmigrations >/dev/null 2>&1 && [ "${CUR_DB_WAIT_TIME}" -lt "${MAX_DB_WAIT_TIME}" ]; do
   echo "⏳ Waiting on DB... (${CUR_DB_WAIT_TIME}s / ${MAX_DB_WAIT_TIME}s)"
   sleep "${DB_WAIT_TIMEOUT}"
   CUR_DB_WAIT_TIME=$((CUR_DB_WAIT_TIME + DB_WAIT_TIMEOUT))
@@ -25,15 +25,15 @@ if [ "${CUR_DB_WAIT_TIME}" -ge "${MAX_DB_WAIT_TIME}" ]; then
   exit 1
 fi
 # Check if update is needed
-if ! ./manage.py migrate --check >/dev/null 2>&1; then
+if ! /opt/netbox/netbox/manage.py migrate --check >/dev/null 2>&1; then
   echo "⚙️ Applying database migrations"
-  ./manage.py migrate --no-input
+  /opt/netbox/netbox/manage.py migrate --no-input
   echo "⚙️ Running trace_paths"
-  ./manage.py trace_paths --no-input
+  /opt/netbox/netbox/manage.py trace_paths --no-input
   echo "⚙️ Removing stale content types"
-  ./manage.py remove_stale_contenttypes --no-input
+  /opt/netbox/netbox/manage.py remove_stale_contenttypes --no-input
   echo "⚙️ Removing expired user sessions"
-  ./manage.py clearsessions
+  /opt/netbox/netbox/manage.py clearsessions
 fi
 
 # Create Superuser if required
@@ -57,7 +57,7 @@ else
     SUPERUSER_API_TOKEN='0123456789abcdef0123456789abcdef01234567'
   fi
 
-  ./manage.py shell --interface python <<END
+  /opt/netbox/netbox/manage.py shell --interface python <<END
 from django.contrib.auth.models import User
 from users.models import Token
 if not User.objects.filter(username='${SUPERUSER_NAME}'):
@@ -72,7 +72,7 @@ fi
 if [ "$SKIP_STARTUP_SCRIPTS" == "true" ]; then
   echo "↩️ Skipping startup scripts"
 else
-  echo "import runpy; runpy.run_path('../startup_scripts')" | ./manage.py shell --interface python
+  echo "import runpy; runpy.run_path('/opt/netbox/startup_scripts/')" | /opt/netbox/netbox/manage.py shell --interface python
 fi
 
 echo "✅ Initialisation is done."
