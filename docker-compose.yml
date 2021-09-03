@@ -20,11 +20,24 @@ services:
     <<: *netbox
     depends_on:
     - redis
+    - postgres
     entrypoint:
+    - "/sbin/tini"
+    - "--"
+    command:
     - /opt/netbox/venv/bin/python
     - /opt/netbox/netbox/manage.py
-    command:
     - rqworker
+  netbox-housekeeping:
+    <<: *netbox
+    depends_on:
+    - redis
+    - postgres
+    entrypoint:
+    - "/sbin/tini"
+    - "--"
+    command:
+    - /opt/netbox/housekeeping.sh
 
   # postgres
   postgres:
