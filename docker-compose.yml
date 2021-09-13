@@ -21,9 +21,6 @@ services:
     depends_on:
     - redis
     - postgres
-    entrypoint:
-    - "/sbin/tini"
-    - "--"
     command:
     - /opt/netbox/venv/bin/python
     - /opt/netbox/netbox/manage.py
@@ -33,9 +30,6 @@ services:
     depends_on:
     - redis
     - postgres
-    entrypoint:
-    - "/sbin/tini"
-    - "--"
     command:
     - /opt/netbox/housekeeping.sh
 

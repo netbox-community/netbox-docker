@@ -100,9 +100,9 @@ RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
       && SECRET_KEY="dummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
 
-ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/sbin/tini", "--" ]
 
-CMD [ "/opt/netbox/launch-netbox.sh" ]
+CMD [ "/opt/netbox/docker-entrypoint.sh", "/opt/netbox/launch-netbox.sh" ]
 
 LABEL ORIGINAL_TAG="" \
       NETBOX_GIT_BRANCH="" \
