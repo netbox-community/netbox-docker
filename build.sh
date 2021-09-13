@@ -119,7 +119,7 @@ NETBOX_PATH="${NETBOX_PATH-.netbox}"
 ###
 if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
   REMOTE_EXISTS=$(git ls-remote --heads --tags "${URL}" "${NETBOX_BRANCH}" | wc -l)
-  if [ "${REMOTE_EXISTS}" != "1" ]; then
+  if [ "${REMOTE_EXISTS}" == "0" ]; then
     echo "❌ Remote branch '${NETBOX_BRANCH}' not found in '${URL}'; Nothing to do"
     if [ -n "${GH_ACTION}" ]; then
       echo "::set-output name=skipped::true"
