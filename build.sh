@@ -118,6 +118,14 @@ NETBOX_PATH="${NETBOX_PATH-.netbox}"
 # Fetching the NetBox source
 ###
 if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
+  REMOTE_EXISTS=$(git ls-remote --heads --tags "${URL}" "${NETBOX_BRANCH}" | wc -l)
+  if [ "${REMOTE_EXISTS}" != "1" ]; then
+    echo "❌ Remote branch '${NETBOX_BRANCH}' not found in '${URL}'; Nothing to do"
+    if [ -n "${GH_ACTION}" ]; then
+      echo "::set-output name=skipped::true"
+    fi
+    exit 0
+  fi
   echo "🌐 Checking out '${NETBOX_BRANCH}' of NetBox from the url '${URL}' into '${NETBOX_PATH}'"
   if [ ! -d "${NETBOX_PATH}" ]; then
     $DRY git clone -q --depth 10 -b "${NETBOX_BRANCH}" "${URL}" "${NETBOX_PATH}"
