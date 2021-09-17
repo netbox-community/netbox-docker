@@ -6,7 +6,7 @@ echo "▶️ $0 $*"
 set -e
 
 if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
-cat <<END_OF_DOCS
+  cat <<END_OF_DOCS
 Usage: ${0} <branch> [--push|--push-only]
   branch       The branch or tag to build. Required.
   --push       Pushes the built Docker image to the registry.
@@ -184,7 +184,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
 
   (
     $DRY cd "${NETBOX_PATH}"
-    # shellcheck disable=SC2030
+    # shellcheck disable=SC2031
     if [ -n "${HTTP_PROXY}" ]; then
       git config http.proxy "${HTTP_PROXY}"
     fi
@@ -444,13 +444,20 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   if [ -n "${BUILDX_PULL_REMOTE_CACHE}" ]; then
     echo "📥  Pulling cache from '${CACHE_TO_DOCKER_TAG}' before build"
     DOCKER_BUILD_ARGS+=("--cache-from=type=registry,ref=${CACHE_FROM_DOCKER_TAG},mode=max")
+  elif [ -n "${GH_ACTION}" ]; then
+    echo "📥  Pulling from GitHub Action cache before build"
   else
+    echo "📥  Pulling buildx cache from '${BUILDX_LOCAL_CACHE-.buildx-cache}' before build"
     DOCKER_BUILD_ARGS+=("--cache-from=type=local,src=${BUILDX_LOCAL_CACHE-.buildx-cache},mode=max")
   fi
   if [ -n "${BUILDX_PUSH_REMOTE_CACHE}" ]; then
-    echo "📤  Pushing cache to '${CACHE_TO_DOCKER_TAG}' after build"
+    echo "📤  Pushing buildx cache to '${CACHE_TO_DOCKER_TAG}' after build"
     DOCKER_BUILD_ARGS+=("--cache-to=type=registry,ref=${CACHE_TO_DOCKER_TAG},mode=max")
+  elif [ -n "${GH_ACTION}" ]; then
+    echo "📤  Pushing to GitHub Action cache after build"
+    DOCKER_BUILD_ARGS+=("--cache-to=type=gha")
   else
+    echo "📤  Pushing buildx cache to '${BUILDX_LOCAL_CACHE-.buildx-cache}' after build"
     DOCKER_BUILD_ARGS+=("--cache-to=type=local,dest=${BUILDX_LOCAL_CACHE-.buildx-cache},mode=max")
   fi
 

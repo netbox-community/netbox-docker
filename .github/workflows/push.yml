@@ -13,12 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Checks syntax of our code
     steps:
-    - uses: actions/checkout@v2
+    -
+      uses: actions/checkout@v2
       with:
         # Full git history is needed to get a proper list of changed files within `super-linter`
         fetch-depth: 0
-    - uses: actions/setup-python@v2
-    - name: Lint Code Base
+    -
+      uses: actions/setup-python@v2
+    -
+      name: Lint Code Base
       uses: github/super-linter@v4
       env:
         DEFAULT_BRANCH: develop
@@ -35,6 +38,7 @@ jobs:
         PYTHON_BLACK_CONFIG_FILE: pyproject.toml
         PYTHON_FLAKE8_CONFIG_FILE: .flake8
         PYTHON_ISORT_CONFIG_FILE: pyproject.toml
+
   build:
     continue-on-error: ${{ matrix.docker_from == 'alpine:edge' }}
     strategy:
@@ -54,33 +58,25 @@ jobs:
     runs-on: ubuntu-latest
     name: Builds new NetBox Docker Images
     steps:
-    - id: git-checkout
+    -
       name: Checkout
       uses: actions/checkout@v2
-    - id: get-version
+    -
       name: Get Version of NetBox Docker
       run: |
         echo "::set-output name=version::$(cat VERSION)"
       shell: bash
-    - id: setup-cache
-      name: NetBox Docker Buildx Cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          .buildx-cache
-        key: ${{ steps.get-version.outputs.version }}-push-${{ matrix.platform }}-${{ hashFiles('Dockerfile','requirements-container.txt') }}
-        restore-keys: |
-          ${{ steps.get-version.outputs.version }}-push-
-          ${{ steps.get-version.outputs.version }}-
-    - id: qemu-setup
+    -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v1
-    - id: buildx-setup
+    -
+      id: buildx-setup
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
       with:
         install: true
-    - id: docker-build
+    -
+      id: docker-build
       name: Build the image from '${{ matrix.docker_from }}' with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
       env:
@@ -88,7 +84,7 @@ jobs:
         GH_ACTION: enable
         BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
         BUILDX_PLATFORMS: ${{ matrix.platform }}
-    - id: docker-test
+    -
       name: Test the image
       run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
       if: steps.docker-build.outputs.skipped != 'true'

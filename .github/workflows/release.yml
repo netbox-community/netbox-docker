@@ -23,92 +23,94 @@ jobs:
     runs-on: ubuntu-latest
     name: Builds new NetBox Docker Images
     steps:
-    - id: git-checkout
+    -
       name: Checkout
       uses: actions/checkout@v2
-    - id: get-version
+    -
       name: Get Version of NetBox Docker
       run: |
         echo "::set-output name=version::$(cat VERSION)"
       shell: bash
-    - id: setup-cache
-      name: NetBox Docker Buildx Cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          .buildx-cache
-        key: ${{ steps.get-version.outputs.version }}-release-${{ matrix.platform }}-${{ hashFiles('Dockerfile','requirements-container.txt') }}
-        restore-keys: |
-          ${{ steps.get-version.outputs.version }}-release-
-          ${{ steps.get-version.outputs.version }}-
-    - id: qemu-setup
+    -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v1
-    - id: buildx-setup
+    -
+      id: buildx-setup
       name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
       with:
         install: true
-    - id: buildx-platforms
+    -
       name: Available platforms
       run: echo ${{ steps.buildx-setup.outputs.platforms }}
-    - id: docker-build
+    -
+      id: docker-build
       name: Build the image with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
       env:
         GH_ACTION: enable
         BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
         BUILDX_PLATFORMS: ${{ matrix.platform }}
-    - id: docker-test
+    -
       name: Test the image
       run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
       if: steps.docker-build.outputs.skipped != 'true'
-    - id: registry-login
-      name: Login to the Docker Registry
-      run: |
-        echo "::add-mask::$DOCKERHUB_USERNAME"
-        echo "::add-mask::$DOCKERHUB_PASSWORD"
-        docker login -u "$DOCKERHUB_USERNAME" --password "${DOCKERHUB_PASSWORD}" "${DOCKER_REGISTRY}"
-      env:
-        DOCKERHUB_USERNAME: ${{ secrets.dockerhub_username }}
-        DOCKERHUB_PASSWORD: ${{ secrets.dockerhub_password }}
+    -
+      name: Login to docker.io
+      uses: docker/login-action@v1
+      with:
+        registry: docker.io
+        username: ${{ secrets.dockerhub_username }}
+        password: ${{ secrets.dockerhub_password }}
       if: steps.docker-build.outputs.skipped != 'true'
-    - id: registry-push
+    -
+      id: registry-push
       name: Push the image
       run: ${{ matrix.build_cmd }} --push-only
       if: steps.docker-build.outputs.skipped != 'true'
-    - id: registry-logout
-      name: Logout of the Docker Registry
-      run: docker logout "${DOCKER_REGISTRY}"
-      if: steps.docker-build.outputs.skipped != 'true'
 
-    # Quay.io
-    - id: quayio-docker-build
+    # quay.io
+    -
       name: Build the image with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
       env:
         DOCKER_REGISTRY: quay.io
         GH_ACTION: enable
-    - id: quayio-registry-login
-      name: Login to the Quay.io Registry
-      run: |
-        echo "::add-mask::$QUAYIO_USERNAME"
-        echo "::add-mask::$QUAYIO_PASSWORD"
-        docker login -u "$QUAYIO_USERNAME" --password "${QUAYIO_PASSWORD}" "${DOCKER_REGISTRY}"
-      env:
-        DOCKER_REGISTRY: quay.io
-        QUAYIO_USERNAME: ${{ secrets.quayio_username }}
-        QUAYIO_PASSWORD: ${{ secrets.quayio_password }}
       if: steps.docker-build.outputs.skipped != 'true'
-    - id: quayio-registry-push
+    -
+      name: Login to Quay.io
+      uses: docker/login-action@v1
+      with:
+        registry: quay.io
+        username: ${{ secrets.quayio_username }}
+        password: ${{ secrets.quayio_password }}
+      if: steps.docker-build.outputs.skipped != 'true'
+    -
       name: Push the image
       run: ${{ matrix.build_cmd }} --push-only
       env:
         DOCKER_REGISTRY: quay.io
       if: steps.docker-build.outputs.skipped != 'true'
-    - id: quayio-registry-logout
-      name: Logout of the Docker Registry
-      run: docker logout "${DOCKER_REGISTRY}"
+
+    # ghcr.io
+    -
+      name: Build the image with '${{ matrix.build_cmd }}'
+      run: ${{ matrix.build_cmd }}
       env:
-        DOCKER_REGISTRY: quay.io
+        DOCKER_REGISTRY: ghcr.io
+        GH_ACTION: enable
+      if: steps.docker-build.outputs.skipped != 'true'
+    -
+      name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      if: steps.docker-build.outputs.skipped != 'true'
+    -
+      name: Push the image
+      run: ${{ matrix.build_cmd }} --push-only
+      env:
+        DOCKER_REGISTRY: ghcr.io
       if: steps.docker-build.outputs.skipped != 'true'
