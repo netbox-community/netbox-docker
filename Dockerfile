@@ -4,7 +4,6 @@ FROM ${FROM} as builder
 RUN apk add --no-cache \
       bash \
       build-base \
-      cargo \
       ca-certificates \
       cmake \
       cyrus-sasl-dev \
@@ -14,14 +13,33 @@ RUN apk add --no-cache \
       libevent-dev \
       libffi-dev \
       libxslt-dev \
+      libxml2-dev \
       make \
       musl-dev \
       openldap-dev \
       openssl-dev \
       postgresql-dev \
+      py3-bcrypt \
+      py3-cffi \
+      py3-coreschema \
+      py3-cryptography \
+      py3-future \
+      py3-idna \
+      py3-jinja2 \
+      py3-markdown \
+      py3-netaddr \
+      py3-pillow \
       py3-pip \
-      python3-dev \
-  && python3 -m venv /opt/netbox/venv \
+      py3-psycopg2 \
+      py3-pycryptodome \
+      py3-pynacl \
+      py3-pyrsistent \
+      py3-ruamel.yaml.clib \
+      py3-watchdog \
+      py3-yaml \
+      python3-dev
+
+RUN python3 -m venv --system-site-packages /opt/netbox/venv \
   && /opt/netbox/venv/bin/python3 -m pip install --upgrade \
       pip \
       setuptools \
@@ -57,7 +75,6 @@ FROM ${FROM} as main
 RUN apk add --no-cache \
       bash \
       ca-certificates \
-      cargo \
       curl \
       graphviz \
       libevent \
@@ -67,9 +84,25 @@ RUN apk add --no-cache \
       libxml2 \
       openssl \
       postgresql-libs \
+      py3-bcrypt \
+      py3-cffi \
+      py3-coreschema \
+      py3-cryptography \
+      py3-future \
+      py3-idna \
+      py3-jinja2 \
+      py3-markdown \
+      py3-netaddr \
+      py3-pillow \
       py3-pip \
+      py3-psycopg2 \
+      py3-pycryptodome \
+      py3-pynacl \
+      py3-pyrsistent \
+      py3-ruamel.yaml.clib \
+      py3-watchdog \
+      py3-yaml \
       python3 \
-      rust \
       tini \
       unit \
       unit-python3
