@@ -15,7 +15,19 @@ source /opt/netbox/venv/bin/activate
 DB_WAIT_TIMEOUT=${DB_WAIT_TIMEOUT-3}
 MAX_DB_WAIT_TIME=${MAX_DB_WAIT_TIME-30}
 CUR_DB_WAIT_TIME=0
-while ! ./manage.py showmigrations >/dev/null 2>&1 && [ "${CUR_DB_WAIT_TIME}" -lt "${MAX_DB_WAIT_TIME}" ]; do
+while [ "${CUR_DB_WAIT_TIME}" -lt "${MAX_DB_WAIT_TIME}" ]; do
+  # Read and truncate connection error tracebacks to last line by default
+  exec {psfd}< <(./manage.py showmigrations 2>&1)
+  read -rd '' DB_ERR <&$psfd || :
+  exec {psfd}<&-
+  wait $! && break
+  if [ -n "$DB_WAIT_DEBUG" ]; then
+    echo "$DB_ERR"
+  else
+    readarray -tn 0 DB_ERR_LINES <<<"$DB_ERR"
+    echo "${DB_ERR_LINES[@]: -1}"
+    echo "[ Use DB_WAIT_DEBUG=1 in netbox.env to print full traceback for errors here ]"
+  fi
   echo "⏳ Waiting on DB... (${CUR_DB_WAIT_TIME}s / ${MAX_DB_WAIT_TIME}s)"
   sleep "${DB_WAIT_TIMEOUT}"
   CUR_DB_WAIT_TIME=$((CUR_DB_WAIT_TIME + DB_WAIT_TIMEOUT))

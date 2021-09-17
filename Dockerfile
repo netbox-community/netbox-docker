@@ -62,11 +62,12 @@ RUN apk add --no-cache \
       libevent \
       libffi \
       libjpeg-turbo \
-      openssl \
       libxslt \
+      openssl \
       postgresql-libs \
-      python3 \
       py3-pip \
+      python3 \
+      tini \
       unit \
       unit-python3
 
@@ -82,6 +83,7 @@ COPY ${NETBOX_PATH} /opt/netbox
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/docker-entrypoint.sh /opt/netbox/docker-entrypoint.sh
+COPY docker/housekeeping.sh /opt/netbox/housekeeping.sh
 COPY docker/launch-netbox.sh /opt/netbox/launch-netbox.sh
 COPY startup_scripts/ /opt/netbox/startup_scripts/
 COPY initializers/ /opt/netbox/initializers/
@@ -98,9 +100,9 @@ RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
       && SECRET_KEY="dummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
 
-ENTRYPOINT [ "/opt/netbox/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/sbin/tini", "--" ]
 
-CMD [ "/opt/netbox/launch-netbox.sh" ]
+CMD [ "/opt/netbox/docker-entrypoint.sh", "/opt/netbox/launch-netbox.sh" ]
 
 LABEL ORIGINAL_TAG="" \
       NETBOX_GIT_BRANCH="" \
