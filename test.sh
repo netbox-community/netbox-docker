@@ -56,13 +56,13 @@ test_setup() {
 
 test_netbox_unit_tests() {
   echo "⏱ Running NetBox Unit Tests"
-  SKIP_STARTUP_SCRIPTS=true $doco run --rm netbox ./manage.py test
+  $doco run --rm netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py test
 }
 
 test_initializers() {
   echo "🏭 Testing Initializers"
   export INITIALIZERS_DIR
-  $doco run --rm netbox ./manage.py check
+  $doco run --rm netbox /opt/netbox/docker-entrypoint.sh ./manage.py check
 }
 
 test_cleanup() {

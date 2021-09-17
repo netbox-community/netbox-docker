@@ -17,8 +17,6 @@ services:
     - ./reports:/etc/netbox/reports:z,ro
     - ./scripts:/etc/netbox/scripts:z,ro
     - netbox-media-files:/opt/netbox/netbox/media:z
-    ports:
-    - 8080
   postgres:
     image: postgres:13-alpine
     env_file: env/postgres.env
