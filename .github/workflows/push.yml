@@ -50,7 +50,6 @@ jobs:
         - ./build.sh develop
         docker_from:
         - '' # use the default of the build script
-        - alpine:edge
         platform:
         - linux/amd64
         - linux/arm64
