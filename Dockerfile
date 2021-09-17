@@ -57,6 +57,7 @@ FROM ${FROM} as main
 RUN apk add --no-cache \
       bash \
       ca-certificates \
+      cargo \
       curl \
       graphviz \
       libevent \
@@ -67,6 +68,7 @@ RUN apk add --no-cache \
       postgresql-libs \
       py3-pip \
       python3 \
+      rust \
       tini \
       unit \
       unit-python3
