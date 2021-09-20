@@ -235,8 +235,10 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   if [ "${DOCKER_TARGET}" != "main" ]; then
     TARGET_DOCKER_TAG="${TARGET_DOCKER_TAG}-${DOCKER_TARGET}"
   fi
+  TARGET_DOCKER_TAG_PROJECT="${TARGET_DOCKER_TAG}-${PROJECT_VERSION}"
+
   if [ -n "${GH_ACTION}" ]; then
-    echo "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG}" >>"$GITHUB_ENV"
+    echo "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG_PROJECT}" >>"$GITHUB_ENV"
     echo "::set-output name=skipped::false"
   fi
 
@@ -257,6 +259,9 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       TARGET_DOCKER_SHORT_TAG="${TARGET_DOCKER_SHORT_TAG}-${DOCKER_TARGET}"
       TARGET_DOCKER_LATEST_TAG="${TARGET_DOCKER_LATEST_TAG}-${DOCKER_TARGET}"
     fi
+
+    TARGET_DOCKER_SHORT_TAG_PROJECT="${TARGET_DOCKER_SHORT_TAG}-${PROJECT_VERSION}"
+    TARGET_DOCKER_LATEST_TAG_PROJECT="${TARGET_DOCKER_LATEST_TAG}-${PROJECT_VERSION}"
   fi
 
   ###
@@ -313,15 +318,18 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       --target "${DOCKER_TARGET}"
       -f "${DOCKERFILE}"
       -t "${TARGET_DOCKER_TAG}"
+      -t "${TARGET_DOCKER_TAG_PROJECT}"
     )
     if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
       DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_SHORT_TAG}")
+      DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_SHORT_TAG_PROJECT}")
       DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_LATEST_TAG}")
+      DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_LATEST_TAG_PROJECT}")
     fi
 
     # --label
     DOCKER_BUILD_ARGS+=(
-      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
+      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG_PROJECT}"
 
       --label "org.label-schema.build-date=${BUILD_DATE}"
       --label "org.opencontainers.image.created=${BUILD_DATE}"
@@ -366,12 +374,12 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     # Building the docker image
     ###
     if [ "${SHOULD_BUILD}" == "true" ]; then
-      echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG}'."
+      echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG_PROJECT}'."
       echo "    Build reason set to: ${BUILD_REASON}"
       $DRY docker build "${DOCKER_BUILD_ARGS[@]}" .
-      echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG}'"
-      echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG}'"
-      $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
+      echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG_PROJECT}'"
+      echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG_PROJECT}'"
+      $DRY docker inspect "${TARGET_DOCKER_TAG_PROJECT}" --format "{{json .Config.Labels}}"
     else
       echo "Build skipped because sources didn't change"
       echo "::set-output name=skipped::true"
@@ -384,10 +392,13 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ]; then
     source ./build-functions/docker-functions.sh
     push_image_to_registry "${TARGET_DOCKER_TAG}"
+    push_image_to_registry "${TARGET_DOCKER_TAG_PROJECT}"
 
     if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
       push_image_to_registry "${TARGET_DOCKER_SHORT_TAG}"
+      push_image_to_registry "${TARGET_DOCKER_SHORT_TAG_PROJECT}"
       push_image_to_registry "${TARGET_DOCKER_LATEST_TAG}"
+      push_image_to_registry "${TARGET_DOCKER_LATEST_TAG_PROJECT}"
     fi
   fi
 done
