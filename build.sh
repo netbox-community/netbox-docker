@@ -95,6 +95,8 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   fi
 fi
 
+source ./build-functions/gh-functions.sh
+
 ###
 # Enabling dry-run mode
 ###
@@ -104,6 +106,8 @@ else
   echo "⚠️ DRY_RUN MODE ON ⚠️"
   DRY="echo"
 fi
+
+gh_echo "::group::⤵️ Fetching the NetBox source code"
 
 ###
 # Variables for fetching the NetBox source
@@ -121,9 +125,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
   REMOTE_EXISTS=$(git ls-remote --heads --tags "${URL}" "${NETBOX_BRANCH}" | wc -l)
   if [ "${REMOTE_EXISTS}" == "0" ]; then
     echo "❌ Remote branch '${NETBOX_BRANCH}' not found in '${URL}'; Nothing to do"
-    if [ -n "${GH_ACTION}" ]; then
-      echo "::set-output name=skipped::true"
-    fi
+    gh_echo "::set-output name=skipped::true"
     exit 0
   fi
   echo "🌐 Checking out '${NETBOX_BRANCH}' of NetBox from the url '${URL}' into '${NETBOX_PATH}'"
@@ -145,6 +147,9 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
   )
   echo "✅ Checked out NetBox"
 fi
+
+gh_echo "::endgroup::"
+gh_echo "::group::🧮 Calculating Values"
 
 ###
 # Determining the value for DOCKERFILE
@@ -221,11 +226,14 @@ DEFAULT_DOCKER_TARGETS=("main" "ldap")
 DOCKER_TARGETS=("${DOCKER_TARGET:-"${DEFAULT_DOCKER_TARGETS[@]}"}")
 echo "🏭 Building the following targets:" "${DOCKER_TARGETS[@]}"
 
+gh_echo "::endgroup::"
+
 ###
 # Build each target
 ###
 export DOCKER_BUILDKIT=${DOCKER_BUILDKIT-1}
 for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
+  gh_echo "::group::🏗 Building the target '${DOCKER_TARGET}'"
   echo "🏗 Building the target '${DOCKER_TARGET}'"
 
   ###
@@ -237,10 +245,8 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   fi
   TARGET_DOCKER_TAG_PROJECT="${TARGET_DOCKER_TAG}-${PROJECT_VERSION}"
 
-  if [ -n "${GH_ACTION}" ]; then
-    echo "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG_PROJECT}" >>"$GITHUB_ENV"
-    echo "::set-output name=skipped::false"
-  fi
+  gh_env "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG_PROJECT}"
+  gh_echo "::set-output name=skipped::false"
 
   ###
   # composing the additional DOCKER_SHORT_TAG,
@@ -401,4 +407,6 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       push_image_to_registry "${TARGET_DOCKER_LATEST_TAG_PROJECT}"
     fi
   fi
+
+  gh_echo "::endgroup::"
 done
