@@ -17,7 +17,6 @@ RUN apk add --no-cache \
       make \
       musl-dev \
       openldap-dev \
-      openssl-dev \
       postgresql-dev \
       py3-pip \
       python3-dev \
