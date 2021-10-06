@@ -94,6 +94,7 @@ WORKDIR /opt/netbox/netbox
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
 RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
+      && chown -R unit:root media /opt/unit/ \
       && chmod -R g+w media /opt/unit/ \
       && cd /opt/netbox/ && /opt/netbox/venv/bin/python -m mkdocs build \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \

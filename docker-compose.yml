@@ -8,7 +8,7 @@ services:
     - redis-cache
     - netbox-worker
     env_file: env/netbox.env
-    user: '101'
+    user: 'unit:root'
     volumes:
     - ./startup_scripts:/opt/netbox/startup_scripts:z,ro
     - ./initializers:/opt/netbox/initializers:z,ro
