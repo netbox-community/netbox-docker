@@ -49,7 +49,7 @@ if ! ./manage.py migrate --check >/dev/null 2>&1; then
 fi
 
 # Create Superuser if required
-if [ "$SKIP_SUPERUSER" == "true" ]; then
+if [ "$SKIP_SUPERUSER" = "true" ]; then
   echo "↩️ Skip creating the superuser"
 else
   if [ -z ${SUPERUSER_NAME+x} ]; then
