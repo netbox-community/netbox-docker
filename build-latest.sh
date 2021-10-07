@@ -6,9 +6,8 @@ echo "▶️ $0 $*"
 ###
 # Check for the jq library needed for parsing JSON
 ###
-if [ ! command -v jq &> /dev/null ]
-then
-    echo "⚠️ PRERELEASE must be either unset, 'true' or 'false', but was '${PRERELEASE}'!"
+if ! command -v jq; then
+    echo "⚠️  jq command missing from \$PATH!"
     exit 1
 fi
 
