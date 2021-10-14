@@ -95,6 +95,8 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   fi
 fi
 
+source ./build-functions/gh-functions.sh
+
 ###
 # Enabling dry-run mode
 ###
@@ -104,6 +106,8 @@ else
   echo "⚠️ DRY_RUN MODE ON ⚠️"
   DRY="echo"
 fi
+
+gh_echo "::group::⤵️ Fetching the NetBox source code"
 
 ###
 # Variables for fetching the NetBox source
@@ -121,9 +125,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
   REMOTE_EXISTS=$(git ls-remote --heads --tags "${URL}" "${NETBOX_BRANCH}" | wc -l)
   if [ "${REMOTE_EXISTS}" == "0" ]; then
     echo "❌ Remote branch '${NETBOX_BRANCH}' not found in '${URL}'; Nothing to do"
-    if [ -n "${GH_ACTION}" ]; then
-      echo "::set-output name=skipped::true"
-    fi
+    gh_echo "::set-output name=skipped::true"
     exit 0
   fi
   echo "🌐 Checking out '${NETBOX_BRANCH}' of NetBox from the url '${URL}' into '${NETBOX_PATH}'"
@@ -145,6 +147,9 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
   )
   echo "✅ Checked out NetBox"
 fi
+
+gh_echo "::endgroup::"
+gh_echo "::group::🧮 Calculating Values"
 
 ###
 # Determining the value for DOCKERFILE
@@ -221,11 +226,14 @@ DEFAULT_DOCKER_TARGETS=("main" "ldap")
 DOCKER_TARGETS=("${DOCKER_TARGET:-"${DEFAULT_DOCKER_TARGETS[@]}"}")
 echo "🏭 Building the following targets:" "${DOCKER_TARGETS[@]}"
 
+gh_echo "::endgroup::"
+
 ###
 # Build each target
 ###
 export DOCKER_BUILDKIT=${DOCKER_BUILDKIT-1}
 for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
+  gh_echo "::group::🏗 Building the target '${DOCKER_TARGET}'"
   echo "🏗 Building the target '${DOCKER_TARGET}'"
 
   ###
@@ -235,10 +243,10 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   if [ "${DOCKER_TARGET}" != "main" ]; then
     TARGET_DOCKER_TAG="${TARGET_DOCKER_TAG}-${DOCKER_TARGET}"
   fi
-  if [ -n "${GH_ACTION}" ]; then
-    echo "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG}" >>"$GITHUB_ENV"
-    echo "::set-output name=skipped::false"
-  fi
+  TARGET_DOCKER_TAG_PROJECT="${TARGET_DOCKER_TAG}-${PROJECT_VERSION}"
+
+  gh_env "FINAL_DOCKER_TAG=${TARGET_DOCKER_TAG_PROJECT}"
+  gh_echo "::set-output name=skipped::false"
 
   ###
   # composing the additional DOCKER_SHORT_TAG,
@@ -257,6 +265,9 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       TARGET_DOCKER_SHORT_TAG="${TARGET_DOCKER_SHORT_TAG}-${DOCKER_TARGET}"
       TARGET_DOCKER_LATEST_TAG="${TARGET_DOCKER_LATEST_TAG}-${DOCKER_TARGET}"
     fi
+
+    TARGET_DOCKER_SHORT_TAG_PROJECT="${TARGET_DOCKER_SHORT_TAG}-${PROJECT_VERSION}"
+    TARGET_DOCKER_LATEST_TAG_PROJECT="${TARGET_DOCKER_LATEST_TAG}-${PROJECT_VERSION}"
   fi
 
   ###
@@ -313,15 +324,18 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       --target "${DOCKER_TARGET}"
       -f "${DOCKERFILE}"
       -t "${TARGET_DOCKER_TAG}"
+      -t "${TARGET_DOCKER_TAG_PROJECT}"
     )
     if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
       DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_SHORT_TAG}")
+      DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_SHORT_TAG_PROJECT}")
       DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_LATEST_TAG}")
+      DOCKER_BUILD_ARGS+=(-t "${TARGET_DOCKER_LATEST_TAG_PROJECT}")
     fi
 
     # --label
     DOCKER_BUILD_ARGS+=(
-      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG}"
+      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG_PROJECT}"
 
       --label "org.label-schema.build-date=${BUILD_DATE}"
       --label "org.opencontainers.image.created=${BUILD_DATE}"
@@ -366,12 +380,12 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     # Building the docker image
     ###
     if [ "${SHOULD_BUILD}" == "true" ]; then
-      echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG}'."
+      echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG_PROJECT}'."
       echo "    Build reason set to: ${BUILD_REASON}"
       $DRY docker build "${DOCKER_BUILD_ARGS[@]}" .
-      echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG}'"
-      echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG}'"
-      $DRY docker inspect "${TARGET_DOCKER_TAG}" --format "{{json .Config.Labels}}"
+      echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG_PROJECT}'"
+      echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG_PROJECT}'"
+      $DRY docker inspect "${TARGET_DOCKER_TAG_PROJECT}" --format "{{json .Config.Labels}}"
     else
       echo "Build skipped because sources didn't change"
       echo "::set-output name=skipped::true"
@@ -384,10 +398,15 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
   if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ]; then
     source ./build-functions/docker-functions.sh
     push_image_to_registry "${TARGET_DOCKER_TAG}"
+    push_image_to_registry "${TARGET_DOCKER_TAG_PROJECT}"
 
     if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
       push_image_to_registry "${TARGET_DOCKER_SHORT_TAG}"
+      push_image_to_registry "${TARGET_DOCKER_SHORT_TAG_PROJECT}"
       push_image_to_registry "${TARGET_DOCKER_LATEST_TAG}"
+      push_image_to_registry "${TARGET_DOCKER_LATEST_TAG_PROJECT}"
     fi
   fi
+
+  gh_echo "::endgroup::"
 done

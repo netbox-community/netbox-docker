@@ -52,5 +52,5 @@ exec unitd \
   --log /dev/stdout \
   --state /opt/unit/state/ \
   --tmp /opt/unit/tmp/ \
-  --user 101 \
-  --group 0
+  --user unit \
+  --group root
