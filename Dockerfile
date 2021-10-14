@@ -63,6 +63,7 @@ RUN apk add --no-cache \
       libjpeg-turbo \
       libxslt \
       openssl \
+      postgresql-client \
       postgresql-libs \
       py3-pip \
       python3 \
