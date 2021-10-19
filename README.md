@@ -7,23 +7,24 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/netboxcommunity/netbox)
 [![GitHub license](https://img.shields.io/github/license/netbox-community/netbox-docker)][netbox-docker-license]
 
-[The Github repository](netbox-docker-github) houses the components needed to build NetBox as a Docker container.
-Images are built using this code and are released to [Docker Hub][netbox-dockerhub] and [Quay.io][netbox-quayio] once a day.
+[The Github repository](netbox-docker-github) houses the components needed to build NetBox as a container.
+Images are built regularly using the code in that repository and are pushed to [Docker Hub][netbox-dockerhub], [Quay.io][netbox-quayio] and [GitHub Container Registry][netbox-ghcr].
 
 Do you have any questions?
 Before opening an issue on Github,
-please join the [our Slack][netbox-docker-slack] and ask for help in the [`#netbox-docker`][netbox-docker-slack-channel] channel.
+please join [our Slack][netbox-docker-slack] and ask for help in the [`#netbox-docker`][netbox-docker-slack-channel] channel.
 
 [github-stargazers]: https://github.com/netbox-community/netbox-docker/stargazers
 [github-release]: https://github.com/netbox-community/netbox-docker/releases
 [netbox-docker-microbadger]: https://microbadger.com/images/netboxcommunity/netbox
 [netbox-dockerhub]: https://hub.docker.com/r/netboxcommunity/netbox/
+[netbox-quayio]: https://quay.io/repository/netboxcommunity/netbox
+[netbox-ghcr]: https://ghcr.io/netbox-community/netbox/
 [netbox-docker-github]: https://github.com/netbox-community/netbox-docker/
 [netbox-docker-slack]: https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
 [netbox-docker-slack-channel]: https://netdev-community.slack.com/archives/C01P0GEVBU7
 [netbox-slack-channel]: https://netdev-community.slack.com/archives/C01P0FRSXRV
 [netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/release/LICENSE
-[netbox-quayio]: https://quay.io/repository/netboxcommunity/netbox
 
 ## Quickstart
 
