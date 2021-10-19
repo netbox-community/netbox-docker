@@ -18,7 +18,7 @@ services:
     - ./scripts:/etc/netbox/scripts:z,ro
     - netbox-media-files:/opt/netbox/netbox/media:z
   postgres:
-    image: postgres:13-alpine
+    image: postgres:14-alpine
     env_file: env/postgres.env
   redis:
     image: redis:6-alpine
