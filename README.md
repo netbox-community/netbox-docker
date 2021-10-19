@@ -106,8 +106,11 @@ Then there is currently one extra tags for each of the above tags:
 
 ## Documentation
 
-Please refer [to our wiki on Github][netbox-docker-wiki] for further information on how to use this NetBox Docker image properly.
-It covers advanced topics such as using files for secrets, deployment to Kubernetes, monitoring and configuring NAPALM or LDAP.
+Please refer [to our wiki on Github][netbox-docker-wiki] for further information on how to use the NetBox Docker image properly.
+The wiki covers advanced topics such as using files for secrets, configuring TLS, deployment to Kubernetes, monitoring and configuring NAPALM or LDAP.
+
+Our wiki is a community effort.
+Feel free to correct errors, update outdated information or provide additional guides and insights.
 
 [netbox-docker-wiki]: https://github.com/netbox-community/netbox-docker/wiki/
 
@@ -131,18 +134,15 @@ This project relies only on *Docker* and *docker-compose* meeting these requirem
 
 To check the version installed on your system run `docker --version` and `docker-compose --version`.
 
-## Breaking Changes
-
-From time to time it might become necessary to re-engineer the structure of this setup.
-Things like the `docker-compose.yml` file or your Kubernetes or OpenShift configurations have to be adjusted as a consequence.
-
-Since November 2019 each image built from this repo contains a `org.opencontainers.image.version` label.
-(The images contained labels since April 2018, although in November 2019 the labels' names changed.)
-You can check the label of your local image by running `docker inspect netboxcommunity/netbox:v2.7.1 --format "{{json .Config.Labels}}"`.
+## Updating
 
 Please read [the release notes][releases] carefully when updating to a new image version.
+Note that the version of the NetBox Docker container image must stay in sync with the code.
+
+If you update for the first time, be sure [to follow our _How To Update NetBox Docker_ guide in the wiki][netbox-docker-wiki-updating].
 
 [releases]: https://github.com/netbox-community/netbox-docker/releases
+[netbox-docker-wiki-updating]: https://github.com/netbox-community/netbox-docker/wiki/Updating
 
 ## Rebuilding the Image
 
