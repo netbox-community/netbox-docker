@@ -25,29 +25,9 @@ please join the [our Slack][netbox-docker-slack] and ask for help in the [`#netb
 [netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/release/LICENSE
 [netbox-quayio]: https://quay.io/repository/netboxcommunity/netbox
 
-## Docker Tags
-
-* `vX.Y.Z`: These are release builds, automatically built from [the corresponding releases of NetBox][netbox-releases].
-* `latest`: These are release builds, automatically built from [the `master` branch of NetBox][netbox-master].
-* `snapshot`: These are pre-release builds, automatically built from the [`develop` branch of NetBox][netbox-develop].
-* `develop-X.Y`: These are pre-release builds, automatically built from the corresponding [branch of NetBox][netbox-branches].
-
-Then there is currently one extra tags for each of the above tags:
-
-* `-ldap`: Contains additional dependencies and configurations for connecting NetBox to an LDAP directory.
-  [Learn more about that in our wiki][netbox-docker-ldap].
-
-New images are built and published automatically every ~24h.
-
-[netbox-releases]: https://github.com/netbox-community/netbox/releases
-[netbox-master]: https://github.com/netbox-community/netbox/tree/master
-[netbox-develop]: https://github.com/netbox-community/netbox/tree/develop
-[netbox-branches]: https://github.com/netbox-community/netbox/branches
-[netbox-docker-ldap]: https://github.com/netbox-community/netbox-docker/wiki/LDAP
-
 ## Quickstart
 
-To get NetBox Docker up and running run the following commands.
+To get _NetBox Docker_ up and running run the following commands.
 There is a more complete [_Getting Started_ guide on our wiki][wiki-getting-started] which explains every step.
 
 ```bash
@@ -76,6 +56,52 @@ The default credentials are:
 
 [wiki-getting-started]: https://github.com/netbox-community/netbox-docker/wiki/Getting-Started
 [docker-reception]: https://github.com/nxt-engineering/reception
+
+## Container Image Tags
+
+New container images are built and published automatically every ~24h.
+
+> We recommend to use either the `vX.Y.Z-a.b.c` tags or the `vX.Y-a.b.c` tags in production!
+
+* `vX.Y.Z-a.b.c`, `vX.Y-a.b.c`:
+  These are release builds containing _NetBox version_ `vX.Y.Z`.
+  They contain the support files of _NetBox Docker version_ `a.b.c`.
+  You must _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
+  These images are automatically built from [the corresponding releases of NetBox][netbox-releases].
+* `latest-a.b.c`:
+  These are release builds, containing the latest stable version of NetBox.
+  They contain the support files of _NetBox Docker version_ `a.b.c`.
+  You must _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
+  These images are automatically built from [the `master` branch of NetBox][netbox-master].
+* `snapshot-a.b.c`:
+  These are pre-release builds.
+  They contain the support files of _NetBox Docker version_ `a.b.c`.
+  You must _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
+  These images are automatically built from the [`develop` branch of NetBox][netbox-develop].
+
+For each of the above tags, there is an extra tag:
+
+* `vX.Y.Z`, `vX.Y`:
+  This is the same version as `vX.Y.Z-a.b.c` (or `vX.Y-a.b.c`, respectively).
+  It always points to the latest version of _NetBox Docker_.
+* `latest`
+  This is the same version as `latest-a.b.c`.
+  It always points to the latest version of _NetBox Docker_.
+* `snapshot`
+  This is the same version as `snapshot-a.b.c`.
+  It always points to the latest version of _NetBox Docker_.
+
+Then there is currently one extra tags for each of the above tags:
+
+* `-ldap`:
+  These container images contain additional dependencies and configuration files for connecting NetBox to an LDAP directory.
+  [Learn more about that in our wiki][netbox-docker-ldap].
+
+[netbox-releases]: https://github.com/netbox-community/netbox/releases
+[netbox-master]: https://github.com/netbox-community/netbox/tree/master
+[netbox-develop]: https://github.com/netbox-community/netbox/tree/develop
+[netbox-branches]: https://github.com/netbox-community/netbox/branches
+[netbox-docker-ldap]: https://github.com/netbox-community/netbox-docker/wiki/LDAP
 
 ## Documentation
 
@@ -119,7 +145,7 @@ Please read [the release notes][releases] carefully when updating to a new image
 
 ## Rebuilding the Image
 
-`./build.sh` can be used to rebuild the Docker image. See `./build.sh --help` for more information.
+`./build.sh` can be used to rebuild the container image. See `./build.sh --help` for more information.
 
 For more details on custom builds [consult our wiki][netbox-docker-wiki-build].
 
