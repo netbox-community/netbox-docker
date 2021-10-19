@@ -67,20 +67,20 @@ New container images are built and published automatically every ~24h.
 * `vX.Y.Z-a.b.c`, `vX.Y-a.b.c`:
   These are release builds containing _NetBox version_ `vX.Y.Z`.
   They contain the support files of _NetBox Docker version_ `a.b.c`.
-  You must _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
+  You must use _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
   These images are automatically built from [the corresponding releases of NetBox][netbox-releases].
 * `latest-a.b.c`:
   These are release builds, containing the latest stable version of NetBox.
   They contain the support files of _NetBox Docker version_ `a.b.c`.
-  You must _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
+  You must use _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
   These images are automatically built from [the `master` branch of NetBox][netbox-master].
 * `snapshot-a.b.c`:
   These are pre-release builds.
   They contain the support files of _NetBox Docker version_ `a.b.c`.
-  You must _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
+  You must use _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
   These images are automatically built from the [`develop` branch of NetBox][netbox-develop].
 
-For each of the above tags, there is an extra tag:
+For each of the above tag, there is an extra tag:
 
 * `vX.Y.Z`, `vX.Y`:
   This is the same version as `vX.Y.Z-a.b.c` (or `vX.Y-a.b.c`, respectively).
@@ -107,7 +107,7 @@ Then there is currently one extra tags for each of the above tags:
 ## Documentation
 
 Please refer [to our wiki on Github][netbox-docker-wiki] for further information on how to use the NetBox Docker image properly.
-The wiki covers advanced topics such as using files for secrets, configuring TLS, deployment to Kubernetes, monitoring and configuring NAPALM or LDAP.
+The wiki covers advanced topics such as using files for secrets, configuring TLS, deployment to Kubernetes, monitoring and configuring NAPALM and LDAP.
 
 Our wiki is a community effort.
 Feel free to correct errors, update outdated information or provide additional guides and insights.
