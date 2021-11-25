@@ -40,7 +40,7 @@ RUN /opt/netbox/venv/bin/pip install \
 ARG FROM
 FROM ${FROM} as main
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
 RUN . /etc/os-release \
   && apt-get update -qq \
   && apt-get upgrade \
