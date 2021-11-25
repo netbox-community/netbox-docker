@@ -50,6 +50,7 @@ RUN . /etc/os-release \
       ca-certificates \
       curl \
       openssl \
+      postgresql-client \
       python3 \
       python3-distutils \
   && curl -sL https://nginx.org/keys/nginx_signing.key | \
@@ -59,8 +60,8 @@ RUN . /etc/os-release \
   && apt-get update -qq \
   && apt-get install \
       --yes -qq --no-install-recommends \
-      unit \
-      unit-python3.9 \
+      unit=1.26.0-1~bullseye \
+      unit-python3.9=1.26.0-1~bullseye \
       tini \
   && rm -rf /var/lib/apt/lists/*
 
@@ -86,6 +87,7 @@ WORKDIR /opt/netbox
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
 RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
+      && chown -R unit:root /opt/netbox/netbox/media /opt/unit/ \
       && chmod -R g+w /opt/netbox/netbox/media /opt/unit/ \
       && /opt/netbox/venv/bin/python -m mkdocs build \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
