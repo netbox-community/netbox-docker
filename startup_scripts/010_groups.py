@@ -18,6 +18,6 @@ for groupname, group_details in groups.items():
 
         if user:
             group.user_set.add(user)
-            print(" 👤 Assigned user %s to group %s" % (username, AdminGroup.name))
+            print(" 👤 Assigned user %s to group %s" % (username, group.name))
 
     group.save()

@@ -9,7 +9,7 @@ services:
     env_file: env/netbox.env
     environment:
       SKIP_STARTUP_SCRIPTS: ${SKIP_STARTUP_SCRIPTS-false}
-    user: '101'
+    user: 'unit:root'
     volumes:
     - ./startup_scripts:/opt/netbox/startup_scripts:z,ro
     - ./${INITIALIZERS_DIR-initializers}:/opt/netbox/initializers:z,ro
@@ -18,7 +18,7 @@ services:
     - ./scripts:/etc/netbox/scripts:z,ro
     - netbox-media-files:/opt/netbox/netbox/media:z
   postgres:
-    image: postgres:13-alpine
+    image: postgres:14-alpine
     env_file: env/postgres.env
   redis:
     image: redis:6-alpine
