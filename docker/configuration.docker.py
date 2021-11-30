@@ -82,3 +82,10 @@ def __getattr__(name):
         except:
             pass
     raise AttributeError
+
+
+def __dir__():
+    names = []
+    for config in _loaded_configurations:
+        names.extend(config.__dir__())
+    return names
