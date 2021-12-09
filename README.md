@@ -7,7 +7,7 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/netboxcommunity/netbox)
 [![GitHub license](https://img.shields.io/github/license/netbox-community/netbox-docker)][netbox-docker-license]
 
-[The Github repository](netbox-docker-github) houses the components needed to build NetBox as a container.
+[The GitHub repository](netbox-docker-github) houses the components needed to build NetBox as a container.
 Images are built regularly using the code in that repository and are pushed to [Docker Hub][netbox-dockerhub], [Quay.io][netbox-quayio] and [GitHub Container Registry][netbox-ghcr].
 
 Do you have any questions?
@@ -75,7 +75,7 @@ New container images are built and published automatically every ~24h.
   You must use _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
   These images are automatically built from [the `master` branch of NetBox][netbox-master].
 * `snapshot-a.b.c`:
-  These are pre-release builds.
+  These are prerelease builds.
   They contain the support files of _NetBox Docker version_ `a.b.c`.
   You must use _NetBox Docker version_ `a.b.c` to guarantee the compatibility.
   These images are automatically built from the [`develop` branch of NetBox][netbox-develop].
@@ -106,7 +106,7 @@ Then there is currently one extra tags for each of the above tags:
 
 ## Documentation
 
-Please refer [to our wiki on Github][netbox-docker-wiki] for further information on how to use the NetBox Docker image properly.
+Please refer [to our wiki on GitHub][netbox-docker-wiki] for further information on how to use the NetBox Docker image properly.
 The wiki covers advanced topics such as using files for secrets, configuring TLS, deployment to Kubernetes, monitoring and configuring NAPALM and LDAP.
 
 Our wiki is a community effort.
@@ -116,7 +116,7 @@ Feel free to correct errors, update outdated information or provide additional g
 
 ## Getting Help
 
-Feel free to ask questions in our [Github Community][netbox-community]
+Feel free to ask questions in our [GitHub Community][netbox-community]
 or [join our Slack][netbox-docker-slack] and ask [in our channel `#netbox-docker`][netbox-docker-slack-channel],
 which is free to use and where there are almost always people online that can help you in the Slack channel.
 
