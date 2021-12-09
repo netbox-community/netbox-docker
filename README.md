@@ -19,7 +19,7 @@ please join [our Slack][netbox-docker-slack] and ask for help in the [`#netbox-d
 [netbox-docker-microbadger]: https://microbadger.com/images/netboxcommunity/netbox
 [netbox-dockerhub]: https://hub.docker.com/r/netboxcommunity/netbox/
 [netbox-quayio]: https://quay.io/repository/netboxcommunity/netbox
-[netbox-ghcr]: https://ghcr.io/netbox-community/netbox/
+[netbox-ghcr]: https://github.com/netbox-community/netbox-docker/pkgs/container/netbox
 [netbox-docker-github]: https://github.com/netbox-community/netbox-docker/
 [netbox-docker-slack]: https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
 [netbox-docker-slack-channel]: https://netdev-community.slack.com/archives/C01P0GEVBU7
