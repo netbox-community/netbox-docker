@@ -42,6 +42,9 @@ for cf_name, cf_details in customfields.items():
         if cf_details.get("type", False):
             custom_field.type = cf_details["type"]
 
+        if cf_details.get("filter_logic", False):
+            custom_field.filter_logic = cf_details["filter_logic"]
+
         if cf_details.get("weight", -1) >= 0:
             custom_field.weight = cf_details["weight"]
 

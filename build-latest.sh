@@ -4,6 +4,14 @@
 echo "▶️ $0 $*"
 
 ###
+# Check for the jq library needed for parsing JSON
+###
+if ! command -v jq; then
+  echo "⚠️  jq command missing from \$PATH!"
+  exit 1
+fi
+
+###
 # Checking for the presence of GITHUB_OAUTH_CLIENT_ID
 # and GITHUB_OAUTH_CLIENT_SECRET
 ###
