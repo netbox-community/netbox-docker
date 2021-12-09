@@ -19,6 +19,8 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-latest
     name: Builds new NetBox Docker Images
+    env:
+      GH_ACTION: enable
     steps:
     -
       name: Checkout
@@ -29,23 +31,9 @@ jobs:
         echo "::set-output name=version::$(cat VERSION)"
       shell: bash
     -
-      name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
-    -
-      id: buildx-setup
-      name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-      with:
-        install: true
-    -
-      name: Available platforms
-      run: echo ${{ steps.buildx-setup.outputs.platforms }}
-    -
       id: docker-build
       name: Build the image with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
-      env:
-        GH_ACTION: enable
     -
       name: Test the image
       run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
@@ -79,7 +67,6 @@ jobs:
       run: ${{ matrix.build_cmd }} --push
       env:
         DOCKER_REGISTRY: quay.io
-        GH_ACTION: enable
       if: steps.docker-build.outputs.skipped != 'true'
 
     # ghcr.io
@@ -97,5 +84,4 @@ jobs:
       env:
         DOCKER_REGISTRY: ghcr.io
         DOCKER_ORG: netbox-community
-        GH_ACTION: enable
       if: steps.docker-build.outputs.skipped != 'true'
