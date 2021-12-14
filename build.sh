@@ -6,10 +6,9 @@ echo "▶️ $0 $*"
 set -e
 
 if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
-  echo "Usage: ${0} <branch> [--push|--push-only]"
+  echo "Usage: ${0} <branch> [--push]"
   echo "  branch       The branch or tag to build. Required."
   echo "  --push       Pushes the built Docker image to the registry."
-  echo "  --push-only  Only pushes the Docker image to the registry, but does not build it."
   echo ""
   echo "You can use the following ENV variables to customize the build:"
   echo "  SRC_ORG     Which fork of netbox to use (i.e. github.com/\${SRC_ORG}/\${SRC_REPO})."
@@ -30,6 +29,9 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "                When <branch>=master:  latest"
   echo "                When <branch>=develop: snapshot"
   echo "                Else:                  same as <branch>"
+  echo "  DOCKER_BUILD_PLATFORMS platforms the docker buildx will build the image for"
+  echo "              Used for specifying multiple arches."
+  echo "              Default: linux/amd64,linux/arm64"
   echo "  DOCKER_REGISTRY The Docker repository's registry (i.e. '\${DOCKER_REGISTRY}/\${DOCKER_ORG}/\${DOCKER_REPO}'')"
   echo "              Used for tagging the image."
   echo "              Default: docker.io"
@@ -94,8 +96,6 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
     exit 0
   fi
 fi
-
-source ./build-functions/gh-functions.sh
 
 ###
 # Enabling dry-run mode
@@ -200,6 +200,12 @@ if [ -d "${NETBOX_PATH}/.git" ]; then
     git remote get-url origin
   )
 fi
+
+
+###
+# Variables for arch target
+###
+DOCKER_BUILD_PLATFORMS="${DOCKER_BUILD_PLATFORMS-linux/amd64,linux/arm64}"
 
 ###
 # Variables for tagging the docker image
@@ -375,6 +381,9 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     if [ -n "${NO_PROXY}" ]; then
       DOCKER_BUILD_ARGS+=(--build-arg "no_proxy=${NO_PROXY}")
     fi
+    if [ "${2}" == "--push" ]; then
+      DOCKER_BUILD_ARGS+=(--push)
+    fi
 
     ###
     # Building the docker image
@@ -382,29 +391,11 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     if [ "${SHOULD_BUILD}" == "true" ]; then
       echo "🐳 Building the Docker image '${TARGET_DOCKER_TAG_PROJECT}'."
       echo "    Build reason set to: ${BUILD_REASON}"
-      $DRY docker build "${DOCKER_BUILD_ARGS[@]}" .
+      $DRY docker buildx build --platform ${DOCKER_BUILD_PLATFORMS} "${DOCKER_BUILD_ARGS[@]}" .
       echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG_PROJECT}'"
-      echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG_PROJECT}'"
-      $DRY docker inspect "${TARGET_DOCKER_TAG_PROJECT}" --format "{{json .Config.Labels}}"
     else
       echo "Build skipped because sources didn't change"
       echo "::set-output name=skipped::true"
-    fi
-  fi
-
-  ###
-  # Pushing the docker images if either `--push` or `--push-only` are passed
-  ###
-  if [ "${2}" == "--push" ] || [ "${2}" == "--push-only" ]; then
-    source ./build-functions/docker-functions.sh
-    push_image_to_registry "${TARGET_DOCKER_TAG}"
-    push_image_to_registry "${TARGET_DOCKER_TAG_PROJECT}"
-
-    if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
-      push_image_to_registry "${TARGET_DOCKER_SHORT_TAG}"
-      push_image_to_registry "${TARGET_DOCKER_SHORT_TAG_PROJECT}"
-      push_image_to_registry "${TARGET_DOCKER_LATEST_TAG}"
-      push_image_to_registry "${TARGET_DOCKER_LATEST_TAG_PROJECT}"
     fi
   fi
 
