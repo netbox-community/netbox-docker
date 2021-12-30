@@ -1,15 +1,25 @@
 import sys
 
-from startup_script_utils import load_yaml
 from tenancy.models import TenantGroup
+from startup_script_utils import load_yaml
 
-tenant_groups = load_yaml("/opt/netbox/initializers/tenant_groups.yml")
+tenant_groups = load_yaml('/opt/netbox/initializers/tenant_groups.yml')
 
 if tenant_groups is None:
-    sys.exit()
+  sys.exit()
+
+optional_assocs = {
+  'parent': (TenantGroup, 'name'),
+}
 
 for params in tenant_groups:
-    tenant_group, created = TenantGroup.objects.get_or_create(**params)
+  for assoc, details in optional_assocs.items():
+    if assoc in params:
+      model, field = details
+      query = { field: params.pop(assoc) }
+      params[assoc] = model.objects.get(**query)
 
-    if created:
-        print("🔳 Created Tenant Group", tenant_group.name)
+  tenant_group, created = TenantGroup.objects.get_or_create(**params)
+
+  if created:
+    print("🔳 Created Tenant Group", tenant_group.name)
