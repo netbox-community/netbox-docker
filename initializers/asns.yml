@@ -1,0 +1,7 @@
+# - asn: 1
+#   rir: RFC1918
+#   tenant: tenant1
+# - asn: 2
+#   rir: RFC4193 ULA
+# - asn: 3
+#   rir: RFC3849
