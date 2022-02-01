@@ -147,6 +147,9 @@ ENFORCE_GLOBAL_UNIQUE = environ.get('ENFORCE_GLOBAL_UNIQUE', 'False').lower() ==
 # by anonymous users. List models in the form `<app>.<model>`. Add '*' to this list to exempt all models.
 EXEMPT_VIEW_PERMISSIONS = list(filter(None, environ.get('EXEMPT_VIEW_PERMISSIONS', '').split(' ')))
 
+# Enable GraphQL API.
+GRAPHQL_ENABLED = environ.get('GRAPHQL_ENABLED', 'True').lower() == 'true'
+
 # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
 #   https://docs.djangoproject.com/en/stable/topics/logging/
 LOGGING = {}
