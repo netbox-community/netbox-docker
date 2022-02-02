@@ -3,7 +3,6 @@
 .initializers
 docker-compose.override.yml
 *.pem
-.DS_Store
 configuration/*
 !configuration/configuration.py
 !configuration/extra.py
