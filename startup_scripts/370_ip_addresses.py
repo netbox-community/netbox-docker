@@ -52,6 +52,7 @@ for params in ip_addresses:
                     params["assigned_object_id"] = Interface.objects.get(**query).id
             else:
                 query = {field: params.pop(assoc)}
+
                 params[assoc] = model.objects.get(**query)
 
     ip_address, created = IPAddress.objects.get_or_create(**params)
