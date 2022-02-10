@@ -1,0 +1,43 @@
+name: Docker Hub Deploy
+
+on:
+  repository_dispatch:
+    types: [docker_hub]
+    
+  workflow_dispatch:
+  
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: mxpicture
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Extract release name
+        shell: bash
+        run: echo "##[set-output name=release;]$(echo ${GITHUB_REF#refs/*/})"
+        if: github.event_name != 'repository_dispatch'
+        id: extract_release
+      
+      - name: Build and push (on push)
+        id: docker_build_push
+        uses: docker/build-push-action@v2
+        if: github.event_name != 'repository_dispatch'
+        with:
+          push: true
+          releases: mxpicture/netbox:${{ steps.extract_release.outputs.release }}
+          build-args: "BASE_IMAGE_VERSION=${{ steps.extract_release.outputs.release }}"
+          
+      - name: Build and push (on dispatch)
+        id: docker_build_dispatch
+        uses: docker/build-push-action@v2
+        if: github.event_name == 'repository_dispatch'
+        with:
+          push: true
+          releases: mxpicture/netbox:${{ github.event.client_payload.release }}
+          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.release }}"

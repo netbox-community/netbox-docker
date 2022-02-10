@@ -1,0 +1,56 @@
+name: Force deploy all
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  get_releases:
+    runs-on: ubuntu-latest
+    outputs:
+      releases: ${{ steps.get.outputs.result }}
+      empty_releases: ${{ steps.check.outputs.result }}
+    steps:
+      - name: Get releases
+        uses: actions/github-script@v5
+        id: get
+        with:
+          script: |
+            const releases = (await github.request("https://api.github.com/repos/" 
+              + context.repo.owner + "/" + context.repo.repo + "/releases")).data
+            
+            let output = []
+            
+            for(let i=0; i<releases.length; i++) {
+              output.push({ "name": releases[i].tag_name })
+            }
+            return output
+      - name: Check releases empty
+        uses: actions/github-script@v5
+        id: check
+        with:
+          script: |
+            let output = ${{ steps.get.outputs.result }}
+            console.log("Count releases: " + (output.length))
+            
+            if (output.length == 0) {
+              console.log("empty")
+              return 'true'
+            } else {
+              console.log("not empty")
+              return 'false'
+            }
+  dispatch:
+    needs: get_releases
+    if: ${{ fromJSON(needs.get_releases.outputs.empty_releases) == 'false' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        release: ${{ fromJSON(needs.get_releases.outputs.releases) }}
+    steps:
+      - name: Dispatch deploy
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: docker_hub
+          client-payload: '{"release": "${{ matrix.release.name }}"}'

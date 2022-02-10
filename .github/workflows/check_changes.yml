@@ -1,0 +1,98 @@
+name: Check Changes
+
+on:
+  schedule:
+    # 07:00 UTC each day
+    - cron:  '0 7 * * *'
+  
+  release:
+    types: [published]
+
+  workflow_dispatch:
+  
+jobs:
+  get_releases:
+    runs-on: ubuntu-latest
+    outputs:
+      releases: ${{ steps.get.outputs.result }}
+      empty_releases: ${{ steps.check.outputs.result }}
+    steps:
+      - name: Docker target releases
+        id: fetch_target_releases
+        uses: mxpicture/action-docker-hub-fetch-releases@v1
+        with:
+          repository: mxpicture/openwrt-rootfs
+          max_items: "999999"
+
+      - name: Docker source releases
+        id: fetch_source_releases
+        uses: mxpicture/action-docker-hub-fetch-releases@v1
+        with:
+          repository: openwrtorg/rootfs
+          max_items: "999999"
+
+      - name: Get releases, compare docker hub image dates
+        uses: actions/github-script@v5
+        id: get
+        with:
+          script: |
+            const releases = (await github.request("https://api.github.com/repos/" 
+              + context.repo.owner + "/" + context.repo.repo + "/releases")).data
+            const target_releases = ${{ steps.fetch_target_releases.outputs.results }}
+            const source_releases = ${{ steps.fetch_source_releases.outputs.results }}
+            let output = []
+            for (const release of releases) {
+              console.log("Processing release: " + release.tag_name)
+              for (const source_release of source_releases) {
+                if ( source_release.tag_name === release.tag_name ) {
+                  let found = false
+                  for (const target_release of target_releases) {
+                    if ( source_release.tag_name === target_release.tag_name ) {
+                      found = true
+                      console.log("Last updated (source): " + source_release.last_updated)
+                      console.log("Last updated (target): " + target_release.last_updated)
+                      if ( source_release.last_updated > target_release.last_updated ) {
+                        console.log("Trigger event for release: " + release.tag_name)
+                        output.push({ "name": release.tag_name })
+                      }
+                    }
+                  } 
+                  if (found != true) {
+                    console.log("Trigger event for release: " + release.tag_name)
+                    output.push({ "name": release.tag_name })
+                  } 
+                }
+              }
+            }
+            return output
+            
+      - name: Check releases empty
+        uses: actions/github-script@v5
+        id: check
+        with:
+          script: |
+            let output = ${{ steps.get.outputs.result }}
+            console.log("Count releases: " + (output.length))
+            
+            if (output.length == 0) {
+              console.log("empty")
+              return 'true'
+            } else {
+              console.log("not empty")
+              return 'false'
+            }
+  dispatch:
+    needs: get_releases
+    if: ${{ fromJSON(needs.get_releases.outputs.empty_releases) == 'false' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        release: ${{ fromJSON(needs.get_releases.outputs.releases) }}
+    steps:
+      - name: Dispatch deploy
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: docker_hub
+          client-payload: '{"release": "${{ matrix.release.tag_name }}"}'
