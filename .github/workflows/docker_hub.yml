@@ -32,6 +32,7 @@ jobs:
           push: true
           tags: mxpicture/netbox:${{ steps.extract_tag.outputs.tag }}
           build-args: "BASE_IMAGE_VERSION=${{ steps.extract_tag.outputs.tag }}"
+          file: Dockerfile_doppler
           
       - name: Build and push (on dispatch)
         id: docker_build_dispatch
@@ -41,3 +42,4 @@ jobs:
           push: true
           tags: mxpicture/netbox:${{ github.event.client_payload.tag }}
           build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.tag }}"
+          file: Dockerfile_doppler
