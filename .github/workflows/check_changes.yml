@@ -5,74 +5,73 @@ on:
     # 07:00 UTC each day
     - cron:  '0 7 * * *'
   
-  release:
-    types: [published]
+  push:
+    tags: ['*']
 
   workflow_dispatch:
   
 jobs:
-  get_releases:
+  get_tags:
     runs-on: ubuntu-latest
     outputs:
-      releases: ${{ steps.get.outputs.result }}
-      empty_releases: ${{ steps.check.outputs.result }}
+      tags: ${{ steps.get.outputs.result }}
+      empty_tags: ${{ steps.check.outputs.result }}
     steps:
-      - name: Docker target releases
-        id: fetch_target_releases
-        uses: mxpicture/action-docker-hub-fetch-releases@v1
+      - name: Docker target tags
+        id: fetch_target_tags
+        uses: mxpicture/action-docker-hub-fetch-tags@v1
         with:
           repository: mxpicture/openwrt-rootfs
           max_items: "999999"
 
-      - name: Docker source releases
-        id: fetch_source_releases
-        uses: mxpicture/action-docker-hub-fetch-releases@v1
+      - name: Docker source tags
+        id: fetch_source_tags
+        uses: mxpicture/action-docker-hub-fetch-tags@v1
         with:
           repository: openwrtorg/rootfs
           max_items: "999999"
 
-      - name: Get releases, compare docker hub image dates
+      - name: Get tags, compare docker hub image dates
         uses: actions/github-script@v5
         id: get
         with:
           script: |
-            const releases = (await github.request("https://api.github.com/repos/" 
-              + context.repo.owner + "/" + context.repo.repo + "/releases")).data
-            const target_releases = ${{ steps.fetch_target_releases.outputs.results }}
-            const source_releases = ${{ steps.fetch_source_releases.outputs.results }}
+            const tags = (await github.request("https://api.github.com/repos/" 
+              + context.repo.owner + "/" + context.repo.repo + "/tags")).data
+            const target_tags = ${{ steps.fetch_target_tags.outputs.results }}
+            const source_tags = ${{ steps.fetch_source_tags.outputs.results }}
             let output = []
-            for (const release of releases) {
-              console.log("Processing release: " + release.tag_name)
-              for (const source_release of source_releases) {
-                if ( source_release.tag_name === release.tag_name ) {
+            for (const tag of tags) {
+              console.log("Processing tag: " + tag.name)
+              for (const source_tag of source_tags) {
+                if ( source_tag.name === tag.name ) {
                   let found = false
-                  for (const target_release of target_releases) {
-                    if ( source_release.tag_name === target_release.tag_name ) {
+                  for (const target_tag of target_tags) {
+                    if ( source_tag.name === target_tag.name ) {
                       found = true
-                      console.log("Last updated (source): " + source_release.last_updated)
-                      console.log("Last updated (target): " + target_release.last_updated)
-                      if ( source_release.last_updated > target_release.last_updated ) {
-                        console.log("Trigger event for release: " + release.tag_name)
-                        output.push({ "name": release.tag_name })
+                      console.log("Last updated (source): " + source_tag.last_updated)
+                      console.log("Last updated (target): " + target_tag.last_updated)
+                      if ( source_tag.last_updated > target_tag.last_updated ) {
+                        console.log("Trigger event for tag: " + tag.name)
+                        output.push({ "name": tag.name })
                       }
                     }
                   } 
                   if (found != true) {
-                    console.log("Trigger event for release: " + release.tag_name)
-                    output.push({ "name": release.tag_name })
+                    console.log("Trigger event for tag: " + tag.name)
+                    output.push({ "name": tag.name })
                   } 
                 }
               }
             }
             return output
-            
-      - name: Check releases empty
+      - name: Check tags empty
         uses: actions/github-script@v5
         id: check
         with:
           script: |
             let output = ${{ steps.get.outputs.result }}
-            console.log("Count releases: " + (output.length))
+            console.log("Count tags: " + (output.length))
             
             if (output.length == 0) {
               console.log("empty")
@@ -82,12 +81,12 @@ jobs:
               return 'false'
             }
   dispatch:
-    needs: get_releases
-    if: ${{ fromJSON(needs.get_releases.outputs.empty_releases) == 'false' }}
+    needs: get_tags
+    if: ${{ fromJSON(needs.get_tags.outputs.empty_tags) == 'false' }}
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        release: ${{ fromJSON(needs.get_releases.outputs.releases) }}
+        tag: ${{ fromJSON(needs.get_tags.outputs.tags) }}
     steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
@@ -95,4 +94,4 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
           event-type: docker_hub
-          client-payload: '{"release": "${{ matrix.release.tag_name }}"}'
+          client-payload: '{"tag": "${{ matrix.tag.name }}"}'

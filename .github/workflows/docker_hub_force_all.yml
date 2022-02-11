@@ -4,33 +4,33 @@ on:
   workflow_dispatch:
   
 jobs:
-  get_releases:
+  get_tags:
     runs-on: ubuntu-latest
     outputs:
-      releases: ${{ steps.get.outputs.result }}
-      empty_releases: ${{ steps.check.outputs.result }}
+      tags: ${{ steps.get.outputs.result }}
+      empty_tags: ${{ steps.check.outputs.result }}
     steps:
-      - name: Get releases
+      - name: Get tags
         uses: actions/github-script@v5
         id: get
         with:
           script: |
-            const releases = (await github.request("https://api.github.com/repos/" 
-              + context.repo.owner + "/" + context.repo.repo + "/releases")).data
+            const tags = (await github.request("https://api.github.com/repos/" 
+              + context.repo.owner + "/" + context.repo.repo + "/tags")).data
             
             let output = []
             
-            for(let i=0; i<releases.length; i++) {
-              output.push({ "name": releases[i].tag_name })
+            for(let i=0; i<tags.length; i++) {
+              output.push({ "name": tags[i].name })
             }
             return output
-      - name: Check releases empty
+      - name: Check tags empty
         uses: actions/github-script@v5
         id: check
         with:
           script: |
             let output = ${{ steps.get.outputs.result }}
-            console.log("Count releases: " + (output.length))
+            console.log("Count tags: " + (output.length))
             
             if (output.length == 0) {
               console.log("empty")
@@ -40,12 +40,12 @@ jobs:
               return 'false'
             }
   dispatch:
-    needs: get_releases
-    if: ${{ fromJSON(needs.get_releases.outputs.empty_releases) == 'false' }}
+    needs: get_tags
+    if: ${{ fromJSON(needs.get_tags.outputs.empty_tags) == 'false' }}
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        release: ${{ fromJSON(needs.get_releases.outputs.releases) }}
+        tag: ${{ fromJSON(needs.get_tags.outputs.tags) }}
     steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
@@ -53,4 +53,4 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
           event-type: docker_hub
-          client-payload: '{"release": "${{ matrix.release.name }}"}'
+          client-payload: '{"tag": "${{ matrix.tag.name }}"}'

@@ -18,11 +18,11 @@ jobs:
           username: mxpicture
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
-      - name: Extract release name
+      - name: Extract tag name
         shell: bash
-        run: echo "##[set-output name=release;]$(echo ${GITHUB_REF#refs/*/})"
+        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/*/})"
         if: github.event_name != 'repository_dispatch'
-        id: extract_release
+        id: extract_tag
       
       - name: Build and push (on push)
         id: docker_build_push
@@ -30,8 +30,8 @@ jobs:
         if: github.event_name != 'repository_dispatch'
         with:
           push: true
-          releases: mxpicture/netbox:${{ steps.extract_release.outputs.release }}
-          build-args: "BASE_IMAGE_VERSION=${{ steps.extract_release.outputs.release }}"
+          tags: mxpicture/netbox:${{ steps.extract_tag.outputs.tag }}
+          build-args: "BASE_IMAGE_VERSION=${{ steps.extract_tag.outputs.tag }}"
           
       - name: Build and push (on dispatch)
         id: docker_build_dispatch
@@ -39,5 +39,5 @@ jobs:
         if: github.event_name == 'repository_dispatch'
         with:
           push: true
-          releases: mxpicture/netbox:${{ github.event.client_payload.release }}
-          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.release }}"
+          tags: mxpicture/netbox:${{ github.event.client_payload.tag }}
+          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.tag }}"
