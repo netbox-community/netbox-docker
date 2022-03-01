@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Checks syntax of our code
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         # Full git history is needed to get a proper list of changed files within `super-linter`
         fetch-depth: 0
@@ -52,7 +52,7 @@ jobs:
     steps:
     - id: git-checkout
       name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - id: docker-build
       name: Build the image from '${{ matrix.docker_from }}' with '${{ matrix.build_cmd }}'
       run: ${{ matrix.build_cmd }}
