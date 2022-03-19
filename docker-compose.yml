@@ -9,6 +9,7 @@ services:
     - netbox-worker
     env_file: env/netbox.env
     user: 'unit:root'
+    restart: "always"
     volumes:
     - ./startup_scripts:/opt/netbox/startup_scripts:z,ro
     - ./initializers:/opt/netbox/initializers:z,ro
@@ -25,6 +26,7 @@ services:
     - /opt/netbox/venv/bin/python
     - /opt/netbox/netbox/manage.py
     - rqworker
+    restart: "always"
   netbox-housekeeping:
     <<: *netbox
     depends_on:
@@ -32,11 +34,13 @@ services:
     - postgres
     command:
     - /opt/netbox/housekeeping.sh
+    restart: "always"
 
   # postgres
   postgres:
     image: postgres:14-alpine
     env_file: env/postgres.env
+    restart: "always"
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
 
@@ -48,6 +52,7 @@ services:
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis.env
+    restart: "always"
     volumes:
     - netbox-redis-data:/data
   redis-cache:
@@ -57,6 +62,7 @@ services:
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis-cache.env
+    restart: "always"
 
 volumes:
   netbox-media-files:
