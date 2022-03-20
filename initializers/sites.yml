@@ -3,7 +3,6 @@
 #   region: Downtown
 #   status: active
 #   facility: Amsterdam 1
-#   asn: 12345
 #   custom_field_data:
 #     text_field: Description for AMS1
 # - name: AMS 2
@@ -11,7 +10,6 @@
 #   region: Downtown
 #   status: active
 #   facility: Amsterdam 2
-#   asn: 54321
 #   custom_field_data:
 #     text_field: Description for AMS2
 # - name: AMS 3
@@ -19,7 +17,6 @@
 #   region: Suburbs
 #   status: active
 #   facility: Amsterdam 3
-#   asn: 67890
 #   tenant: tenant1
 #   custom_field_data:
 #     text_field: Description for AMS3
@@ -28,7 +25,6 @@
 #   region: Singapore
 #   status: active
 #   facility: Singapore 1
-#   asn: 09876
 #   tenant: tenant2
 #   custom_field_data:
 #     text_field: Description for SING1
