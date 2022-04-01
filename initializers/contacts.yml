@@ -1,0 +1,9 @@
+# - name: Lee Widget
+#   group: Network-Team
+#   title: CEO of Widget Corp
+#   phone: 221-555-1212
+#   email: widgetCEO@widgetcorp.com
+#   address: 1200 Nowhere Blvd, Scranton NJ, 555111
+#   comments: This is a very important contact
+#   custom_field_data:
+#     widget: This is the custom field called widget

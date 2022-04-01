@@ -1,0 +1,5 @@
+# - name: New Contact Role
+#   slug: new-contact-role
+#   description: This is a new contact role description
+#   custom_field_data:
+#     widget: This is the custom field called widget
