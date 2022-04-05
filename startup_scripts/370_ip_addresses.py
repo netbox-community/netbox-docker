@@ -58,6 +58,6 @@ for params in ip_addresses:
     ip_address, created = IPAddress.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(ip_address, custom_field_data)
-
         print("🧬 Created IP Address", ip_address.address)
+
+    set_custom_fields_values(ip_address, custom_field_data)

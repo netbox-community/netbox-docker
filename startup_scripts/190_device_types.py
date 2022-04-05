@@ -32,6 +32,6 @@ for params in device_types:
     device_type, created = DeviceType.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(device_type, custom_field_data)
-
         print("🔡 Created device type", device_type.manufacturer, device_type.model)
+
+    set_custom_fields_values(device_type, custom_field_data)

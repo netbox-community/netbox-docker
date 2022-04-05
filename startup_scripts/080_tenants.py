@@ -23,6 +23,6 @@ for params in tenants:
     tenant, created = Tenant.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(tenant, custom_field_data)
-
         print("👩‍💻 Created Tenant", tenant.name)
+
+    set_custom_fields_values(tenant, custom_field_data)

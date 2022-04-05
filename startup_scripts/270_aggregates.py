@@ -37,6 +37,6 @@ for params in aggregates:
     aggregate, created = Aggregate.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(aggregate, custom_field_data)
-
         print("🗞️ Created Aggregate", aggregate.prefix)
+
+    set_custom_fields_values(aggregate, custom_field_data)

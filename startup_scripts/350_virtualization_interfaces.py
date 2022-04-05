@@ -22,6 +22,6 @@ for params in interfaces:
     interface, created = VMInterface.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(interface, custom_field_data)
-
         print("🧷 Created interface", interface.name, interface.virtual_machine.name)
+
+    set_custom_fields_values(interface, custom_field_data)

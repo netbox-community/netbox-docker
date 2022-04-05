@@ -41,6 +41,6 @@ for params in virtual_machines:
     virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(virtual_machine, custom_field_data)
-
         print("🖥️ Created virtual machine", virtual_machine.name)
+
+    set_custom_fields_values(virtual_machine, custom_field_data)

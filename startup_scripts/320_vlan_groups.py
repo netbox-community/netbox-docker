@@ -35,6 +35,6 @@ for params in vlan_groups:
     vlan_group, created = VLANGroup.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(vlan_group, custom_field_data)
-
         print("🏘️ Created VLAN Group", vlan_group.name)
+
+    set_custom_fields_values(vlan_group, custom_field_data)

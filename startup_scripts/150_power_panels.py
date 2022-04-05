@@ -31,6 +31,6 @@ for params in power_panels:
     power_panel, created = PowerPanel.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(power_panel, custom_field_data)
-
         print("⚡ Created Power Panel", power_panel.site, power_panel.name)
+
+    set_custom_fields_values(power_panel, custom_field_data)

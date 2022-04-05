@@ -14,6 +14,6 @@ for params in providers:
     provider, created = Provider.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(provider, custom_field_data)
-
         print("📡 Created provider", provider.name)
+
+    set_custom_fields_values(provider, custom_field_data)

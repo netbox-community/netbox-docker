@@ -32,6 +32,6 @@ for params in circuits:
     circuit, created = Circuit.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(circuit, custom_field_data)
-
         print("⚡ Created Circuit", circuit.cid)
+
+    set_custom_fields_values(circuit, custom_field_data)

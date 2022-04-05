@@ -47,6 +47,6 @@ for params in devices:
     device, created = Device.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(device, custom_field_data)
-
         print("🖥️  Created device", device.name)
+
+    set_custom_fields_values(device, custom_field_data)

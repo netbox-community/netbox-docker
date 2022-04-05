@@ -31,6 +31,6 @@ for params in power_feeds:
     power_feed, created = PowerFeed.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(power_feed, custom_field_data)
-
         print("⚡ Created Power Feed", power_feed.name)
+
+    set_custom_fields_values(power_feed, custom_field_data)
