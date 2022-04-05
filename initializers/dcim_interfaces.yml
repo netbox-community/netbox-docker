@@ -10,9 +10,13 @@
 
 # - device: server01
 #   enabled: true
-#   type: virtual
+#   type: 1000base-x-sfp
 #   name: to-server02
 # - device: server02
 #   enabled: true
-#   type: virtual
+#   type: 1000base-x-sfp
 #   name: to-server01
+# - device: server02
+#   enabled: true
+#   type: 1000base-t
+#   name: eth0
