@@ -1,7 +1,12 @@
 import sys
 
 from dcim.models import DeviceRole, Platform
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant
 from virtualization.models import Cluster, VirtualMachine
 
@@ -10,8 +15,8 @@ virtual_machines = load_yaml("/opt/netbox/initializers/virtual_machines.yml")
 if virtual_machines is None:
     sys.exit()
 
+match_params = ["cluster", "name"]
 required_assocs = {"cluster": (Cluster, "name")}
-
 optional_assocs = {
     "tenant": (Tenant, "name"),
     "platform": (Platform, "name"),
@@ -38,7 +43,10 @@ for params in virtual_machines:
 
             params[assoc] = model.objects.get(**query)
 
-    virtual_machine, created = VirtualMachine.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params, match_params)
+    virtual_machine, created = VirtualMachine.objects.get_or_create(
+        **matching_params, defaults=defaults
+    )
 
     if created:
         print("🖥️ Created virtual machine", virtual_machine.name)

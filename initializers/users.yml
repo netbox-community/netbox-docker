@@ -4,6 +4,7 @@
 #   password: reader
 # writer:
 #   password: writer
+#   api_token:  # leave empty to not generate any token
 # jdoe:
 #   first_name: John
 #   last_name: Doe

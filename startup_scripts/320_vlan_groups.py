@@ -2,7 +2,12 @@ import sys
 
 from django.contrib.contenttypes.models import ContentType
 from ipam.models import VLANGroup
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 
 vlan_groups = load_yaml("/opt/netbox/initializers/vlan_groups.yml")
 
@@ -32,7 +37,9 @@ for params in vlan_groups:
                 )
                 continue
             params["scope_id"] = ct.model_class().objects.get(**query).id
-    vlan_group, created = VLANGroup.objects.get_or_create(**params)
+
+    matching_params, defaults = split_params(params)
+    vlan_group, created = VLANGroup.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("🏘️ Created VLAN Group", vlan_group.name)

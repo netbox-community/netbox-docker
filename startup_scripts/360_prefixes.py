@@ -3,7 +3,12 @@ import sys
 from dcim.models import Site
 from ipam.models import VLAN, VRF, Prefix, Role
 from netaddr import IPNetwork
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant, TenantGroup
 
 prefixes = load_yaml("/opt/netbox/initializers/prefixes.yml")
@@ -11,6 +16,7 @@ prefixes = load_yaml("/opt/netbox/initializers/prefixes.yml")
 if prefixes is None:
     sys.exit()
 
+match_params = ["prefix", "site", "vrf", "vlan"]
 optional_assocs = {
     "site": (Site, "name"),
     "tenant": (Tenant, "name"),
@@ -31,7 +37,8 @@ for params in prefixes:
             query = {field: params.pop(assoc)}
             params[assoc] = model.objects.get(**query)
 
-    prefix, created = Prefix.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params, match_params)
+    prefix, created = Prefix.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("📌 Created Prefix", prefix.prefix)

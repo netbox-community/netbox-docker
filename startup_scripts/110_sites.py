@@ -1,7 +1,12 @@
 import sys
 
 from dcim.models import Region, Site
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant
 
 sites = load_yaml("/opt/netbox/initializers/sites.yml")
@@ -21,7 +26,8 @@ for params in sites:
 
             params[assoc] = model.objects.get(**query)
 
-    site, created = Site.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params)
+    site, created = Site.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("📍 Created site", site.name)

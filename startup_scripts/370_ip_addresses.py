@@ -5,7 +5,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from ipam.models import VRF, IPAddress
 from netaddr import IPNetwork
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant
 from virtualization.models import VirtualMachine, VMInterface
 
@@ -14,6 +19,7 @@ ip_addresses = load_yaml("/opt/netbox/initializers/ip_addresses.yml")
 if ip_addresses is None:
     sys.exit()
 
+match_params = ["address", "vrf"]
 optional_assocs = {
     "tenant": (Tenant, "name"),
     "vrf": (VRF, "name"),
@@ -55,7 +61,8 @@ for params in ip_addresses:
 
                 params[assoc] = model.objects.get(**query)
 
-    ip_address, created = IPAddress.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params, match_params)
+    ip_address, created = IPAddress.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("🧬 Created IP Address", ip_address.address)
