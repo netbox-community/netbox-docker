@@ -17,7 +17,7 @@ if ip_addresses is None:
 optional_assocs = {
     "tenant": (Tenant, "name"),
     "vrf": (VRF, "name"),
-    "interface": (None, None),
+    "interface": (Interface, "name"),
 }
 
 vm_interface_ct = ContentType.objects.filter(
