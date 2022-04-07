@@ -37,6 +37,6 @@ for params in clusters:
     cluster, created = Cluster.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(cluster, custom_field_data)
-
         print("🗄️ Created cluster", cluster.name)
+
+    set_custom_fields_values(cluster, custom_field_data)

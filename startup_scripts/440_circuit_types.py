@@ -14,6 +14,6 @@ for params in circuit_types:
     circuit_type, created = CircuitType.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(circuit_type, custom_field_data)
-
         print("⚡ Created Circuit Type", circuit_type.name)
+
+    set_custom_fields_values(circuit_type, custom_field_data)

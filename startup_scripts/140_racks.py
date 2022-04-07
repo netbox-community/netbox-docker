@@ -36,6 +36,6 @@ for params in racks:
     rack, created = Rack.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(rack, custom_field_data)
-
         print("🔳 Created rack", rack.site, rack.name)
+
+    set_custom_fields_values(rack, custom_field_data)

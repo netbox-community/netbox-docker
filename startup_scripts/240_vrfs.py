@@ -24,6 +24,6 @@ for params in vrfs:
     vrf, created = VRF.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(vrf, custom_field_data)
-
         print("📦 Created VRF", vrf.name)
+
+    set_custom_fields_values(vrf, custom_field_data)

@@ -34,6 +34,6 @@ for params in prefixes:
     prefix, created = Prefix.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(prefix, custom_field_data)
-
         print("📌 Created Prefix", prefix.prefix)
+
+    set_custom_fields_values(prefix, custom_field_data)

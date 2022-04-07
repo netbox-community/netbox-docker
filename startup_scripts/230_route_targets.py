@@ -24,6 +24,6 @@ for params in route_targets:
     route_target, created = RouteTarget.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(route_target, custom_field_data)
-
         print("🎯 Created Route Target", route_target.name)
+
+    set_custom_fields_values(route_target, custom_field_data)

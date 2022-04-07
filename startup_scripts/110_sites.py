@@ -24,6 +24,6 @@ for params in sites:
     site, created = Site.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(site, custom_field_data)
-
         print("📍 Created site", site.name)
+
+    set_custom_fields_values(site, custom_field_data)

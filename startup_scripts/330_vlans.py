@@ -31,6 +31,6 @@ for params in vlans:
     vlan, created = VLAN.objects.get_or_create(**params)
 
     if created:
-        set_custom_fields_values(vlan, custom_field_data)
-
         print("🏠 Created VLAN", vlan.name)
+
+    set_custom_fields_values(vlan, custom_field_data)
