@@ -16,12 +16,14 @@ services:
     - ./reports:/etc/netbox/reports:z,ro
     - ./scripts:/etc/netbox/scripts:z,ro
     - netbox-media-files:/opt/netbox/netbox/media:z
+    # - ./custom_preentry.sh:/opt/netbox/preentry.sh
   netbox-worker:
     <<: *netbox
     depends_on:
     - redis
     - postgres
     command:
+    - /opt/netbox/preentry.sh
     - /opt/netbox/venv/bin/python
     - /opt/netbox/netbox/manage.py
     - rqworker

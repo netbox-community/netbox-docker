@@ -1,4 +1,7 @@
 #!/bin/bash
+# run preentry script to install any local depencencies / file mods
+/opt/netbox/preentry.sh
+
 SECONDS=${HOUSEKEEPING_INTERVAL:=86400}
 echo "Interval set to ${SECONDS} seconds"
 while true; do
