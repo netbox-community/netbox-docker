@@ -9,7 +9,7 @@ if tenant_groups is None:
     sys.exit()
 
 optional_assocs = {
-    'parent': (TenantGroup, "name"),
+    "parent": (TenantGroup, "name"),
 }
 
 for params in tenant_groups:
