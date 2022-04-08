@@ -20,3 +20,7 @@
 #   enabled: true
 #   type: 1000base-t
 #   name: eth0
+# - device: server02
+#   enabled: true
+#   type: virtual
+#   name: loopback

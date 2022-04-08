@@ -22,7 +22,7 @@ from startup_script_utils import load_yaml
 CONSOLE_PORT_TERMINATION = ContentType.objects.get_for_model(ConsolePort)
 CONSOLE_SERVER_PORT_TERMINATION = ContentType.objects.get_for_model(ConsoleServerPort)
 FRONT_PORT_TERMINATION = ContentType.objects.get_for_model(FrontPort)
-REAR_PORT_TERMINATION = ContentType.objects.get_for_model(Interface)
+REAR_PORT_TERMINATION = ContentType.objects.get_for_model(RearPort)
 FRONT_AND_REAR = [FRONT_PORT_TERMINATION, REAR_PORT_TERMINATION]
 POWER_PORT_TERMINATION = ContentType.objects.get_for_model(PowerPort)
 POWER_OUTLET_TERMINATION = ContentType.objects.get_for_model(PowerOutlet)
@@ -43,7 +43,10 @@ def get_termination_object(params: dict, side: str):
         termination = klass.objects.get(name=name, device__name=device)
         return termination
     elif feed_params:
-        q = {"name": feed_params["power_panel"]["name"], "site__name": feed_params["power_panel"]["site"]}
+        q = {
+            "name": feed_params["power_panel"]["name"],
+            "site__name": feed_params["power_panel"]["site"],
+        }
         power_panel = PowerPanel.objects.get(**q)
         termination = PowerFeed.objects.get(name=feed_params["name"], power_panel=power_panel)
         return termination
@@ -78,25 +81,11 @@ def get_termination_object(params: dict, side: str):
     )
 
 
-def get_termination_class(port_class: str):
+def get_termination_class_by_name(port_class: str):
     if not port_class:
         return Interface
 
-    klass = globals()[port_class]
-    if klass not in [
-        Interface,
-        FrontPort,
-        RearPort,
-        CircuitTermination,
-        ConsolePort,
-        ConsoleServerPort,
-        PowerPort,
-        PowerOutlet,
-        PowerFeed,
-    ]:
-        raise Exception(f"⚠️ Requested {port_class} is not supported as a cable termination!")
-
-    return klass
+    return globals()[port_class]
 
 
 def cable_in_cables(term_a: tuple, term_b: tuple) -> bool:
@@ -182,17 +171,22 @@ def check_interface_types(*args):
                     f"Termination {termination.device} {termination} {termination.type}"
                 )
         except AttributeError:
-            # CircuitTermination dosn't have a type field
+            # CircuitTermination doesn't have a type field
             pass
+
 
 def check_terminations_are_free(*args):
     any_failed = False
     for termination in args:
         if termination.cable_id:
             any_failed = True
-            print(f"⚠️ Termination {termination} is already occupied with cable #{termination.cable_id}")
+            print(
+                f"⚠️ Termination {termination} is already occupied "
+                f"with cable #{termination.cable_id}"
+            )
     if any_failed:
-        raise Exception(f"⚠️ At least one end of the cable is already occupied.")
+        raise Exception("⚠️ At least one end of the cable is already occupied.")
+
 
 cables = load_yaml("/opt/netbox/initializers/cables.yml")
 
@@ -200,8 +194,8 @@ if cables is None:
     sys.exit()
 
 for params in cables:
-    params["termination_a_class"] = get_termination_class(params.get("termination_a_class"))
-    params["termination_b_class"] = get_termination_class(params.get("termination_b_class"))
+    params["termination_a_class"] = get_termination_class_by_name(params.get("termination_a_class"))
+    params["termination_b_class"] = get_termination_class_by_name(params.get("termination_b_class"))
 
     term_a = get_termination_object(params, side="a")
     term_b = get_termination_object(params, side="b")
