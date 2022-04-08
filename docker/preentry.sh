@@ -9,7 +9,7 @@ set -e
 # python3 setup.py develop
 # echo -e "finished installing custom plugin"
 
-# follow on scripts expect this to be the current dir. 
+# follow on scripts expect this to be the current dir.
 # uncomment if you have changed directory
 # cd /opt/netbox/netbox
 exec "$@"
