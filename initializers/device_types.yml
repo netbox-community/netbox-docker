@@ -31,7 +31,8 @@
 #     - name_template: ttyS[1-48]
 #       type: rj-45
 #   power_ports:
-#     - name_template: psu[0,1]
+#     - name: psu0  # both non-template and template field specified; non-template field takes precedence
+#       name_template: psu[0,1]
 #       type: iec-60320-c14
 #       maximum_draw: 35
 #       allocated_draw: 35
