@@ -123,7 +123,7 @@ CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in list(filter(None, environ.
 # Cross-Site-Request-Forgery-Attack settings. If Netbox is sitting behind a reverse proxy, you might need to set the CSRF_TRUSTED_ORIGINS flag.
 # Django 4.0 requires to specify the URL Scheme in this setting. An example environment variable could be specified like:
 # CSRF_TRUSTED_ORIGINS=https://demo.netbox.dev http://demo.netbox.dev
-CSRF_TRUSTED_ORIGINS = list(filter(None, environ.get('CSRF_TRUSTED_ORIGINS', 'https://localhost').split(' ')))
+CSRF_TRUSTED_ORIGINS = list(filter(None, environ.get('CSRF_TRUSTED_ORIGINS', '').split(' ')))
 
 # Set to True to enable server debugging. WARNING: Debugging introduces a substantial performance penalty and may reveal
 # sensitive information about your installation. Only enable debugging while performing testing. Never enable debugging
