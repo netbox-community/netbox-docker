@@ -1,7 +1,12 @@
 import sys
 
 from dcim.models import Device, DeviceRole, DeviceType, Location, Platform, Rack, Site
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant
 from virtualization.models import Cluster
 
@@ -10,12 +15,12 @@ devices = load_yaml("/opt/netbox/initializers/devices.yml")
 if devices is None:
     sys.exit()
 
+match_params = ["device_type", "name", "site"]
 required_assocs = {
     "device_role": (DeviceRole, "name"),
     "device_type": (DeviceType, "model"),
     "site": (Site, "name"),
 }
-
 optional_assocs = {
     "tenant": (Tenant, "name"),
     "platform": (Platform, "name"),
@@ -27,7 +32,7 @@ optional_assocs = {
 for params in devices:
     custom_field_data = pop_custom_fields(params)
 
-    # primary ips are handled later in `270_primary_ips.py`
+    # primary ips are handled later in `380_primary_ips.py`
     params.pop("primary_ip4", None)
     params.pop("primary_ip6", None)
 
@@ -44,7 +49,8 @@ for params in devices:
 
             params[assoc] = model.objects.get(**query)
 
-    device, created = Device.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params, match_params)
+    device, created = Device.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("🖥️  Created device", device.name)

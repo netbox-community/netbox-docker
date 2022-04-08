@@ -1,6 +1,11 @@
 import sys
 
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant, TenantGroup
 
 tenants = load_yaml("/opt/netbox/initializers/tenants.yml")
@@ -20,7 +25,8 @@ for params in tenants:
 
             params[assoc] = model.objects.get(**query)
 
-    tenant, created = Tenant.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params)
+    tenant, created = Tenant.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("👩‍💻 Created Tenant", tenant.name)

@@ -14,9 +14,11 @@ for permission_name, permission_details in object_permissions.items():
 
     object_permission, created = ObjectPermission.objects.get_or_create(
         name=permission_name,
-        description=permission_details["description"],
-        enabled=permission_details["enabled"],
-        actions=permission_details["actions"],
+        defaults={
+            "description": permission_details["description"],
+            "enabled": permission_details["enabled"],
+            "actions": permission_details["actions"],
+        },
     )
 
     if permission_details.get("object_types", 0):

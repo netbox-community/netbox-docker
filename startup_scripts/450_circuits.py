@@ -1,7 +1,12 @@
 import sys
 
 from circuits.models import Circuit, CircuitType, Provider
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant
 
 circuits = load_yaml("/opt/netbox/initializers/circuits.yml")
@@ -9,8 +14,8 @@ circuits = load_yaml("/opt/netbox/initializers/circuits.yml")
 if circuits is None:
     sys.exit()
 
+match_params = ["cid", "provider", "type"]
 required_assocs = {"provider": (Provider, "name"), "type": (CircuitType, "name")}
-
 optional_assocs = {"tenant": (Tenant, "name")}
 
 for params in circuits:
@@ -29,7 +34,8 @@ for params in circuits:
 
             params[assoc] = model.objects.get(**query)
 
-    circuit, created = Circuit.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params, match_params)
+    circuit, created = Circuit.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("⚡ Created Circuit", circuit.cid)

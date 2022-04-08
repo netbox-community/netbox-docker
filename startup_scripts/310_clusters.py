@@ -1,7 +1,12 @@
 import sys
 
 from dcim.models import Site
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant
 from virtualization.models import Cluster, ClusterGroup, ClusterType
 
@@ -10,8 +15,8 @@ clusters = load_yaml("/opt/netbox/initializers/clusters.yml")
 if clusters is None:
     sys.exit()
 
+match_params = ["name", "type"]
 required_assocs = {"type": (ClusterType, "name")}
-
 optional_assocs = {
     "site": (Site, "name"),
     "group": (ClusterGroup, "name"),
@@ -34,7 +39,8 @@ for params in clusters:
 
             params[assoc] = model.objects.get(**query)
 
-    cluster, created = Cluster.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params, match_params)
+    cluster, created = Cluster.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("🗄️ Created cluster", cluster.name)

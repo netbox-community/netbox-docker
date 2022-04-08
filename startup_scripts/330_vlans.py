@@ -2,7 +2,12 @@ import sys
 
 from dcim.models import Site
 from ipam.models import VLAN, Role, VLANGroup
-from startup_script_utils import load_yaml, pop_custom_fields, set_custom_fields_values
+from startup_script_utils import (
+    load_yaml,
+    pop_custom_fields,
+    set_custom_fields_values,
+    split_params,
+)
 from tenancy.models import Tenant, TenantGroup
 
 vlans = load_yaml("/opt/netbox/initializers/vlans.yml")
@@ -10,6 +15,7 @@ vlans = load_yaml("/opt/netbox/initializers/vlans.yml")
 if vlans is None:
     sys.exit()
 
+match_params = ["name", "vid"]
 optional_assocs = {
     "site": (Site, "name"),
     "tenant": (Tenant, "name"),
@@ -28,7 +34,8 @@ for params in vlans:
 
             params[assoc] = model.objects.get(**query)
 
-    vlan, created = VLAN.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params, match_params)
+    vlan, created = VLAN.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("🏠 Created VLAN", vlan.name)
