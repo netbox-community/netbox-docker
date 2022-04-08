@@ -4,7 +4,7 @@
 #   password: reader
 # writer:
 #   password: writer
-#   api_token:  # leave empty to not generate any token
+#   api_token: "" # a token is generated automatically unless the value is explicity set to empty
 # jdoe:
 #   first_name: John
 #   last_name: Doe
