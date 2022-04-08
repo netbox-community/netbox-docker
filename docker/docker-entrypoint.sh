@@ -1,6 +1,9 @@
 #!/bin/bash
 # Runs on every start of the NetBox Docker container
 
+# Run preentry script to install any local depencencies / file mods
+/opt/netbox/preentry.sh
+
 # Stop when an error occures
 set -e
 
