@@ -9,14 +9,14 @@ if tenant_groups is None:
     sys.exit()
 
 optional_assocs = {
-    'parent': (TenantGroup, 'name'),
+    'parent': (TenantGroup, "name"),
 }
 
 for params in tenant_groups:
     for assoc, details in optional_assocs.items():
         if assoc in params:
             model, field = details
-            query = { field: params.pop(assoc) }
+            query = {field: params.pop(assoc)}
             params[assoc] = model.objects.get(**query)
 
     tenant_group, created = TenantGroup.objects.get_or_create(**params)
