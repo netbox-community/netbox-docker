@@ -21,3 +21,36 @@
 #   slug: other
 #   custom_field_data:
 #     text_field: Description
+#   interfaces:
+#     - name: eth0
+#       type: 1000base-t
+#       mgmt_only: True
+#     - name: eth1
+#       type: 1000base-t
+#   console_server_ports:
+#     - name_template: ttyS[1-48]
+#       type: rj-45
+#   power_ports:
+#     - name: psu0  # both non-template and template field specified; non-template field takes precedence
+#       name_template: psu[0,1]
+#       type: iec-60320-c14
+#       maximum_draw: 35
+#       allocated_draw: 35
+#   front_ports:
+#     - name_template: front[1,2]
+#       type: 8p8c
+#       rear_port_template: rear[0,1]
+#       rear_port_position_template: "[1,2]"
+#   rear_ports:
+#     - name_template: rear[0,1]
+#       type: 8p8c
+#       positions_template: "[3,2]"
+#   device_bays:
+#     - name_template: bay[0-9]
+#       label_template: test[0-5,9,6-8]
+#       description: Test description
+#   power_outlets:
+#     - name_template: outlet[0,1]
+#       type: iec-60320-c5
+#       power_port: psu0
+#       feed_leg: B
