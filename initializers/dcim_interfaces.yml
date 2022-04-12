@@ -9,6 +9,15 @@
 ## Examples:
 
 # - device: server01
+#   name: ath0
+#   type: 1000base-t
+#   lag: ae0
+#   bridge: br0
+# - device: server01
+#   name: ath1
+#   type: 1000base-t
+#   parent: ath0
+# - device: server01
 #   enabled: true
 #   type: virtual
 #   name: to-server02
