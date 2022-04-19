@@ -251,3 +251,6 @@ TIME_FORMAT = environ.get('TIME_FORMAT', 'g:i a')
 SHORT_TIME_FORMAT = environ.get('SHORT_TIME_FORMAT', 'H:i:s')
 DATETIME_FORMAT = environ.get('DATETIME_FORMAT', 'N j, Y g:i a')
 SHORT_DATETIME_FORMAT = environ.get('SHORT_DATETIME_FORMAT', 'Y-m-d H:i')
+
+# Maps provider
+MAPS_URL = environ.get('MAPS_URL', None)
