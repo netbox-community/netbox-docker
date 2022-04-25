@@ -1,12 +1,7 @@
 # - name: Network-Team
 #   slug: network-team
 #   description: This is a new contact group for the Network-Team
-#   parent: None
-#   custom_field_data:
-#     widget: This is the custom field called widget
 # - name: New Contact Group
 #   slug: new-contact-group
 #   description: This is a new contact group sub under of Network-Team
 #   parent: Network-Team
-#   custom_field_data:
-#     widget: This is the custom field called widget
