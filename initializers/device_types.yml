@@ -31,8 +31,7 @@
 #     - name_template: ttyS[1-48]
 #       type: rj-45
 #   power_ports:
-#     - name: psu0  # both non-template and template field specified; non-template field takes precedence
-#       name_template: psu[0,1]
+#     - name_template: psu[0,1]
 #       type: iec-60320-c14
 #       maximum_draw: 35
 #       allocated_draw: 35
@@ -46,7 +45,9 @@
 #       type: 8p8c
 #       positions_template: "[3,2]"
 #   device_bays:
-#     - name_template: bay[0-9]
+#     - name: bay0 # both non-template and template field specified; non-template field takes precedence
+#       name_template: bay[0-9]
+#       label: test0
 #       label_template: test[0-5,9,6-8]
 #       description: Test description
 #   power_outlets:
