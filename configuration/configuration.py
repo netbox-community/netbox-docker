@@ -221,6 +221,13 @@ REMOTE_AUTH_BACKEND = environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.
 REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
 REMOTE_AUTH_AUTO_CREATE_USER = environ.get('REMOTE_AUTH_AUTO_CREATE_USER', 'True').lower() == 'true'
 REMOTE_AUTH_DEFAULT_GROUPS = list(filter(None, environ.get('REMOTE_AUTH_DEFAULT_GROUPS', '').split(' ')))
+REMOTE_AUTH_GROUP_SYNC_ENABLED = environ.get('REMOTE_AUTH_GROUP_SYNC_ENABLED', 'False').lower() == 'true'
+REMOTE_AUTH_GROUP_HEADER = environ.get('REMOTE_AUTH_GROUP_HEADER', 'HTTP_REMOTE_USER')
+REMOTE_AUTH_GROUP_SEPARATOR = environ.get('REMOTE_AUTH_GROUP_SEPARATOR', '|')
+REMOTE_AUTH_SUPERUSER_GROUPS = list(filter(None, environ.get('REMOTE_AUTH_SUPERUSER_GROUPS', '').split(' ')))
+REMOTE_AUTH_SUPERUSERS = list(filter(None, environ.get('REMOTE_AUTH_SUPERUSERS', '').split(' ')))
+REMOTE_AUTH_STAFF_GROUPS = list(filter(None, environ.get('REMOTE_AUTH_STAFF_GROUPS', '').split(' ')))
+REMOTE_AUTH_STAFF_USERS = list(filter(None, environ.get('REMOTE_AUTH_STAFF_USERS', '').split(' ')))
 
 # This repository is used to check whether there is a new release of NetBox available. Set to None to disable the
 # version check or use the URL below to check for release in the official NetBox repository.
