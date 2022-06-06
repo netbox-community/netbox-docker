@@ -1,0 +1,18 @@
+# - device_type: Other
+#   name: GigabitEthernet1
+#   type: 10gbase-t
+#   mgmt_only: true
+#   description: Management interface
+#
+# - device_type: Other
+#   name: GigabitEthernet2
+#   type: 10gbase-t
+#   mgmt_only: false
+#   description: Data interface
+#
+# - device_type: Other
+#   name: GigabitEthernet3
+#   type: 1000base-t
+#   description: GigE data interface
+---
+
