@@ -34,6 +34,8 @@ _BASE_DIR = dirname(dirname(abspath(__file__)))
 #
 # Example: ALLOWED_HOSTS = ['netbox.example.com', 'netbox.internal.local']
 ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS', '*').split(' ')
+# Example: CSRF_TRUSTED_ORIGINS = http://netbox.example.com/*
+CSRF_TRUSTED_ORIGINS = environ.get('CSRF_TRUSTED_ORIGINS', '').split(' ')
 
 # PostgreSQL database configuration. See the Django documentation for a complete list of available parameters:
 #   https://docs.djangoproject.com/en/stable/ref/settings/#databases
@@ -82,7 +84,7 @@ SECRET_KEY = _read_secret('secret_key', environ.get('SECRET_KEY', ''))
 
 
 #########################
-#                       #
+#                       #http://localhost
 #   Optional settings   #
 #                       #
 #########################
