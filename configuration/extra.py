@@ -53,3 +53,6 @@
 # from datetime import datetime
 # now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 # BANNER_TOP = f'<marquee width="200px">This instance started on {now}.</marquee>'
+
+# Allow CSRF trusted origins, e.g:
+# CSRF_TRUSTED_ORIGINS = ['http://netbox.example.com']
