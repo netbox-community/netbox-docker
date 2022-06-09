@@ -178,7 +178,7 @@ fi
 ###
 BUILD_DATE="$(date -u '+%Y-%m-%dT%H:%M+00:00')"
 
-if [ -d ".git" ]; then
+if [ -d ".git" ] && [ -z "${SKIP_GIT}" ]; then
   GIT_REF="$(git rev-parse HEAD)"
 fi
 
@@ -186,7 +186,7 @@ fi
 PROJECT_VERSION="${PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' VERSION)}"
 
 # Get the Git information from the netbox directory
-if [ -d "${NETBOX_PATH}/.git" ]; then
+if [ -d "${NETBOX_PATH}/.git" ] && [ -z "${SKIP_GIT}" ]; then
   NETBOX_GIT_REF=$(
     cd "${NETBOX_PATH}"
     git rev-parse HEAD
