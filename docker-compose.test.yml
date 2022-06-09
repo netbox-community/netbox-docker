@@ -21,14 +21,14 @@ services:
     image: postgres:14-alpine
     env_file: env/postgres.env
   redis:
-    image: redis:6-alpine
+    image: redis:7-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis.env
   redis-cache:
-    image: redis:6-alpine
+    image: redis:7-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
