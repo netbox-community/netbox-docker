@@ -7,7 +7,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       build-essential \
       ca-certificates \
       libldap-dev \
+      libpq-dev \
       libsasl2-dev \
+      libssl-dev \
       python3-dev \
       python3-pip \
       python3-venv \
@@ -38,6 +40,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       --yes -qq --no-install-recommends \
       ca-certificates \
       curl \
+      libpq5 \
       openssl \
       python3 \
       python3-distutils \
