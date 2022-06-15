@@ -49,10 +49,10 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  DOCKERFILE  The name of Dockerfile to use."
   echo "              Default: Dockerfile"
   echo "  DOCKER_FROM The base image to use."
-  echo "              Default: 'alpine:3.14'"
+  echo "              Default: 'debian:11-slim'"
   echo "  DOCKER_TARGET A specific target to build."
   echo "              It's currently not possible to pass multiple targets."
-  echo "              Default: main ldap"
+  echo "              Default: main"
   echo "  HTTP_PROXY  The proxy to use for http requests."
   echo "              Example: http://proxy.domain.tld:3128"
   echo "              Default: undefined"
@@ -170,7 +170,7 @@ fi
 # Determining the value for DOCKER_FROM
 ###
 if [ -z "$DOCKER_FROM" ]; then
-  DOCKER_FROM="alpine:3.14"
+  DOCKER_FROM="debian:11-slim"
 fi
 
 ###
@@ -222,7 +222,7 @@ esac
 ###
 # Determine targets to build
 ###
-DEFAULT_DOCKER_TARGETS=("main" "ldap")
+DEFAULT_DOCKER_TARGETS=("main")
 DOCKER_TARGETS=("${DOCKER_TARGET:-"${DEFAULT_DOCKER_TARGETS[@]}"}")
 echo "🏭 Building the following targets:" "${DOCKER_TARGETS[@]}"
 
@@ -302,7 +302,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
 
       if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
         SHOULD_BUILD="true"
-        BUILD_REASON="${BUILD_REASON} alpine"
+        BUILD_REASON="${BUILD_REASON} debian"
       fi
       if [ "${NETBOX_GIT_REF}" != "${NETBOX_GIT_REF_OLD}" ]; then
         SHOULD_BUILD="true"
@@ -335,7 +335,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
 
     # --label
     DOCKER_BUILD_ARGS+=(
-      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG_PROJECT}"
+      --label "netbox.original-tag=${TARGET_DOCKER_TAG_PROJECT}"
 
       --label "org.label-schema.build-date=${BUILD_DATE}"
       --label "org.opencontainers.image.created=${BUILD_DATE}"
@@ -351,14 +351,14 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     fi
     if [ -d "${NETBOX_PATH}/.git" ]; then
       DOCKER_BUILD_ARGS+=(
-        --label "NETBOX_GIT_BRANCH=${NETBOX_GIT_BRANCH}"
-        --label "NETBOX_GIT_REF=${NETBOX_GIT_REF}"
-        --label "NETBOX_GIT_URL=${NETBOX_GIT_URL}"
+        --label "netbox.git-branch=${NETBOX_GIT_BRANCH}"
+        --label "netbox.git-ref=${NETBOX_GIT_REF}"
+        --label "netbox.git-url=${NETBOX_GIT_URL}"
       )
     fi
     if [ -n "${BUILD_REASON}" ]; then
       BUILD_REASON=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$BUILD_REASON")
-      DOCKER_BUILD_ARGS+=(--label "BUILD_REASON=${BUILD_REASON}")
+      DOCKER_BUILD_ARGS+=(--label "netbox.build-reason=${BUILD_REASON}")
     fi
 
     # --build-arg
