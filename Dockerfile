@@ -3,7 +3,10 @@ FROM ${FROM} as builder
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update -qq \
-    && apt-get install --yes -qq \
+    && apt-get upgrade \
+      --yes -qq --no-install-recommends \
+    && apt-get install \
+      --yes -qq --no-install-recommends \
       build-essential \
       ca-certificates \
       libldap-dev \
