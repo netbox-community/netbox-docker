@@ -94,18 +94,6 @@ LABEL netbox.original-tag="" \
       netbox.git-branch="" \
       netbox.git-ref="" \
       netbox.git-url="" \
-# See http://label-schema.org/rc1/#build-time-labels
-# Also https://microbadger.com/labels
-      org.label-schema.schema-version="1.0" \
-      org.label-schema.build-date="" \
-      org.label-schema.name="NetBox Docker" \
-      org.label-schema.description="A container based distribution of NetBox, the free and open IPAM and DCIM solution." \
-      org.label-schema.vendor="The netbox-docker contributors." \
-      org.label-schema.url="https://github.com/netbox-community/netbox-docker" \
-      org.label-schema.usage="https://github.com/netbox-community/netbox-docker/wiki" \
-      org.label-schema.vcs-url="https://github.com/netbox-community/netbox-docker.git" \
-      org.label-schema.vcs-ref="" \
-      org.label-schema.version="snapshot" \
 # See https://github.com/opencontainers/image-spec/blob/master/annotations.md#pre-defined-annotation-keys
       org.opencontainers.image.created="" \
       org.opencontainers.image.title="NetBox Docker" \
@@ -117,4 +105,4 @@ LABEL netbox.original-tag="" \
       org.opencontainers.image.documentation="https://github.com/netbox-community/netbox-docker/wiki" \
       org.opencontainers.image.source="https://github.com/netbox-community/netbox-docker.git" \
       org.opencontainers.image.revision="" \
-      org.opencontainers.image.version="snapshot"
+      org.opencontainers.image.version=""
