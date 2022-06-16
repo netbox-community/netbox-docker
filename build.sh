@@ -297,8 +297,8 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       fi
       PYTHON_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
       mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
-      NETBOX_GIT_REF_OLD=$(get_image_label NETBOX_GIT_REF "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
-      GIT_REF_OLD=$(get_image_label org.label-schema.vcs-ref "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+      NETBOX_GIT_REF_OLD=$(get_image_label netbox.git-ref "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+      GIT_REF_OLD=$(get_image_label org.opencontainers.image.revision "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
 
       if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
         SHOULD_BUILD="true"
@@ -336,16 +336,11 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     # --label
     DOCKER_BUILD_ARGS+=(
       --label "netbox.original-tag=${TARGET_DOCKER_TAG_PROJECT}"
-
-      --label "org.label-schema.build-date=${BUILD_DATE}"
       --label "org.opencontainers.image.created=${BUILD_DATE}"
-
-      --label "org.label-schema.version=${PROJECT_VERSION}"
       --label "org.opencontainers.image.version=${PROJECT_VERSION}"
     )
     if [ -d ".git" ]; then
       DOCKER_BUILD_ARGS+=(
-        --label "org.label-schema.vcs-ref=${GIT_REF}"
         --label "org.opencontainers.image.revision=${GIT_REF}"
       )
     fi
@@ -385,7 +380,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       $DRY docker build "${DOCKER_BUILD_ARGS[@]}" .
       echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG_PROJECT}'"
       echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG_PROJECT}'"
-      $DRY docker inspect "${TARGET_DOCKER_TAG_PROJECT}" --format "{{json .Config.Labels}}"
+      $DRY docker inspect "${TARGET_DOCKER_TAG_PROJECT}" --format "{{json .Config.Labels}}" | jq
     else
       echo "Build skipped because sources didn't change"
       echo "::set-output name=skipped::true"
