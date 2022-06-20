@@ -31,9 +31,12 @@ AUTH_LDAP_CONNECTION_OPTIONS = {
     ldap.OPT_REFERRALS: 0
 }
 
-# Set the DN and password for the NetBox service account.
-AUTH_LDAP_BIND_DN = environ.get('AUTH_LDAP_BIND_DN', '')
-AUTH_LDAP_BIND_PASSWORD = _read_secret('auth_ldap_bind_password', environ.get('AUTH_LDAP_BIND_PASSWORD', ''))
+AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = environ.get('AUTH_LDAP_BIND_AS_AUTHENTICATING_USER', 'True').lower() == 'true'
+
+# Set the DN and password for the NetBox service account if needed.
+if not AUTH_LDAP_BIND_AS_AUTHENTICATING_USER:
+    AUTH_LDAP_BIND_DN = environ.get('AUTH_LDAP_BIND_DN', '')
+    AUTH_LDAP_BIND_PASSWORD = _read_secret('auth_ldap_bind_password', environ.get('AUTH_LDAP_BIND_PASSWORD', ''))
 
 # Set a string template that describes any user’s distinguished name based on the username.
 AUTH_LDAP_USER_DN_TEMPLATE = environ.get('AUTH_LDAP_USER_DN_TEMPLATE', None)
