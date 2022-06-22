@@ -277,9 +277,9 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     ###
     # Checking if the build is necessary,
     # meaning build only if one of those values changed:
-    # - Python base image digest (Label: PYTHON_BASE_DIGEST)
-    # - netbox git ref (Label: NETBOX_GIT_REF)
-    # - netbox-docker git ref (Label: org.label-schema.vcs-ref)
+    # - base image digest
+    # - netbox git ref (Label: netbox.git-ref)
+    # - netbox-docker git ref (Label: org.opencontainers.image.revision)
     ###
     # Load information from registry (only for docker.io)
     SHOULD_BUILD="false"
@@ -295,12 +295,12 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
         # Need to use "library/..." for images the have no two part name
         DOCKER_FROM_SPLIT[0]="library/${DOCKER_FROM_SPLIT[0]}"
       fi
-      PYTHON_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
+      BASE_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
       mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
       NETBOX_GIT_REF_OLD=$(get_image_label netbox.git-ref "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
       GIT_REF_OLD=$(get_image_label org.opencontainers.image.revision "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
 
-      if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
+      if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${BASE_LAST_LAYER}\$"; then
         SHOULD_BUILD="true"
         BUILD_REASON="${BUILD_REASON} debian"
       fi
