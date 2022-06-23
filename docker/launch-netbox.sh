@@ -15,8 +15,6 @@ put_config() {
   RET_BODY=${RET::-3}
   RET_STATUS=$(echo $RET | tail -c 4)
 
-  echo $RET
-
   if [ "$RET_STATUS" -ne "200" ]; then
       echo "⚠️ Error: Failed to load configuration from $1"
       ( echo "HTTP response status code is '$RET_STATUS'"
