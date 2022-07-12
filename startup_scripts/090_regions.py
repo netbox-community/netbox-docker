@@ -1,7 +1,7 @@
 import sys
 
 from dcim.models import Region
-from startup_script_utils import load_yaml
+from startup_script_utils import load_yaml, split_params
 
 regions = load_yaml("/opt/netbox/initializers/regions.yml")
 
@@ -19,7 +19,8 @@ for params in regions:
 
             params[assoc] = model.objects.get(**query)
 
-    region, created = Region.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params)
+    region, created = Region.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("🌐 Created region", region.name)

@@ -1,22 +1,21 @@
 import sys
 
-from ipam.models import RouteTarget
 from startup_script_utils import (
     load_yaml,
     pop_custom_fields,
     set_custom_fields_values,
     split_params,
 )
-from tenancy.models import Tenant
+from tenancy.models import Contact, ContactGroup
 
-route_targets = load_yaml("/opt/netbox/initializers/route_targets.yml")
+contacts = load_yaml("/opt/netbox/initializers/contacts.yml")
 
-if route_targets is None:
+if contacts is None:
     sys.exit()
 
-optional_assocs = {"tenant": (Tenant, "name")}
+optional_assocs = {"group": (ContactGroup, "name")}
 
-for params in route_targets:
+for params in contacts:
     custom_field_data = pop_custom_fields(params)
 
     for assoc, details in optional_assocs.items():
@@ -27,9 +26,9 @@ for params in route_targets:
             params[assoc] = model.objects.get(**query)
 
     matching_params, defaults = split_params(params)
-    route_target, created = RouteTarget.objects.get_or_create(**matching_params, defaults=defaults)
+    contact, created = Contact.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
-        print("🎯 Created Route Target", route_target.name)
+        print("👩‍💻 Created Contact", contact.name)
 
-    set_custom_fields_values(route_target, custom_field_data)
+    set_custom_fields_values(contact, custom_field_data)

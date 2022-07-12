@@ -49,10 +49,10 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  DOCKERFILE  The name of Dockerfile to use."
   echo "              Default: Dockerfile"
   echo "  DOCKER_FROM The base image to use."
-  echo "              Default: 'alpine:3.14'"
+  echo "              Default: 'debian:11-slim'"
   echo "  DOCKER_TARGET A specific target to build."
   echo "              It's currently not possible to pass multiple targets."
-  echo "              Default: main ldap"
+  echo "              Default: main"
   echo "  HTTP_PROXY  The proxy to use for http requests."
   echo "              Example: http://proxy.domain.tld:3128"
   echo "              Default: undefined"
@@ -170,7 +170,7 @@ fi
 # Determining the value for DOCKER_FROM
 ###
 if [ -z "$DOCKER_FROM" ]; then
-  DOCKER_FROM="alpine:3.14"
+  DOCKER_FROM="debian:11-slim"
 fi
 
 ###
@@ -178,7 +178,7 @@ fi
 ###
 BUILD_DATE="$(date -u '+%Y-%m-%dT%H:%M+00:00')"
 
-if [ -d ".git" ]; then
+if [ -d ".git" ] && [ -z "${SKIP_GIT}" ]; then
   GIT_REF="$(git rev-parse HEAD)"
 fi
 
@@ -186,7 +186,7 @@ fi
 PROJECT_VERSION="${PROJECT_VERSION-$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' VERSION)}"
 
 # Get the Git information from the netbox directory
-if [ -d "${NETBOX_PATH}/.git" ]; then
+if [ -d "${NETBOX_PATH}/.git" ] && [ -z "${SKIP_GIT}" ]; then
   NETBOX_GIT_REF=$(
     cd "${NETBOX_PATH}"
     git rev-parse HEAD
@@ -222,7 +222,7 @@ esac
 ###
 # Determine targets to build
 ###
-DEFAULT_DOCKER_TARGETS=("main" "ldap")
+DEFAULT_DOCKER_TARGETS=("main")
 DOCKER_TARGETS=("${DOCKER_TARGET:-"${DEFAULT_DOCKER_TARGETS[@]}"}")
 echo "🏭 Building the following targets:" "${DOCKER_TARGETS[@]}"
 
@@ -277,9 +277,9 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
     ###
     # Checking if the build is necessary,
     # meaning build only if one of those values changed:
-    # - Python base image digest (Label: PYTHON_BASE_DIGEST)
-    # - netbox git ref (Label: NETBOX_GIT_REF)
-    # - netbox-docker git ref (Label: org.label-schema.vcs-ref)
+    # - base image digest
+    # - netbox git ref (Label: netbox.git-ref)
+    # - netbox-docker git ref (Label: org.opencontainers.image.revision)
     ###
     # Load information from registry (only for docker.io)
     SHOULD_BUILD="false"
@@ -295,14 +295,14 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
         # Need to use "library/..." for images the have no two part name
         DOCKER_FROM_SPLIT[0]="library/${DOCKER_FROM_SPLIT[0]}"
       fi
-      PYTHON_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
+      BASE_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
       mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
-      NETBOX_GIT_REF_OLD=$(get_image_label NETBOX_GIT_REF "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
-      GIT_REF_OLD=$(get_image_label org.label-schema.vcs-ref "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+      NETBOX_GIT_REF_OLD=$(get_image_label netbox.git-ref "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
+      GIT_REF_OLD=$(get_image_label org.opencontainers.image.revision "${DOCKER_ORG}"/"${DOCKER_REPO}" "${TAG}")
 
-      if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${PYTHON_LAST_LAYER}\$"; then
+      if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${BASE_LAST_LAYER}\$"; then
         SHOULD_BUILD="true"
-        BUILD_REASON="${BUILD_REASON} alpine"
+        BUILD_REASON="${BUILD_REASON} debian"
       fi
       if [ "${NETBOX_GIT_REF}" != "${NETBOX_GIT_REF_OLD}" ]; then
         SHOULD_BUILD="true"
@@ -335,30 +335,25 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
 
     # --label
     DOCKER_BUILD_ARGS+=(
-      --label "ORIGINAL_TAG=${TARGET_DOCKER_TAG_PROJECT}"
-
-      --label "org.label-schema.build-date=${BUILD_DATE}"
+      --label "netbox.original-tag=${TARGET_DOCKER_TAG_PROJECT}"
       --label "org.opencontainers.image.created=${BUILD_DATE}"
-
-      --label "org.label-schema.version=${PROJECT_VERSION}"
       --label "org.opencontainers.image.version=${PROJECT_VERSION}"
     )
     if [ -d ".git" ]; then
       DOCKER_BUILD_ARGS+=(
-        --label "org.label-schema.vcs-ref=${GIT_REF}"
         --label "org.opencontainers.image.revision=${GIT_REF}"
       )
     fi
     if [ -d "${NETBOX_PATH}/.git" ]; then
       DOCKER_BUILD_ARGS+=(
-        --label "NETBOX_GIT_BRANCH=${NETBOX_GIT_BRANCH}"
-        --label "NETBOX_GIT_REF=${NETBOX_GIT_REF}"
-        --label "NETBOX_GIT_URL=${NETBOX_GIT_URL}"
+        --label "netbox.git-branch=${NETBOX_GIT_BRANCH}"
+        --label "netbox.git-ref=${NETBOX_GIT_REF}"
+        --label "netbox.git-url=${NETBOX_GIT_URL}"
       )
     fi
     if [ -n "${BUILD_REASON}" ]; then
       BUILD_REASON=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$BUILD_REASON")
-      DOCKER_BUILD_ARGS+=(--label "BUILD_REASON=${BUILD_REASON}")
+      DOCKER_BUILD_ARGS+=(--label "netbox.build-reason=${BUILD_REASON}")
     fi
 
     # --build-arg
@@ -385,7 +380,7 @@ for DOCKER_TARGET in "${DOCKER_TARGETS[@]}"; do
       $DRY docker build "${DOCKER_BUILD_ARGS[@]}" .
       echo "✅ Finished building the Docker images '${TARGET_DOCKER_TAG_PROJECT}'"
       echo "🔎 Inspecting labels on '${TARGET_DOCKER_TAG_PROJECT}'"
-      $DRY docker inspect "${TARGET_DOCKER_TAG_PROJECT}" --format "{{json .Config.Labels}}"
+      $DRY docker inspect "${TARGET_DOCKER_TAG_PROJECT}" --format "{{json .Config.Labels}}" | jq
     else
       echo "Build skipped because sources didn't change"
       echo "::set-output name=skipped::true"

@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: netboxcommunity/netbox:${VERSION-v3.2-1.6.1}
+    image: netboxcommunity/netbox:${VERSION-v3.2-2.0.0}
     depends_on:
     - postgres
     - redis
@@ -42,7 +42,7 @@ services:
 
   # redis
   redis:
-    image: redis:6-alpine
+    image: redis:7-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
@@ -51,7 +51,7 @@ services:
     volumes:
     - netbox-redis-data:/data
   redis-cache:
-    image: redis:6-alpine
+    image: redis:7-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env

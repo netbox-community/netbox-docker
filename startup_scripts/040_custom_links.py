@@ -2,7 +2,7 @@ import sys
 
 from django.contrib.contenttypes.models import ContentType
 from extras.models import CustomLink
-from startup_script_utils import load_yaml
+from startup_script_utils import load_yaml, split_params
 
 custom_links = load_yaml("/opt/netbox/initializers/custom_links.yml")
 
@@ -28,6 +28,8 @@ for link in custom_links:
         )
         continue
 
-    custom_link, created = CustomLink.objects.get_or_create(**link)
+    matching_params, defaults = split_params(link)
+    custom_link, created = CustomLink.objects.get_or_create(**matching_params, defaults=defaults)
+
     if created:
         print("🔗 Created Custom Link '{0}'".format(custom_link.name))

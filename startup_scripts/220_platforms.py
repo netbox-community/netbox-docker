@@ -1,7 +1,7 @@
 import sys
 
 from dcim.models import Manufacturer, Platform
-from startup_script_utils import load_yaml
+from startup_script_utils import load_yaml, split_params
 
 platforms = load_yaml("/opt/netbox/initializers/platforms.yml")
 
@@ -21,7 +21,8 @@ for params in platforms:
 
             params[assoc] = model.objects.get(**query)
 
-    platform, created = Platform.objects.get_or_create(**params)
+    matching_params, defaults = split_params(params)
+    platform, created = Platform.objects.get_or_create(**matching_params, defaults=defaults)
 
     if created:
         print("💾 Created platform", platform.name)

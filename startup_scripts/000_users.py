@@ -9,13 +9,17 @@ if users is None:
     sys.exit()
 
 for username, user_details in users.items():
-    if not User.objects.filter(username=username):
-        user = User.objects.create_user(
-            username=username,
-            password=user_details.get("password", 0) or User.objects.make_random_password(),
-        )
+
+    api_token = user_details.pop("api_token", Token.generate_key())
+    password = user_details.pop("password", User.objects.make_random_password())
+
+    user, created = User.objects.get_or_create(username=username, defaults=user_details)
+
+    if created:
+        user.set_password(password)
+        user.save()
+
+        if api_token:
+            Token.objects.get_or_create(user=user, key=api_token)
 
         print("👤 Created user", username)
-
-        if user_details.get("api_token", 0):
-            Token.objects.create(user=user, key=user_details["api_token"])

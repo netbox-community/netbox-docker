@@ -120,6 +120,11 @@ CORS_ORIGIN_ALLOW_ALL = environ.get('CORS_ORIGIN_ALLOW_ALL', 'False').lower() ==
 CORS_ORIGIN_WHITELIST = list(filter(None, environ.get('CORS_ORIGIN_WHITELIST', 'https://localhost').split(' ')))
 CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in list(filter(None, environ.get('CORS_ORIGIN_REGEX_WHITELIST', '').split(' ')))]
 
+# Cross-Site-Request-Forgery-Attack settings. If Netbox is sitting behind a reverse proxy, you might need to set the CSRF_TRUSTED_ORIGINS flag.
+# Django 4.0 requires to specify the URL Scheme in this setting. An example environment variable could be specified like:
+# CSRF_TRUSTED_ORIGINS=https://demo.netbox.dev http://demo.netbox.dev
+CSRF_TRUSTED_ORIGINS = list(filter(None, environ.get('CSRF_TRUSTED_ORIGINS', '').split(' ')))
+
 # Set to True to enable server debugging. WARNING: Debugging introduces a substantial performance penalty and may reveal
 # sensitive information about your installation. Only enable debugging while performing testing. Never enable debugging
 # on a production system.
@@ -164,6 +169,9 @@ LOGIN_TIMEOUT = int(environ.get('LOGIN_TIMEOUT', 1209600))
 
 # Setting this to True will display a "maintenance mode" banner at the top of every page.
 MAINTENANCE_MODE = environ.get('MAINTENANCE_MODE', 'False').lower() == 'true'
+
+# Maps provider
+MAPS_URL = environ.get('MAPS_URL', None)
 
 # An API consumer can request an arbitrary number of objects =by appending the "limit" parameter to the URL (e.g.
 # "?limit=1000"). This setting defines the maximum limit. Setting it to 0 or None will allow an API consumer to request

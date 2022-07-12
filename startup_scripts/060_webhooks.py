@@ -2,7 +2,7 @@ import sys
 
 from django.contrib.contenttypes.models import ContentType
 from extras.models import Webhook
-from startup_script_utils import load_yaml
+from startup_script_utils import load_yaml, split_params
 
 webhooks = load_yaml("/opt/netbox/initializers/webhooks.yml")
 
@@ -26,7 +26,9 @@ for hook in webhooks:
     except ContentType.DoesNotExist:
         continue
 
-    webhook, created = Webhook.objects.get_or_create(**hook)
+    matching_params, defaults = split_params(hook)
+    webhook, created = Webhook.objects.get_or_create(**matching_params, defaults=defaults)
+
     if created:
         webhook.content_types.set(obj_type_ids)
         webhook.save()
