@@ -42,6 +42,9 @@ for cf_name, cf_details in customfields.items():
         if cf_details.get("type", False):
             custom_field.type = cf_details["type"]
 
+        if cf_details.get("type", False) in ('object', 'multipobject',):
+            custom_field.object_type = cf_details["object_type"]
+
         if cf_details.get("filter_logic", False):
             custom_field.filter_logic = cf_details["filter_logic"]
 
@@ -65,3 +68,4 @@ for cf_name, cf_details in customfields.items():
         custom_field.save()
 
         print("🔧 Created custom field", cf_name)
+
