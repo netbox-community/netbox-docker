@@ -43,7 +43,7 @@ if [ "${1}x" == "x" ] || [ "${1}" == "--help" ] || [ "${1}" == "-h" ]; then
   echo "  DOCKERFILE  The name of Dockerfile to use."
   echo "              Default: Dockerfile"
   echo "  DOCKER_FROM The base image to use."
-  echo "              Default: 'debian:11-slim'"
+  echo "              Default: 'ubuntu:22.04'"
   echo "  BUILDX_PLATFORMS"
   echo "            Specifies the platform(s) to build the image for."
   echo "            Example: 'linux/amd64,linux/arm64'"
@@ -182,7 +182,7 @@ fi
 # Determining the value for DOCKER_FROM
 ###
 if [ -z "$DOCKER_FROM" ]; then
-  DOCKER_FROM="debian:11-slim"
+  DOCKER_FROM="ubuntu:22.04"
 fi
 
 ###
