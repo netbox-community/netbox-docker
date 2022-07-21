@@ -43,6 +43,10 @@ jobs:
       - id: docker-build
         name: Build the image with '${{ matrix.build_cmd }}'
         run: ${{ matrix.build_cmd }}
+      - id: test-configuration
+        name: Set ENV variable to skip initializer tests for prereleases
+        if: ${{ contains(matrix.build_cmd, 'PRERELEASE=true') || contains(matrix.build_cmd, 'feature') }}
+        run: echo "SKIP_INITIALIZER_TESTS=true" >>"${GITHUB_ENV}"
       - id: test-image
         name: Test the image
         run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh

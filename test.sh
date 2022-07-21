@@ -14,6 +14,8 @@
 # exit when a command exits with an exit code != 0
 set -e
 
+source ./build-functions/gh-functions.sh
+
 # IMAGE is used by `docker-compose.yml` do determine the tag
 # of the Docker Image that is to be used
 if [ "${1}x" != "x" ]; then
@@ -80,7 +82,16 @@ echo "🐳🐳🐳 Start testing '${IMAGE}'"
 trap test_cleanup EXIT ERR
 test_setup
 
+gh_echo "::group::Netbox unit tests"
 test_netbox_unit_tests
-test_initializers
+gh_echo "::endgroup::"
+
+gh_echo "::group::Innitializer tests"
+if [ "$SKIP_INITIALIZER_TESTS" == "true" ]; then
+  echo "↩️ Skipping initializer tests"
+else
+  test_initializers
+fi
+gh_echo "::endgroup::"
 
 echo "🐳🐳🐳 Done testing '${IMAGE}'"
