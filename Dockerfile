@@ -43,6 +43,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       --yes -qq --no-install-recommends \
       ca-certificates \
       curl \
+      libldap-common \
       libpq5 \
       openssl \
       python3 \
