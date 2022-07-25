@@ -43,6 +43,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       --yes -qq --no-install-recommends \
       ca-certificates \
       curl \
+      libldap-common \
       libpq5 \
       openssl \
       python3 \
@@ -50,13 +51,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       tini \
     && curl -sL https://nginx.org/keys/nginx_signing.key \
       > /etc/apt/trusted.gpg.d/nginx.asc && \
-    echo "deb https://packages.nginx.org/unit/debian/ bullseye unit" \
+    echo "deb https://packages.nginx.org/unit/ubuntu/ jammy unit" \
       > /etc/apt/sources.list.d/unit.list \
     && apt-get update -qq \
     && apt-get install \
       --yes -qq --no-install-recommends \
-      unit=1.27.0-1~bullseye \
-      unit-python3.9=1.27.0-1~bullseye \
+      unit=1.27.0-1~jammy \
+      unit-python3.10=1.27.0-1~jammy \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv
@@ -85,7 +86,7 @@ RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
       && SECRET_KEY="dummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
 
-ENV LANG=C.UTF-8
+ENV LANG=C.UTF-8 PATH=/opt/netbox/venv/bin:$PATH
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
 CMD [ "/opt/netbox/docker-entrypoint.sh", "/opt/netbox/launch-netbox.sh" ]
