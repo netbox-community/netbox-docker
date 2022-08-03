@@ -93,25 +93,9 @@ ADMINS = [
     # ['John Doe', 'jdoe@example.com'],
 ]
 
-# URL schemes that are allowed within links in NetBox
-ALLOWED_URL_SCHEMES = (
-    'file', 'ftp', 'ftps', 'http', 'https', 'irc', 'mailto', 'sftp', 'ssh', 'tel', 'telnet', 'tftp', 'vnc', 'xmpp',
-)
-
-# Optionally display a persistent banner at the top and/or bottom of every page. HTML is allowed. To display the same
-# content in both banners, define BANNER_TOP and set BANNER_BOTTOM = BANNER_TOP.
-BANNER_TOP = environ.get('BANNER_TOP', '')
-BANNER_BOTTOM = environ.get('BANNER_BOTTOM', '')
-
-# Text to include on the login page above the login form. HTML is allowed.
-BANNER_LOGIN = environ.get('BANNER_LOGIN', '')
-
 # Base URL path if accessing NetBox within a directory. For example, if installed at http://example.com/netbox/, set:
 # BASE_PATH = 'netbox/'
 BASE_PATH = environ.get('BASE_PATH', '')
-
-# Maximum number of days to retain logged changes. Set to 0 to retain changes indefinitely. (Default: 90)
-CHANGELOG_RETENTION = int(environ.get('CHANGELOG_RETENTION', 90))
 
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
 # allowed. Otherwise, define a list of allowed origins using either CORS_ORIGIN_WHITELIST or
@@ -144,16 +128,9 @@ EMAIL = {
     'FROM_EMAIL': environ.get('EMAIL_FROM', ''),
 }
 
-# Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce unique IP space within the global table
-# (all prefixes and IP addresses not assigned to a VRF), set ENFORCE_GLOBAL_UNIQUE to True.
-ENFORCE_GLOBAL_UNIQUE = environ.get('ENFORCE_GLOBAL_UNIQUE', 'False').lower() == 'true'
-
 # Exempt certain models from the enforcement of view permissions. Models listed here will be viewable by all users and
 # by anonymous users. List models in the form `<app>.<model>`. Add '*' to this list to exempt all models.
 EXEMPT_VIEW_PERMISSIONS = list(filter(None, environ.get('EXEMPT_VIEW_PERMISSIONS', '').split(' ')))
-
-# Enable GraphQL API.
-GRAPHQL_ENABLED = environ.get('GRAPHQL_ENABLED', 'True').lower() == 'true'
 
 # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
 #   https://docs.djangoproject.com/en/stable/topics/logging/
@@ -167,37 +144,12 @@ LOGIN_REQUIRED = environ.get('LOGIN_REQUIRED', 'False').lower() == 'true'
 # re-authenticate. (Default: 1209600 [14 days])
 LOGIN_TIMEOUT = int(environ.get('LOGIN_TIMEOUT', 1209600))
 
-# Setting this to True will display a "maintenance mode" banner at the top of every page.
-MAINTENANCE_MODE = environ.get('MAINTENANCE_MODE', 'False').lower() == 'true'
-
-# Maps provider
-MAPS_URL = environ.get('MAPS_URL', None)
-
-# An API consumer can request an arbitrary number of objects =by appending the "limit" parameter to the URL (e.g.
-# "?limit=1000"). This setting defines the maximum limit. Setting it to 0 or None will allow an API consumer to request
-# all objects by specifying "?limit=0".
-MAX_PAGE_SIZE = int(environ.get('MAX_PAGE_SIZE', 1000))
-
 # The file path where uploaded media such as image attachments are stored. A trailing slash is not needed. Note that
 # the default value of this setting is derived from the installed location.
 MEDIA_ROOT = environ.get('MEDIA_ROOT', join(_BASE_DIR, 'media'))
 
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
 METRICS_ENABLED = environ.get('METRICS_ENABLED', 'False').lower() == 'true'
-
-# Credentials that NetBox will uses to authenticate to devices when connecting via NAPALM.
-NAPALM_USERNAME = environ.get('NAPALM_USERNAME', '')
-NAPALM_PASSWORD = _read_secret('napalm_password', environ.get('NAPALM_PASSWORD', ''))
-
-# NAPALM timeout (in seconds). (Default: 30)
-NAPALM_TIMEOUT = int(environ.get('NAPALM_TIMEOUT', 30))
-
-# NAPALM optional arguments (see http://napalm.readthedocs.io/en/latest/support/#optional-arguments). Arguments must
-# be provided as a dictionary.
-NAPALM_ARGS = {}
-
-# Determine how many objects to display per page within a list. (Default: 50)
-PAGINATE_COUNT = int(environ.get('PAGINATE_COUNT', 50))
 
 # Enable installed plugins. Add the name of each plugin to the list.
 PLUGINS = []
@@ -206,14 +158,6 @@ PLUGINS = []
 # Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
 PLUGINS_CONFIG = {
 }
-
-# When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
-# prefer IPv4 instead.
-PREFER_IPV4 = environ.get('PREFER_IPV4', 'False').lower() == 'true'
-
-# Rack elevation size defaults, in pixels. For best results, the ratio of width to height should be roughly 10:1.
-RACK_ELEVATION_DEFAULT_UNIT_HEIGHT = int(environ.get('RACK_ELEVATION_DEFAULT_UNIT_HEIGHT', 22))
-RACK_ELEVATION_DEFAULT_UNIT_WIDTH = int(environ.get('RACK_ELEVATION_DEFAULT_UNIT_WIDTH', 220))
 
 # Remote authentication support
 REMOTE_AUTH_ENABLED = environ.get('REMOTE_AUTH_ENABLED', 'False').lower() == 'true'
