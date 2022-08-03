@@ -46,6 +46,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       libldap-common \
       libpq5 \
       openssl \
+      postgresql-client \
       python3 \
       python3-distutils \
       tini \
