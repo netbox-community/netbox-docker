@@ -10,8 +10,6 @@ services:
     env_file: env/netbox.env
     user: 'unit:root'
     volumes:
-    - ./startup_scripts:/opt/netbox/startup_scripts:z,ro
-    - ./initializers:/opt/netbox/initializers:z,ro
     - ./configuration:/etc/netbox/config:z,ro
     - ./reports:/etc/netbox/reports:z,ro
     - ./scripts:/etc/netbox/scripts:z,ro

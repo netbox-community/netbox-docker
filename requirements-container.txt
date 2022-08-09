@@ -3,4 +3,3 @@ django-storages[azure,boto3,dropbox,google,libcloud,sftp]==1.12.3
 napalm==4.0.0
 psycopg2==2.9.3
 social-auth-core[openidconnect]==4.3.0
-ruamel.yaml==0.17.21

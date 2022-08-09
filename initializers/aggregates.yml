@@ -1,7 +1,0 @@
-# - prefix: 10.0.0.0/16
-#   rir: RFC1918
-#   tenant: tenant1
-# - prefix: fd00:ccdd::/32
-#   rir: RFC4193 ULA
-# - prefix: 2001:db8::/32
-#   rir: RFC3849

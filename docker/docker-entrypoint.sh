@@ -80,11 +80,13 @@ END
   echo "💡 Superuser Username: ${SUPERUSER_NAME}, E-Mail: ${SUPERUSER_EMAIL}"
 fi
 
-# Run the startup scripts (and initializers)
+# Print warning if startup scripts (and initializers) would've been run # Remove for next release
 if [ "$SKIP_STARTUP_SCRIPTS" == "true" ]; then
-  echo "↩️ Skipping startup scripts"
+  # Nothing to do
+  echo "" # Empty block not allowed
 else
-  echo "import runpy; runpy.run_path('../startup_scripts')" | ./manage.py shell --interface python
+  echo "⚠️⚠️⚠️ WARNING: The initializers have been moved to a plugin. See release notes."
+  echo "⚠️⚠️⚠️ Set environment variable 'SKIP_STARTUP_SCRIPTS' to 'true' to remove this warning."
 fi
 
 echo "✅ Initialisation is done."

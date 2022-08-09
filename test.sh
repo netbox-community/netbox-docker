@@ -37,21 +37,8 @@ fi
 # The docker compose command to use
 doco="docker-compose --file docker-compose.test.yml --project-name netbox_docker_test_${1}"
 
-INITIALIZERS_DIR=".initializers"
-
 test_setup() {
   echo "🏗 Setup up test environment"
-  if [ -d "${INITIALIZERS_DIR}" ]; then
-    rm -rf "${INITIALIZERS_DIR}"
-  fi
-
-  mkdir "${INITIALIZERS_DIR}"
-  (
-    cd initializers
-    for script in *.yml; do
-      sed -E 's/^# //' "${script}" >"../${INITIALIZERS_DIR}/${script}"
-    done
-  )
 }
 
 test_netbox_unit_tests() {
@@ -59,19 +46,9 @@ test_netbox_unit_tests() {
   $doco run --rm netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py test
 }
 
-test_initializers() {
-  echo "🏭 Testing Initializers"
-  export INITIALIZERS_DIR
-  $doco run --rm netbox /opt/netbox/docker-entrypoint.sh ./manage.py check
-}
-
 test_cleanup() {
   echo "💣 Cleaning Up"
   $doco down -v
-
-  if [ -d "${INITIALIZERS_DIR}" ]; then
-    rm -rf "${INITIALIZERS_DIR}"
-  fi
 }
 
 echo "🐳🐳🐳 Start testing '${IMAGE}'"
@@ -81,6 +58,5 @@ trap test_cleanup EXIT ERR
 test_setup
 
 test_netbox_unit_tests
-test_initializers
 
 echo "🐳🐳🐳 Done testing '${IMAGE}'"
