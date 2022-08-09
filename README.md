@@ -7,7 +7,7 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/netboxcommunity/netbox)
 [![GitHub license](https://img.shields.io/github/license/netbox-community/netbox-docker)][netbox-docker-license]
 
-[The GitHub repository](netbox-docker-github) houses the components needed to build NetBox as a container.
+[The GitHub repository][netbox-docker-github] houses the components needed to build NetBox as a container.
 Images are built regularly using the code in that repository and are pushed to [Docker Hub][netbox-dockerhub], [Quay.io][netbox-quayio] and [GitHub Container Registry][netbox-ghcr].
 
 Do you have any questions?
@@ -16,7 +16,6 @@ please join [our Slack][netbox-docker-slack] and ask for help in the [`#netbox-d
 
 [github-stargazers]: https://github.com/netbox-community/netbox-docker/stargazers
 [github-release]: https://github.com/netbox-community/netbox-docker/releases
-[netbox-docker-microbadger]: https://microbadger.com/images/netboxcommunity/netbox
 [netbox-dockerhub]: https://hub.docker.com/r/netboxcommunity/netbox/
 [netbox-quayio]: https://quay.io/repository/netboxcommunity/netbox
 [netbox-ghcr]: https://github.com/netbox-community/netbox-docker/pkgs/container/netbox
@@ -56,7 +55,6 @@ The default credentials are:
 * API Token: **0123456789abcdef0123456789abcdef01234567**
 
 [wiki-getting-started]: https://github.com/netbox-community/netbox-docker/wiki/Getting-Started
-[docker-reception]: https://github.com/nxt-engineering/reception
 
 ## Container Image Tags
 
@@ -92,17 +90,9 @@ For each of the above tag, there is an extra tag:
   This is the same version as `snapshot-a.b.c`.
   It always points to the latest version of _NetBox Docker_.
 
-Then there is currently one extra tags for each of the above tags:
-
-* `-ldap`:
-  These container images contain additional dependencies and configuration files for connecting NetBox to an LDAP directory.
-  [Learn more about that in our wiki][netbox-docker-ldap].
-
 [netbox-releases]: https://github.com/netbox-community/netbox/releases
 [netbox-master]: https://github.com/netbox-community/netbox/tree/master
 [netbox-develop]: https://github.com/netbox-community/netbox/tree/develop
-[netbox-branches]: https://github.com/netbox-community/netbox/branches
-[netbox-docker-ldap]: https://github.com/netbox-community/netbox-docker/wiki/LDAP
 
 ## Documentation
 
@@ -127,10 +117,11 @@ you may find [the `#netbox` channel][netbox-slack-channel] on the same Slack ins
 
 ## Dependencies
 
-This project relies only on *Docker* and *docker-compose* meeting these requirements:
+This project relies only on _Docker_ and _docker-compose_ meeting these requirements:
 
-* The *Docker version* must be at least `19.03`.
-* The *docker-compose version* must be at least `1.28.0`.
+* The _Docker version_ must be at least `20.10.10`.
+* The _containerd version_ must be at least `1.5.6`.
+* The _docker-compose version_ must be at least `1.28.0`.
 
 To check the version installed on your system run `docker --version` and `docker-compose --version`.
 
