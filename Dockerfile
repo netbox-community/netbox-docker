@@ -41,6 +41,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       --yes -qq --no-install-recommends \
     && apt-get install \
       --yes -qq --no-install-recommends \
+      bzip2 \
       ca-certificates \
       curl \
       libldap-common \
