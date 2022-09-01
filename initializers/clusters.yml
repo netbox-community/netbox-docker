@@ -1,7 +1,0 @@
-# - name: cluster1
-#   type: Hyper-V
-#   group: Group 1
-#   tenant: tenant1
-# - name: cluster2
-#   type: Hyper-V
-#   site: SING 1

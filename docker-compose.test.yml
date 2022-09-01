@@ -11,9 +11,8 @@ services:
       SKIP_STARTUP_SCRIPTS: ${SKIP_STARTUP_SCRIPTS-false}
     user: 'unit:root'
     volumes:
-    - ./startup_scripts:/opt/netbox/startup_scripts:z,ro
-    - ./${INITIALIZERS_DIR-initializers}:/opt/netbox/initializers:z,ro
     - ./configuration:/etc/netbox/config:z,ro
+    - ./test-configuration/logging.py:/etc/netbox/config/logging.py:z,ro
     - ./reports:/etc/netbox/reports:z,ro
     - ./scripts:/etc/netbox/scripts:z,ro
     - netbox-media-files:/opt/netbox/netbox/media:z

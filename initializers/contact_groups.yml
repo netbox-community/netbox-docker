@@ -1,7 +1,0 @@
-# - name: Network-Team
-#   slug: network-team
-#   description: This is a new contact group for the Network-Team
-# - name: New Contact Group
-#   slug: new-contact-group
-#   description: This is a new contact group sub under of Network-Team
-#   parent: Network-Team
