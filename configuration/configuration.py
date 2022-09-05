@@ -113,6 +113,9 @@ BASE_PATH = environ.get('BASE_PATH', '')
 # Maximum number of days to retain logged changes. Set to 0 to retain changes indefinitely. (Default: 90)
 CHANGELOG_RETENTION = int(environ.get('CHANGELOG_RETENTION', 90))
 
+# Maximum number of days to retain job results (scripts and reports). Set to 0 to retain job results in the database indefinitely. (Default: 90)
+JOBRESULT_RETENTION = int(environ.get('JOBRESULT_RETENTION', 90))
+
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
 # allowed. Otherwise, define a list of allowed origins using either CORS_ORIGIN_WHITELIST or
 # CORS_ORIGIN_REGEX_WHITELIST. For more information, see https://github.com/ottoyiu/django-cors-headers
