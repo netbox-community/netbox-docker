@@ -31,7 +31,7 @@ AUTH_LDAP_CONNECTION_OPTIONS = {
     ldap.OPT_REFERRALS: 0
 }
 
-AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = environ.get('AUTH_LDAP_BIND_AS_AUTHENTICATING_USER', 'True').lower() == 'true'
+AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = environ.get('AUTH_LDAP_BIND_AS_AUTHENTICATING_USER', 'False').lower() == 'true'
 
 # Set the DN and password for the NetBox service account if needed.
 if not AUTH_LDAP_BIND_AS_AUTHENTICATING_USER:
