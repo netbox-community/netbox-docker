@@ -7,12 +7,17 @@
 import re
 from os import environ
 from os.path import abspath, dirname, join
+from typing import Any, Callable
 
-# For reference see https://netbox.readthedocs.io/en/stable/configuration/
-# Based on https://github.com/netbox-community/netbox/blob/master/netbox/netbox/configuration.example.py
+# For reference see https://docs.netbox.dev/en/stable/configuration/
+# Based on https://github.com/netbox-community/netbox/blob/develop/netbox/netbox/configuration_example.py
+
+###
+# NetBox-Docker Helper functions
+###
 
 # Read secret from file
-def _read_secret(secret_name, default = None):
+def _read_secret(secret_name: str, default: str | None = None) -> str | None:
     try:
         f = open('/run/secrets/' + secret_name, 'r', encoding='utf-8')
     except EnvironmentError:
@@ -20,6 +25,25 @@ def _read_secret(secret_name, default = None):
     else:
         with f:
             return f.readline().strip()
+
+# If the `map_fn` isn't defined, then the value that is read from the environment (or the default value if not found) is returned.
+# If the `map_fn` is defined, then `map_fn` is invoked and the value (that was read from the environment or the default value if not found)
+# is passed to it as a parameter. The value returned from `map_fn` is then the return value of this function.
+# The `map_fn` is not invoked, if the value (that was read from the environment or the default value if not found) is None.
+def _environ_get_and_map(variable_name: str, default: str | None = None, map_fn: Callable[[str], Any | None] = None) -> Any | None:
+    env_value = environ.get(variable_name, default)
+
+    if env_value == None:
+        return env_value
+
+    if not map_fn:
+        return env_value
+    
+    return map_fn(env_value)
+
+_EQUALS_TRUE = lambda value : value.lower() == 'true'
+_AS_INT = lambda value : int(value)
+_SPLIT_ON_SPACE = lambda value : list(filter(None, value.split(' ')))
 
 _BASE_DIR = dirname(dirname(abspath(__file__)))
 
@@ -46,9 +70,9 @@ DATABASE = {
     'PORT': environ.get('DB_PORT', ''),             # Database port (leave blank for default)
     'OPTIONS': {'sslmode': environ.get('DB_SSLMODE', 'prefer')},
                                                     # Database connection SSLMODE
-    'CONN_MAX_AGE': int(environ.get('DB_CONN_MAX_AGE', '300')),
+    'CONN_MAX_AGE': _environ_get_and_map('DB_CONN_MAX_AGE', '300', _AS_INT),
                                                     # Max database connection age
-    'DISABLE_SERVER_SIDE_CURSORS': environ.get('DB_DISABLE_SERVER_SIDE_CURSORS', 'False').lower() == 'true',
+    'DISABLE_SERVER_SIDE_CURSORS': _environ_get_and_map('DB_DISABLE_SERVER_SIDE_CURSORS', 'False', _EQUALS_TRUE),
                                                     # Disable the use of server-side cursors transaction pooling
 }
 
@@ -58,19 +82,19 @@ DATABASE = {
 REDIS = {
     'tasks': {
         'HOST': environ.get('REDIS_HOST', 'localhost'),
-        'PORT': int(environ.get('REDIS_PORT', 6379)),
+        'PORT': _environ_get_and_map('REDIS_PORT', 6379, _AS_INT),
         'PASSWORD': _read_secret('redis_password', environ.get('REDIS_PASSWORD', '')),
-        'DATABASE': int(environ.get('REDIS_DATABASE', 0)),
-        'SSL': environ.get('REDIS_SSL', 'False').lower() == 'true',
-        'INSECURE_SKIP_TLS_VERIFY': environ.get('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False').lower() == 'true',
+        'DATABASE': _environ_get_and_map('REDIS_DATABASE', 0, _AS_INT),
+        'SSL': _environ_get_and_map('REDIS_SSL', 'False', _EQUALS_TRUE),
+        'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False', _EQUALS_TRUE),
     },
     'caching': {
         'HOST': environ.get('REDIS_CACHE_HOST', environ.get('REDIS_HOST', 'localhost')),
-        'PORT': int(environ.get('REDIS_CACHE_PORT', environ.get('REDIS_PORT', 6379))),
+        'PORT': _environ_get_and_map('REDIS_CACHE_PORT', environ.get('REDIS_PORT', '6379'), _AS_INT),
         'PASSWORD': _read_secret('redis_cache_password', environ.get('REDIS_CACHE_PASSWORD', environ.get('REDIS_PASSWORD', ''))),
-        'DATABASE': int(environ.get('REDIS_CACHE_DATABASE', 1)),
-        'SSL': environ.get('REDIS_CACHE_SSL', environ.get('REDIS_SSL', 'False')).lower() == 'true',
-        'INSECURE_SKIP_TLS_VERIFY': environ.get('REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY', environ.get('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False')).lower() == 'true',
+        'DATABASE': _environ_get_and_map('REDIS_CACHE_DATABASE', '1', _AS_INT),
+        'SSL': _environ_get_and_map('REDIS_CACHE_SSL', environ.get('REDIS_SSL', 'False'), _EQUALS_TRUE),
+        'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map('REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY', environ.get('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False'), _EQUALS_TRUE),
     },
 }
 
@@ -87,91 +111,106 @@ SECRET_KEY = _read_secret('secret_key', environ.get('SECRET_KEY', ''))
 #                       #
 #########################
 
-# Specify one or more name and email address tuples representing NetBox administrators. These people will be notified of
-# application errors (assuming correct email settings are provided).
-ADMINS = [
-    # ['John Doe', 'jdoe@example.com'],
-]
+# # Specify one or more name and email address tuples representing NetBox administrators. These people will be notified of
+# # application errors (assuming correct email settings are provided).
+# ADMINS = [
+#    # ['John Doe', 'jdoe@example.com'],
+# ]
 
 # URL schemes that are allowed within links in NetBox
-ALLOWED_URL_SCHEMES = (
+_DEFAULT_ALLOWED_URL_SCHEMES = (
     'file', 'ftp', 'ftps', 'http', 'https', 'irc', 'mailto', 'sftp', 'ssh', 'tel', 'telnet', 'tftp', 'vnc', 'xmpp',
 )
+ALLOWED_URL_SCHEMES = _environ_get_and_map('ALLOWED_URL_SCHEMES', ' '.join(_DEFAULT_ALLOWED_URL_SCHEMES), _SPLIT_ON_SPACE)
 
 # Optionally display a persistent banner at the top and/or bottom of every page. HTML is allowed. To display the same
 # content in both banners, define BANNER_TOP and set BANNER_BOTTOM = BANNER_TOP.
-BANNER_TOP = environ.get('BANNER_TOP', '')
-BANNER_BOTTOM = environ.get('BANNER_BOTTOM', '')
+BANNER_TOP = environ.get('BANNER_TOP', None)
+BANNER_BOTTOM = environ.get('BANNER_BOTTOM', None)
 
 # Text to include on the login page above the login form. HTML is allowed.
-BANNER_LOGIN = environ.get('BANNER_LOGIN', '')
+BANNER_LOGIN = environ.get('BANNER_LOGIN', None)
 
 # Base URL path if accessing NetBox within a directory. For example, if installed at http://example.com/netbox/, set:
 # BASE_PATH = 'netbox/'
 BASE_PATH = environ.get('BASE_PATH', '')
 
 # Maximum number of days to retain logged changes. Set to 0 to retain changes indefinitely. (Default: 90)
-CHANGELOG_RETENTION = int(environ.get('CHANGELOG_RETENTION', 90))
+CHANGELOG_RETENTION = _environ_get_and_map('CHANGELOG_RETENTION', None, _AS_INT)
 
 # Maximum number of days to retain job results (scripts and reports). Set to 0 to retain job results in the database indefinitely. (Default: 90)
-JOBRESULT_RETENTION = int(environ.get('JOBRESULT_RETENTION', 90))
+JOBRESULT_RETENTION = _environ_get_and_map('CHANGELOG_RETENTION', None, _AS_INT)
 
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
 # allowed. Otherwise, define a list of allowed origins using either CORS_ORIGIN_WHITELIST or
 # CORS_ORIGIN_REGEX_WHITELIST. For more information, see https://github.com/ottoyiu/django-cors-headers
-CORS_ORIGIN_ALLOW_ALL = environ.get('CORS_ORIGIN_ALLOW_ALL', 'False').lower() == 'true'
-CORS_ORIGIN_WHITELIST = list(filter(None, environ.get('CORS_ORIGIN_WHITELIST', 'https://localhost').split(' ')))
-CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in list(filter(None, environ.get('CORS_ORIGIN_REGEX_WHITELIST', '').split(' ')))]
-
-# Cross-Site-Request-Forgery-Attack settings. If Netbox is sitting behind a reverse proxy, you might need to set the CSRF_TRUSTED_ORIGINS flag.
-# Django 4.0 requires to specify the URL Scheme in this setting. An example environment variable could be specified like:
-# CSRF_TRUSTED_ORIGINS=https://demo.netbox.dev http://demo.netbox.dev
-CSRF_TRUSTED_ORIGINS = list(filter(None, environ.get('CSRF_TRUSTED_ORIGINS', '').split(' ')))
+CORS_ORIGIN_ALLOW_ALL = _environ_get_and_map('CORS_ORIGIN_ALLOW_ALL', 'False', _EQUALS_TRUE)
+CORS_ORIGIN_WHITELIST = _environ_get_and_map('CORS_ORIGIN_WHITELIST', 'https://localhost', _SPLIT_ON_SPACE)
+CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in _environ_get_and_map('CORS_ORIGIN_REGEX_WHITELIST', '', _SPLIT_ON_SPACE)]
 
 # Set to True to enable server debugging. WARNING: Debugging introduces a substantial performance penalty and may reveal
-# sensitive information about your installation. Only enable debugging while performing testing. Never enable debugging
-# on a production system.
-DEBUG = environ.get('DEBUG', 'False').lower() == 'true'
+# sensitive information about your installation. Only enable debugging while performing testing.
+# Never enable debugging on a production system.
+DEBUG = _environ_get_and_map('DEBUG', 'False', _EQUALS_TRUE)
+
+# This parameter serves as a safeguard to prevent some potentially dangerous behavior,
+# such as generating new database schema migrations.
+# Set this to True only if you are actively developing the NetBox code base.
+DEVELOPER = _environ_get_and_map('DEBUG', 'False', _EQUALS_TRUE)
 
 # Email settings
 EMAIL = {
     'SERVER': environ.get('EMAIL_SERVER', 'localhost'),
-    'PORT': int(environ.get('EMAIL_PORT', 25)),
+    'PORT': _environ_get_and_map('EMAIL_PORT', 25, _AS_INT),
     'USERNAME': environ.get('EMAIL_USERNAME', ''),
     'PASSWORD': _read_secret('email_password', environ.get('EMAIL_PASSWORD', '')),
-    'USE_SSL': environ.get('EMAIL_USE_SSL', 'False').lower() == 'true',
-    'USE_TLS': environ.get('EMAIL_USE_TLS', 'False').lower() == 'true',
+    'USE_SSL': _environ_get_and_map('EMAIL_USE_SSL', 'False', _EQUALS_TRUE),
+    'USE_TLS': _environ_get_and_map('EMAIL_USE_TLS', 'False', _EQUALS_TRUE),
     'SSL_CERTFILE': environ.get('EMAIL_SSL_CERTFILE', ''),
     'SSL_KEYFILE': environ.get('EMAIL_SSL_KEYFILE', ''),
-    'TIMEOUT': int(environ.get('EMAIL_TIMEOUT', 10)),  # seconds
+    'TIMEOUT': _environ_get_and_map('EMAIL_TIMEOUT', 10, _AS_INT),  # seconds
     'FROM_EMAIL': environ.get('EMAIL_FROM', ''),
 }
 
 # Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce unique IP space within the global table
 # (all prefixes and IP addresses not assigned to a VRF), set ENFORCE_GLOBAL_UNIQUE to True.
-ENFORCE_GLOBAL_UNIQUE = environ.get('ENFORCE_GLOBAL_UNIQUE', 'False').lower() == 'true'
+ENFORCE_GLOBAL_UNIQUE = _environ_get_and_map('ENFORCE_GLOBAL_UNIQUE', None, _EQUALS_TRUE)
 
 # Exempt certain models from the enforcement of view permissions. Models listed here will be viewable by all users and
 # by anonymous users. List models in the form `<app>.<model>`. Add '*' to this list to exempt all models.
-EXEMPT_VIEW_PERMISSIONS = list(filter(None, environ.get('EXEMPT_VIEW_PERMISSIONS', '').split(' ')))
+EXEMPT_VIEW_PERMISSIONS = _environ_get_and_map('EXEMPT_VIEW_PERMISSIONS', '', _SPLIT_ON_SPACE)
+
+# HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for webhooks).
+# HTTP_PROXIES = {
+#     'http': 'http://10.10.1.10:3128',
+#     'https': 'http://10.10.1.10:1080',
+# }
+
+# IP addresses recognized as internal to the system. The debugging toolbar will be available only to clients accessing
+# NetBox from an internal IP.
+INTERNAL_IPS = _environ_get_and_map('INTERNAL_IPS', '127.0.0.1 ::1', _SPLIT_ON_SPACE)
 
 # Enable GraphQL API.
-GRAPHQL_ENABLED = environ.get('GRAPHQL_ENABLED', 'True').lower() == 'true'
+GRAPHQL_ENABLED = _environ_get_and_map('GRAPHQL_ENABLED', None, _EQUALS_TRUE)
 
-# Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
-#   https://docs.djangoproject.com/en/stable/topics/logging/
-LOGGING = {}
+# # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
+# #   https://docs.djangoproject.com/en/stable/topics/logging/
+# LOGGING = {}
+
+# Automatically reset the lifetime of a valid session upon each authenticated request. Enables users to remain
+# authenticated to NetBox indefinitely.
+LOGIN_PERSISTENCE = _environ_get_and_map('LOGIN_PERSISTENCE', 'False', _EQUALS_TRUE)
 
 # Setting this to True will permit only authenticated users to access any part of NetBox. By default, anonymous users
 # are permitted to access most data in NetBox (excluding secrets) but not make any changes.
-LOGIN_REQUIRED = environ.get('LOGIN_REQUIRED', 'False').lower() == 'true'
+LOGIN_REQUIRED = _environ_get_and_map('LOGIN_REQUIRED', 'False', _EQUALS_TRUE)
 
 # The length of time (in seconds) for which a user will remain logged into the web UI before being prompted to
 # re-authenticate. (Default: 1209600 [14 days])
-LOGIN_TIMEOUT = int(environ.get('LOGIN_TIMEOUT', 1209600))
+LOGIN_TIMEOUT = _environ_get_and_map('LOGIN_TIMEOUT', 1209600, _AS_INT)
 
 # Setting this to True will display a "maintenance mode" banner at the top of every page.
-MAINTENANCE_MODE = environ.get('MAINTENANCE_MODE', 'False').lower() == 'true'
+MAINTENANCE_MODE = _environ_get_and_map('MAINTENANCE_MODE', None, _EQUALS_TRUE)
 
 # Maps provider
 MAPS_URL = environ.get('MAPS_URL', None)
@@ -179,67 +218,88 @@ MAPS_URL = environ.get('MAPS_URL', None)
 # An API consumer can request an arbitrary number of objects =by appending the "limit" parameter to the URL (e.g.
 # "?limit=1000"). This setting defines the maximum limit. Setting it to 0 or None will allow an API consumer to request
 # all objects by specifying "?limit=0".
-MAX_PAGE_SIZE = int(environ.get('MAX_PAGE_SIZE', 1000))
+MAX_PAGE_SIZE = _environ_get_and_map('MAX_PAGE_SIZE', None, _AS_INT)
 
 # The file path where uploaded media such as image attachments are stored. A trailing slash is not needed. Note that
 # the default value of this setting is derived from the installed location.
 MEDIA_ROOT = environ.get('MEDIA_ROOT', join(_BASE_DIR, 'media'))
 
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
-METRICS_ENABLED = environ.get('METRICS_ENABLED', 'False').lower() == 'true'
+METRICS_ENABLED = _environ_get_and_map('METRICS_ENABLED', 'False', _EQUALS_TRUE)
 
 # Credentials that NetBox will uses to authenticate to devices when connecting via NAPALM.
-NAPALM_USERNAME = environ.get('NAPALM_USERNAME', '')
-NAPALM_PASSWORD = _read_secret('napalm_password', environ.get('NAPALM_PASSWORD', ''))
+NAPALM_USERNAME = environ.get('NAPALM_USERNAME', None)
+NAPALM_PASSWORD = _read_secret('napalm_password', environ.get('NAPALM_PASSWORD', None))
 
 # NAPALM timeout (in seconds). (Default: 30)
-NAPALM_TIMEOUT = int(environ.get('NAPALM_TIMEOUT', 30))
+NAPALM_TIMEOUT = _environ_get_and_map('NAPALM_TIMEOUT', None, _AS_INT)
 
-# NAPALM optional arguments (see http://napalm.readthedocs.io/en/latest/support/#optional-arguments). Arguments must
-# be provided as a dictionary.
-NAPALM_ARGS = {}
+# # NAPALM optional arguments (see http://napalm.readthedocs.io/en/latest/support/#optional-arguments). Arguments must
+# # be provided as a dictionary.
+# NAPALM_ARGS = None
 
 # Determine how many objects to display per page within a list. (Default: 50)
-PAGINATE_COUNT = int(environ.get('PAGINATE_COUNT', 50))
+PAGINATE_COUNT = _environ_get_and_map('PAGINATE_COUNT', None, _AS_INT)
 
-# Enable installed plugins. Add the name of each plugin to the list.
-PLUGINS = []
+# # Enable installed plugins. Add the name of each plugin to the list.
+# PLUGINS = []
 
-# Plugins configuration settings. These settings are used by various plugins that the user may have installed.
-# Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
-PLUGINS_CONFIG = {
-}
+# # Plugins configuration settings. These settings are used by various plugins that the user may have installed.
+# # Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
+# PLUGINS_CONFIG = {
+# }
 
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
 # prefer IPv4 instead.
-PREFER_IPV4 = environ.get('PREFER_IPV4', 'False').lower() == 'true'
+PREFER_IPV4 = _environ_get_and_map('PREFER_IPV4', None, _EQUALS_TRUE)
+
+# The default value for the amperage field when creating new power feeds.
+POWERFEED_DEFAULT_AMPERAGE = _environ_get_and_map('POWERFEED_DEFAULT_AMPERAGE', None, _AS_INT)
+
+# The default value (percentage) for the max_utilization field when creating new power feeds.
+POWERFEED_DEFAULT_MAX_UTILIZATION = _environ_get_and_map('POWERFEED_DEFAULT_MAX_UTILIZATION', None, _AS_INT)
+
+# The default value for the voltage field when creating new power feeds.
+POWERFEED_DEFAULT_VOLTAGE = _environ_get_and_map('POWERFEED_DEFAULT_VOLTAGE', None, _AS_INT)
 
 # Rack elevation size defaults, in pixels. For best results, the ratio of width to height should be roughly 10:1.
-RACK_ELEVATION_DEFAULT_UNIT_HEIGHT = int(environ.get('RACK_ELEVATION_DEFAULT_UNIT_HEIGHT', 22))
-RACK_ELEVATION_DEFAULT_UNIT_WIDTH = int(environ.get('RACK_ELEVATION_DEFAULT_UNIT_WIDTH', 220))
+RACK_ELEVATION_DEFAULT_UNIT_HEIGHT = _environ_get_and_map('RACK_ELEVATION_DEFAULT_UNIT_HEIGHT', None, _AS_INT)
+RACK_ELEVATION_DEFAULT_UNIT_WIDTH = _environ_get_and_map('RACK_ELEVATION_DEFAULT_UNIT_WIDTH', None, _AS_INT)
 
 # Remote authentication support
-REMOTE_AUTH_ENABLED = environ.get('REMOTE_AUTH_ENABLED', 'False').lower() == 'true'
+REMOTE_AUTH_ENABLED = _environ_get_and_map('REMOTE_AUTH_ENABLED', 'False', _EQUALS_TRUE)
 REMOTE_AUTH_BACKEND = environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend')
 REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
-REMOTE_AUTH_AUTO_CREATE_USER = environ.get('REMOTE_AUTH_AUTO_CREATE_USER', 'True').lower() == 'true'
-REMOTE_AUTH_DEFAULT_GROUPS = list(filter(None, environ.get('REMOTE_AUTH_DEFAULT_GROUPS', '').split(' ')))
+REMOTE_AUTH_AUTO_CREATE_USER = _environ_get_and_map('REMOTE_AUTH_AUTO_CREATE_USER', 'True', _EQUALS_TRUE)
+REMOTE_AUTH_DEFAULT_GROUPS = _environ_get_and_map('REMOTE_AUTH_DEFAULT_GROUPS', '', _SPLIT_ON_SPACE)
+# REMOTE_AUTH_DEFAULT_PERMISSIONS = {}
 
 # This repository is used to check whether there is a new release of NetBox available. Set to None to disable the
 # version check or use the URL below to check for release in the official NetBox repository.
-# https://api.github.com/repos/netbox-community/netbox/releases
 RELEASE_CHECK_URL = environ.get('RELEASE_CHECK_URL', None)
+# RELEASE_CHECK_URL = 'https://api.github.com/repos/netbox-community/netbox/releases'
 
 # The file path where custom reports will be stored. A trailing slash is not needed. Note that the default value of
 # this setting is derived from the installed location.
 REPORTS_ROOT = environ.get('REPORTS_ROOT', '/etc/netbox/reports')
 
 # Maximum execution time for background tasks, in seconds.
-RQ_DEFAULT_TIMEOUT = int(environ.get('RQ_DEFAULT_TIMEOUT', 300))
+RQ_DEFAULT_TIMEOUT = _environ_get_and_map('RQ_DEFAULT_TIMEOUT', 300, _AS_INT)
 
 # The file path where custom scripts will be stored. A trailing slash is not needed. Note that the default value of
 # this setting is derived from the installed location.
 SCRIPTS_ROOT = environ.get('SCRIPTS_ROOT', '/etc/netbox/scripts')
+
+# The name to use for the csrf token cookie.
+CSRF_COOKIE_NAME = environ.get('CSRF_COOKIE_NAME', 'csrftoken')
+
+# Cross-Site-Request-Forgery-Attack settings. If Netbox is sitting behind a reverse proxy, you might need to set the CSRF_TRUSTED_ORIGINS flag.
+# Django 4.0 requires to specify the URL Scheme in this setting. An example environment variable could be specified like:
+# CSRF_TRUSTED_ORIGINS=https://demo.netbox.dev http://demo.netbox.dev
+CSRF_TRUSTED_ORIGINS = _environ_get_and_map('CSRF_TRUSTED_ORIGINS', '', _SPLIT_ON_SPACE)
+
+# The name to use for the session cookie.
+SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME', 'sessionid')
 
 # By default, NetBox will store session data in the database. Alternatively, a file path can be specified here to use
 # local file storage instead. (This can be useful for enabling authentication on a standby instance with read-only
