@@ -332,7 +332,7 @@ elif [[ "${IMAGE_NAME_TAGS[0]}" = docker.io* ]]; then
 
   if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${BASE_LAST_LAYER}\$"; then
     SHOULD_BUILD="true"
-    BUILD_REASON="${BUILD_REASON} debian"
+    BUILD_REASON="${BUILD_REASON} ubuntu"
   fi
   if [ "${NETBOX_GIT_REF}" != "${NETBOX_GIT_REF_OLD}" ]; then
     SHOULD_BUILD="true"
