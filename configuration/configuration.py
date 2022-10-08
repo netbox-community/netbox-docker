@@ -118,9 +118,8 @@ SECRET_KEY = _read_secret('secret_key', environ.get('SECRET_KEY', ''))
 #    # ['John Doe', 'jdoe@example.com'],
 # ]
 
-_ALLOWED_URL_SCHEMES = _environ_get_and_map('ALLOWED_URL_SCHEMES', None, _SPLIT_ON_SPACE)
-if _ALLOWED_URL_SCHEMES:
-    ALLOWED_URL_SCHEMES = _ALLOWED_URL_SCHEMES
+if 'ALLOWED_URL_SCHEMES' in environ:
+    ALLOWED_URL_SCHEMES = _environ_get_and_map('ALLOWED_URL_SCHEMES', None, _SPLIT_ON_SPACE)
 
 # Optionally display a persistent banner at the top and/or bottom of every page. HTML is allowed. To display the same
 # content in both banners, define BANNER_TOP and set BANNER_BOTTOM = BANNER_TOP.
@@ -138,9 +137,8 @@ if 'BANNER_LOGIN' in environ:
 BASE_PATH = environ.get('BASE_PATH', '')
 
 # Maximum number of days to retain logged changes. Set to 0 to retain changes indefinitely. (Default: 90)
-_CHANGELOG_RETENTION = _environ_get_and_map('CHANGELOG_RETENTION', None, _AS_INT)
-if _CHANGELOG_RETENTION:
-    CHANGELOG_RETENTION = _CHANGELOG_RETENTION
+if 'CHANGELOG_RETENTION' in environ:
+    CHANGELOG_RETENTION = _environ_get_and_map('CHANGELOG_RETENTION', None, _AS_INT)
 
 # Maximum number of days to retain job results (scripts and reports). Set to 0 to retain job results in the database indefinitely. (Default: 90)
 if 'JOBRESULT_RETENTION' in environ:
@@ -179,9 +177,8 @@ EMAIL = {
 
 # Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce unique IP space within the global table
 # (all prefixes and IP addresses not assigned to a VRF), set ENFORCE_GLOBAL_UNIQUE to True.
-_ENFORCE_GLOBAL_UNIQUE = _environ_get_and_map('ENFORCE_GLOBAL_UNIQUE', None, _EQUALS_TRUE)
-if _ENFORCE_GLOBAL_UNIQUE:
-    ENFORCE_GLOBAL_UNIQUE = _ENFORCE_GLOBAL_UNIQUE
+if 'ENFORCE_GLOBAL_UNIQUE' in environ:
+    ENFORCE_GLOBAL_UNIQUE = _environ_get_and_map('ENFORCE_GLOBAL_UNIQUE', None, _EQUALS_TRUE)
 
 # Exempt certain models from the enforcement of view permissions. Models listed here will be viewable by all users and
 # by anonymous users. List models in the form `<app>.<model>`. Add '*' to this list to exempt all models.
@@ -198,9 +195,8 @@ EXEMPT_VIEW_PERMISSIONS = _environ_get_and_map('EXEMPT_VIEW_PERMISSIONS', '', _S
 INTERNAL_IPS = _environ_get_and_map('INTERNAL_IPS', '127.0.0.1 ::1', _SPLIT_ON_SPACE)
 
 # Enable GraphQL API.
-_GRAPHQL_ENABLED = _environ_get_and_map('GRAPHQL_ENABLED', None, _EQUALS_TRUE)
-if _GRAPHQL_ENABLED:
-    GRAPHQL_ENABLED = _GRAPHQL_ENABLED
+if 'GRAPHQL_ENABLED' in environ:
+    GRAPHQL_ENABLED = _environ_get_and_map('GRAPHQL_ENABLED', None, _EQUALS_TRUE)
 
 # # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
 # #   https://docs.djangoproject.com/en/stable/topics/logging/
@@ -219,9 +215,8 @@ LOGIN_REQUIRED = _environ_get_and_map('LOGIN_REQUIRED', 'False', _EQUALS_TRUE)
 LOGIN_TIMEOUT = _environ_get_and_map('LOGIN_TIMEOUT', 1209600, _AS_INT)
 
 # Setting this to True will display a "maintenance mode" banner at the top of every page.
-_MAINTENANCE_MODE = _environ_get_and_map('MAINTENANCE_MODE', None, _EQUALS_TRUE)
-if _MAINTENANCE_MODE:
-    MAINTENANCE_MODE = _MAINTENANCE_MODE
+if 'MAINTENANCE_MODE' in environ:
+    MAINTENANCE_MODE = _environ_get_and_map('MAINTENANCE_MODE', None, _EQUALS_TRUE)
 
 # Maps provider
 if 'MAPS_URL' in environ:
@@ -230,9 +225,8 @@ if 'MAPS_URL' in environ:
 # An API consumer can request an arbitrary number of objects =by appending the "limit" parameter to the URL (e.g.
 # "?limit=1000"). This setting defines the maximum limit. Setting it to 0 or None will allow an API consumer to request
 # all objects by specifying "?limit=0".
-_MAX_PAGE_SIZE = _environ_get_and_map('MAX_PAGE_SIZE', None, _AS_INT)
-if _MAX_PAGE_SIZE:
-    MAX_PAGE_SIZE = _MAX_PAGE_SIZE
+if 'MAX_PAGE_SIZE' in environ:
+    MAX_PAGE_SIZE = _environ_get_and_map('MAX_PAGE_SIZE', None, _AS_INT)
 
 # The file path where uploaded media such as image attachments are stored. A trailing slash is not needed. Note that
 # the default value of this setting is derived from the installed location.
@@ -248,18 +242,16 @@ if 'NAPALM_PASSWORD' in environ:
     NAPALM_PASSWORD = _read_secret('napalm_password', environ.get('NAPALM_PASSWORD', None))
 
 # NAPALM timeout (in seconds). (Default: 30)
-_NAPALM_TIMEOUT = _environ_get_and_map('NAPALM_TIMEOUT', None, _AS_INT)
-if _NAPALM_TIMEOUT:
-    NAPALM_TIMEOUT = _NAPALM_TIMEOUT
+if 'NAPALM_TIMEOUT' in environ:
+    NAPALM_TIMEOUT = _environ_get_and_map('NAPALM_TIMEOUT', None, _AS_INT)
 
 # # NAPALM optional arguments (see http://napalm.readthedocs.io/en/latest/support/#optional-arguments). Arguments must
 # # be provided as a dictionary.
 # NAPALM_ARGS = None
 
 # Determine how many objects to display per page within a list. (Default: 50)
-_PAGINATE_COUNT = _environ_get_and_map('PAGINATE_COUNT', None, _AS_INT)
-if _PAGINATE_COUNT:
-    PAGINATE_COUNT = _PAGINATE_COUNT
+if 'PAGINATE_COUNT' in environ:
+    PAGINATE_COUNT = _environ_get_and_map('PAGINATE_COUNT', None, _AS_INT)
 
 # # Enable installed plugins. Add the name of each plugin to the list.
 # PLUGINS = []
@@ -271,32 +263,26 @@ if _PAGINATE_COUNT:
 
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
 # prefer IPv4 instead.
-_PREFER_IPV4 = _environ_get_and_map('PREFER_IPV4', None, _EQUALS_TRUE)
-if _PREFER_IPV4:
-    PREFER_IPV = _PREFER_IPV4
+if 'PREFER_IPV4' in environ:
+    PREFER_IPV4 = _environ_get_and_map('PREFER_IPV4', None, _EQUALS_TRUE)
 
 # The default value for the amperage field when creating new power feeds.
-_POWERFEED_DEFAULT_AMPERAGE = _environ_get_and_map('POWERFEED_DEFAULT_AMPERAGE', None, _AS_INT)
-if _POWERFEED_DEFAULT_AMPERAGE:
-    POWERFEED_DEFAULT_AMPERAGE = _POWERFEED_DEFAULT_AMPERAGE
+if 'POWERFEED_DEFAULT_AMPERAGE' in environ:
+    POWERFEED_DEFAULT_AMPERAGE = _environ_get_and_map('POWERFEED_DEFAULT_AMPERAGE', None, _AS_INT)
 
 # The default value (percentage) for the max_utilization field when creating new power feeds.
-_POWERFEED_DEFAULT_MAX_UTILIZATION = _environ_get_and_map('POWERFEED_DEFAULT_MAX_UTILIZATION', None, _AS_INT)
-if _POWERFEED_DEFAULT_MAX_UTILIZATION:
-    POWERFEED_DEFAULT_MAX_UTILIZATION = _POWERFEED_DEFAULT_MAX_UTILIZATION
+if 'POWERFEED_DEFAULT_MAX_UTILIZATION' in environ:
+    POWERFEED_DEFAULT_MAX_UTILIZATION = _environ_get_and_map('POWERFEED_DEFAULT_MAX_UTILIZATION', None, _AS_INT)
 
 # The default value for the voltage field when creating new power feeds.
-_POWERFEED_DEFAULT_VOLTAGE = _environ_get_and_map('POWERFEED_DEFAULT_VOLTAGE', None, _AS_INT)
-if _POWERFEED_DEFAULT_VOLTAGE:
-    POWERFEED_DEFAULT_VOLTAGE = _POWERFEED_DEFAULT_VOLTAGE
+if 'POWERFEED_DEFAULT_VOLTAGE' in environ:
+    POWERFEED_DEFAULT_VOLTAGE = _environ_get_and_map('POWERFEED_DEFAULT_VOLTAGE', None, _AS_INT)
 
 # Rack elevation size defaults, in pixels. For best results, the ratio of width to height should be roughly 10:1.
-_RACK_ELEVATION_DEFAULT_UNIT_HEIGHT = _environ_get_and_map('RACK_ELEVATION_DEFAULT_UNIT_HEIGHT', None, _AS_INT)
-if _RACK_ELEVATION_DEFAULT_UNIT_HEIGHT:
-    RACK_ELEVATION_DEFAULT_UNIT_HEIGHT = _RACK_ELEVATION_DEFAULT_UNIT_HEIGHT
-_RACK_ELEVATION_DEFAULT_UNIT_WIDTH = _environ_get_and_map('RACK_ELEVATION_DEFAULT_UNIT_WIDTH', None, _AS_INT)
-if _RACK_ELEVATION_DEFAULT_UNIT_WIDTH:
-    RACK_ELEVATION_DEFAULT_UNIT_WIDTH = _RACK_ELEVATION_DEFAULT_UNIT_WIDTH
+if 'RACK_ELEVATION_DEFAULT_UNIT_HEIGHT' in environ:
+    RACK_ELEVATION_DEFAULT_UNIT_HEIGHT = _environ_get_and_map('RACK_ELEVATION_DEFAULT_UNIT_HEIGHT', None, _AS_INT)
+if 'RACK_ELEVATION_DEFAULT_UNIT_WIDTH' in environ:
+    RACK_ELEVATION_DEFAULT_UNIT_WIDTH = _environ_get_and_map('RACK_ELEVATION_DEFAULT_UNIT_WIDTH', None, _AS_INT)
 
 # Remote authentication support
 REMOTE_AUTH_ENABLED = _environ_get_and_map('REMOTE_AUTH_ENABLED', 'False', _EQUALS_TRUE)
