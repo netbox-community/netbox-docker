@@ -42,9 +42,9 @@ def _environ_get_and_map(variable_name: str, default: str | None = None, map_fn:
     
     return map_fn(env_value)
 
-_EQUALS_TRUE = lambda value : value.lower() == 'true'
+_AS_BOOL = lambda value : value.lower() == 'true'
 _AS_INT = lambda value : int(value)
-_SPLIT_ON_SPACE = lambda value : list(filter(None, value.split(' ')))
+_AS_LIST = lambda value : list(filter(None, value.split(' ')))
 
 _BASE_DIR = dirname(dirname(abspath(__file__)))
 
@@ -73,7 +73,7 @@ DATABASE = {
                                                     # Database connection SSLMODE
     'CONN_MAX_AGE': _environ_get_and_map('DB_CONN_MAX_AGE', '300', _AS_INT),
                                                     # Max database connection age
-    'DISABLE_SERVER_SIDE_CURSORS': _environ_get_and_map('DB_DISABLE_SERVER_SIDE_CURSORS', 'False', _EQUALS_TRUE),
+    'DISABLE_SERVER_SIDE_CURSORS': _environ_get_and_map('DB_DISABLE_SERVER_SIDE_CURSORS', 'False', _AS_BOOL),
                                                     # Disable the use of server-side cursors transaction pooling
 }
 
@@ -86,16 +86,16 @@ REDIS = {
         'PORT': _environ_get_and_map('REDIS_PORT', 6379, _AS_INT),
         'PASSWORD': _read_secret('redis_password', environ.get('REDIS_PASSWORD', '')),
         'DATABASE': _environ_get_and_map('REDIS_DATABASE', 0, _AS_INT),
-        'SSL': _environ_get_and_map('REDIS_SSL', 'False', _EQUALS_TRUE),
-        'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False', _EQUALS_TRUE),
+        'SSL': _environ_get_and_map('REDIS_SSL', 'False', _AS_BOOL),
+        'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False', _AS_BOOL),
     },
     'caching': {
         'HOST': environ.get('REDIS_CACHE_HOST', environ.get('REDIS_HOST', 'localhost')),
         'PORT': _environ_get_and_map('REDIS_CACHE_PORT', environ.get('REDIS_PORT', '6379'), _AS_INT),
         'PASSWORD': _read_secret('redis_cache_password', environ.get('REDIS_CACHE_PASSWORD', environ.get('REDIS_PASSWORD', ''))),
         'DATABASE': _environ_get_and_map('REDIS_CACHE_DATABASE', '1', _AS_INT),
-        'SSL': _environ_get_and_map('REDIS_CACHE_SSL', environ.get('REDIS_SSL', 'False'), _EQUALS_TRUE),
-        'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map('REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY', environ.get('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False'), _EQUALS_TRUE),
+        'SSL': _environ_get_and_map('REDIS_CACHE_SSL', environ.get('REDIS_SSL', 'False'), _AS_BOOL),
+        'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map('REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY', environ.get('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False'), _AS_BOOL),
     },
 }
 
@@ -119,7 +119,7 @@ SECRET_KEY = _read_secret('secret_key', environ.get('SECRET_KEY', ''))
 # ]
 
 if 'ALLOWED_URL_SCHEMES' in environ:
-    ALLOWED_URL_SCHEMES = _environ_get_and_map('ALLOWED_URL_SCHEMES', None, _SPLIT_ON_SPACE)
+    ALLOWED_URL_SCHEMES = _environ_get_and_map('ALLOWED_URL_SCHEMES', None, _AS_LIST)
 
 # Optionally display a persistent banner at the top and/or bottom of every page. HTML is allowed. To display the same
 # content in both banners, define BANNER_TOP and set BANNER_BOTTOM = BANNER_TOP.
@@ -147,19 +147,19 @@ if 'JOBRESULT_RETENTION' in environ:
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
 # allowed. Otherwise, define a list of allowed origins using either CORS_ORIGIN_WHITELIST or
 # CORS_ORIGIN_REGEX_WHITELIST. For more information, see https://github.com/ottoyiu/django-cors-headers
-CORS_ORIGIN_ALLOW_ALL = _environ_get_and_map('CORS_ORIGIN_ALLOW_ALL', 'False', _EQUALS_TRUE)
-CORS_ORIGIN_WHITELIST = _environ_get_and_map('CORS_ORIGIN_WHITELIST', 'https://localhost', _SPLIT_ON_SPACE)
-CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in _environ_get_and_map('CORS_ORIGIN_REGEX_WHITELIST', '', _SPLIT_ON_SPACE)]
+CORS_ORIGIN_ALLOW_ALL = _environ_get_and_map('CORS_ORIGIN_ALLOW_ALL', 'False', _AS_BOOL)
+CORS_ORIGIN_WHITELIST = _environ_get_and_map('CORS_ORIGIN_WHITELIST', 'https://localhost', _AS_LIST)
+CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in _environ_get_and_map('CORS_ORIGIN_REGEX_WHITELIST', '', _AS_LIST)]
 
 # Set to True to enable server debugging. WARNING: Debugging introduces a substantial performance penalty and may reveal
 # sensitive information about your installation. Only enable debugging while performing testing.
 # Never enable debugging on a production system.
-DEBUG = _environ_get_and_map('DEBUG', 'False', _EQUALS_TRUE)
+DEBUG = _environ_get_and_map('DEBUG', 'False', _AS_BOOL)
 
 # This parameter serves as a safeguard to prevent some potentially dangerous behavior,
 # such as generating new database schema migrations.
 # Set this to True only if you are actively developing the NetBox code base.
-DEVELOPER = _environ_get_and_map('DEVELOPER', 'False', _EQUALS_TRUE)
+DEVELOPER = _environ_get_and_map('DEVELOPER', 'False', _AS_BOOL)
 
 # Email settings
 EMAIL = {
@@ -167,8 +167,8 @@ EMAIL = {
     'PORT': _environ_get_and_map('EMAIL_PORT', 25, _AS_INT),
     'USERNAME': environ.get('EMAIL_USERNAME', ''),
     'PASSWORD': _read_secret('email_password', environ.get('EMAIL_PASSWORD', '')),
-    'USE_SSL': _environ_get_and_map('EMAIL_USE_SSL', 'False', _EQUALS_TRUE),
-    'USE_TLS': _environ_get_and_map('EMAIL_USE_TLS', 'False', _EQUALS_TRUE),
+    'USE_SSL': _environ_get_and_map('EMAIL_USE_SSL', 'False', _AS_BOOL),
+    'USE_TLS': _environ_get_and_map('EMAIL_USE_TLS', 'False', _AS_BOOL),
     'SSL_CERTFILE': environ.get('EMAIL_SSL_CERTFILE', ''),
     'SSL_KEYFILE': environ.get('EMAIL_SSL_KEYFILE', ''),
     'TIMEOUT': _environ_get_and_map('EMAIL_TIMEOUT', 10, _AS_INT),  # seconds
@@ -178,11 +178,11 @@ EMAIL = {
 # Enforcement of unique IP space can be toggled on a per-VRF basis. To enforce unique IP space within the global table
 # (all prefixes and IP addresses not assigned to a VRF), set ENFORCE_GLOBAL_UNIQUE to True.
 if 'ENFORCE_GLOBAL_UNIQUE' in environ:
-    ENFORCE_GLOBAL_UNIQUE = _environ_get_and_map('ENFORCE_GLOBAL_UNIQUE', None, _EQUALS_TRUE)
+    ENFORCE_GLOBAL_UNIQUE = _environ_get_and_map('ENFORCE_GLOBAL_UNIQUE', None, _AS_BOOL)
 
 # Exempt certain models from the enforcement of view permissions. Models listed here will be viewable by all users and
 # by anonymous users. List models in the form `<app>.<model>`. Add '*' to this list to exempt all models.
-EXEMPT_VIEW_PERMISSIONS = _environ_get_and_map('EXEMPT_VIEW_PERMISSIONS', '', _SPLIT_ON_SPACE)
+EXEMPT_VIEW_PERMISSIONS = _environ_get_and_map('EXEMPT_VIEW_PERMISSIONS', '', _AS_LIST)
 
 # HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for webhooks).
 # HTTP_PROXIES = {
@@ -192,11 +192,11 @@ EXEMPT_VIEW_PERMISSIONS = _environ_get_and_map('EXEMPT_VIEW_PERMISSIONS', '', _S
 
 # IP addresses recognized as internal to the system. The debugging toolbar will be available only to clients accessing
 # NetBox from an internal IP.
-INTERNAL_IPS = _environ_get_and_map('INTERNAL_IPS', '127.0.0.1 ::1', _SPLIT_ON_SPACE)
+INTERNAL_IPS = _environ_get_and_map('INTERNAL_IPS', '127.0.0.1 ::1', _AS_LIST)
 
 # Enable GraphQL API.
 if 'GRAPHQL_ENABLED' in environ:
-    GRAPHQL_ENABLED = _environ_get_and_map('GRAPHQL_ENABLED', None, _EQUALS_TRUE)
+    GRAPHQL_ENABLED = _environ_get_and_map('GRAPHQL_ENABLED', None, _AS_BOOL)
 
 # # Enable custom logging. Please see the Django documentation for detailed guidance on configuring custom logs:
 # #   https://docs.djangoproject.com/en/stable/topics/logging/
@@ -204,11 +204,11 @@ if 'GRAPHQL_ENABLED' in environ:
 
 # Automatically reset the lifetime of a valid session upon each authenticated request. Enables users to remain
 # authenticated to NetBox indefinitely.
-LOGIN_PERSISTENCE = _environ_get_and_map('LOGIN_PERSISTENCE', 'False', _EQUALS_TRUE)
+LOGIN_PERSISTENCE = _environ_get_and_map('LOGIN_PERSISTENCE', 'False', _AS_BOOL)
 
 # Setting this to True will permit only authenticated users to access any part of NetBox. By default, anonymous users
 # are permitted to access most data in NetBox (excluding secrets) but not make any changes.
-LOGIN_REQUIRED = _environ_get_and_map('LOGIN_REQUIRED', 'False', _EQUALS_TRUE)
+LOGIN_REQUIRED = _environ_get_and_map('LOGIN_REQUIRED', 'False', _AS_BOOL)
 
 # The length of time (in seconds) for which a user will remain logged into the web UI before being prompted to
 # re-authenticate. (Default: 1209600 [14 days])
@@ -216,7 +216,7 @@ LOGIN_TIMEOUT = _environ_get_and_map('LOGIN_TIMEOUT', 1209600, _AS_INT)
 
 # Setting this to True will display a "maintenance mode" banner at the top of every page.
 if 'MAINTENANCE_MODE' in environ:
-    MAINTENANCE_MODE = _environ_get_and_map('MAINTENANCE_MODE', None, _EQUALS_TRUE)
+    MAINTENANCE_MODE = _environ_get_and_map('MAINTENANCE_MODE', None, _AS_BOOL)
 
 # Maps provider
 if 'MAPS_URL' in environ:
@@ -233,7 +233,7 @@ if 'MAX_PAGE_SIZE' in environ:
 MEDIA_ROOT = environ.get('MEDIA_ROOT', join(_BASE_DIR, 'media'))
 
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
-METRICS_ENABLED = _environ_get_and_map('METRICS_ENABLED', 'False', _EQUALS_TRUE)
+METRICS_ENABLED = _environ_get_and_map('METRICS_ENABLED', 'False', _AS_BOOL)
 
 # Credentials that NetBox will uses to authenticate to devices when connecting via NAPALM.
 if 'NAPALM_USERNAME' in environ:
@@ -264,7 +264,7 @@ if 'PAGINATE_COUNT' in environ:
 # When determining the primary IP address for a device, IPv6 is preferred over IPv4 by default. Set this to True to
 # prefer IPv4 instead.
 if 'PREFER_IPV4' in environ:
-    PREFER_IPV4 = _environ_get_and_map('PREFER_IPV4', None, _EQUALS_TRUE)
+    PREFER_IPV4 = _environ_get_and_map('PREFER_IPV4', None, _AS_BOOL)
 
 # The default value for the amperage field when creating new power feeds.
 if 'POWERFEED_DEFAULT_AMPERAGE' in environ:
@@ -285,11 +285,11 @@ if 'RACK_ELEVATION_DEFAULT_UNIT_WIDTH' in environ:
     RACK_ELEVATION_DEFAULT_UNIT_WIDTH = _environ_get_and_map('RACK_ELEVATION_DEFAULT_UNIT_WIDTH', None, _AS_INT)
 
 # Remote authentication support
-REMOTE_AUTH_ENABLED = _environ_get_and_map('REMOTE_AUTH_ENABLED', 'False', _EQUALS_TRUE)
+REMOTE_AUTH_ENABLED = _environ_get_and_map('REMOTE_AUTH_ENABLED', 'False', _AS_BOOL)
 REMOTE_AUTH_BACKEND = environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend')
 REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
-REMOTE_AUTH_AUTO_CREATE_USER = _environ_get_and_map('REMOTE_AUTH_AUTO_CREATE_USER', 'True', _EQUALS_TRUE)
-REMOTE_AUTH_DEFAULT_GROUPS = _environ_get_and_map('REMOTE_AUTH_DEFAULT_GROUPS', '', _SPLIT_ON_SPACE)
+REMOTE_AUTH_AUTO_CREATE_USER = _environ_get_and_map('REMOTE_AUTH_AUTO_CREATE_USER', 'True', _AS_BOOL)
+REMOTE_AUTH_DEFAULT_GROUPS = _environ_get_and_map('REMOTE_AUTH_DEFAULT_GROUPS', '', _AS_LIST)
 # REMOTE_AUTH_DEFAULT_PERMISSIONS = {}
 
 # This repository is used to check whether there is a new release of NetBox available. Set to None to disable the
@@ -314,7 +314,7 @@ CSRF_COOKIE_NAME = environ.get('CSRF_COOKIE_NAME', 'csrftoken')
 # Cross-Site-Request-Forgery-Attack settings. If Netbox is sitting behind a reverse proxy, you might need to set the CSRF_TRUSTED_ORIGINS flag.
 # Django 4.0 requires to specify the URL Scheme in this setting. An example environment variable could be specified like:
 # CSRF_TRUSTED_ORIGINS=https://demo.netbox.dev http://demo.netbox.dev
-CSRF_TRUSTED_ORIGINS = _environ_get_and_map('CSRF_TRUSTED_ORIGINS', '', _SPLIT_ON_SPACE)
+CSRF_TRUSTED_ORIGINS = _environ_get_and_map('CSRF_TRUSTED_ORIGINS', '', _AS_LIST)
 
 # The name to use for the session cookie.
 SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME', 'sessionid')
