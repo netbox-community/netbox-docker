@@ -7,7 +7,6 @@
 import re
 from os import environ
 from os.path import abspath, dirname, join
-from termios import VREPRINT
 from typing import Any, Callable, Tuple
 
 # For reference see https://docs.netbox.dev/en/stable/configuration/
