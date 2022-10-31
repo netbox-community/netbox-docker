@@ -13,6 +13,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       libpq-dev \
       libsasl2-dev \
       libssl-dev \
+      libxml2-dev \
+      libxml2-dev \
+      libxmlsec1 \
+      libxmlsec1-dev \
+      libxmlsec1-openssl \
+      libxslt-dev \
+      pkg-config \
       python3-dev \
       python3-pip \
       python3-venv \
@@ -46,6 +53,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       curl \
       libldap-common \
       libpq5 \
+      libxmlsec1-openssl \
       openssl \
       python3 \
       python3-distutils \
