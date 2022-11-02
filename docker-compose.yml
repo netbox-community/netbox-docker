@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: netboxcommunity/netbox:${VERSION-v3.3-2.2.0}
+    image: netboxcommunity/netbox:${VERSION-v3.3-2.3.0}
     depends_on:
     - postgres
     - redis
@@ -55,6 +55,8 @@ services:
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis-cache.env
+    volumes:
+    - netbox-redis-cache-data:/data    
 
 volumes:
   netbox-media-files:
@@ -63,3 +65,5 @@ volumes:
     driver: local
   netbox-redis-data:
     driver: local
+  netbox-redis-cache-data:
+    driver: local    
