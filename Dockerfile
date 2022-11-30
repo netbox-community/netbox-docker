@@ -31,7 +31,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
-RUN /opt/netbox/venv/bin/pip install \
+RUN sed -i -e '/psycopg2-binary/d' requirements.txt && \
+    /opt/netbox/venv/bin/pip install \
       -r /requirements.txt \
       -r /requirements-container.txt
 
