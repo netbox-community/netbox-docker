@@ -31,6 +31,7 @@ jobs:
           LINTER_RULES_PATH: /
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_DOCKERFILE: false
+          VALIDATE_GITLEAKS: false
           FILTER_REGEX_EXCLUDE: (.*/)?(LICENSE|configuration/.*)
           EDITORCONFIG_FILE_NAME: .ecrc
           DOCKERFILE_HADOLINT_FILE_NAME: .hadolint.yaml
