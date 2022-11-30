@@ -35,10 +35,14 @@ if [ -z "${IMAGE}" ]; then
 fi
 
 # The docker compose command to use
-doco="docker-compose --file docker-compose.test.yml --project-name netbox_docker_test_${1}"
+doco="docker compose --file docker-compose.test.yml --project-name netbox_docker_test"
 
 test_setup() {
   echo "🏗 Setup up test environment"
+  $doco up --detach --quiet-pull --wait --force-recreate --renew-anon-volumes --no-start
+  $doco start postgres
+  $doco start redis
+  $doco start redis-cache
 }
 
 test_netbox_unit_tests() {
@@ -46,9 +50,14 @@ test_netbox_unit_tests() {
   $doco run --rm netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py test
 }
 
+test_compose_db_setup() {
+  echo "⏱ Running NetBox DB migrations"
+  $doco run --rm netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py migrate
+}
+
 test_cleanup() {
   echo "💣 Cleaning Up"
-  $doco down -v
+  $doco down --volumes
 }
 
 echo "🐳🐳🐳 Start testing '${IMAGE}'"
@@ -58,5 +67,6 @@ trap test_cleanup EXIT ERR
 test_setup
 
 test_netbox_unit_tests
+test_compose_db_setup
 
 echo "🐳🐳🐳 Done testing '${IMAGE}'"

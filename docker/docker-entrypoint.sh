@@ -80,15 +80,6 @@ END
   echo "💡 Superuser Username: ${SUPERUSER_NAME}, E-Mail: ${SUPERUSER_EMAIL}"
 fi
 
-# Print warning if startup scripts (and initializers) would've been run # Remove for next release
-if [ "$SKIP_STARTUP_SCRIPTS" == "true" ]; then
-  # Nothing to do
-  echo "" # Empty block not allowed
-else
-  echo "⚠️⚠️⚠️ WARNING: The initializers have been moved to a plugin. See release notes."
-  echo "⚠️⚠️⚠️ Set environment variable 'SKIP_STARTUP_SCRIPTS' to 'true' to remove this warning."
-fi
-
 echo "✅ Initialisation is done."
 
 # Launch whatever is passed by docker
