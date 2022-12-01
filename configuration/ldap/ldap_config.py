@@ -49,6 +49,16 @@ AUTH_LDAP_START_TLS = environ.get('AUTH_LDAP_START_TLS', 'False').lower() == 'tr
 #     ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
 LDAP_IGNORE_CERT_ERRORS = environ.get('LDAP_IGNORE_CERT_ERRORS', 'False').lower() == 'true'
 
+# Include this setting if you want to validate the LDAP server certificates against a CA certificate directory on your server
+# Note that this is a NetBox-specific setting which sets:
+#     ldap.set_option(ldap.OPT_X_TLS_CACERTDIR, LDAP_CA_CERT_DIR)
+LDAP_CA_CERT_DIR = environ.get('LDAP_CA_CERT_DIR', None)
+
+# Include this setting if you want to validate the LDAP server certificates against your own CA.
+# Note that this is a NetBox-specific setting which sets:
+#     ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, LDAP_CA_CERT_FILE)
+LDAP_CA_CERT_FILE = environ.get('LDAP_CA_CERT_FILE', None)
+
 AUTH_LDAP_USER_SEARCH_BASEDN = environ.get('AUTH_LDAP_USER_SEARCH_BASEDN', '')
 AUTH_LDAP_USER_SEARCH_ATTR = environ.get('AUTH_LDAP_USER_SEARCH_ATTR', 'sAMAccountName')
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
