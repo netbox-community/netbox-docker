@@ -1,14 +1,18 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: netboxcommunity/netbox:${VERSION-v3.3-2.3.0}
+    image: netboxcommunity/netbox:${VERSION-v3.4-2.4.0}
     depends_on:
     - postgres
     - redis
     - redis-cache
-    - netbox-worker
     env_file: env/netbox.env
     user: 'unit:root'
+    healthcheck:
+      start_period: 60s
+      timeout: 3s
+      interval: 15s
+      test: "curl -f http://localhost:8080/api/ || exit 1"
     volumes:
     - ./configuration:/etc/netbox/config:z,ro
     - ./reports:/etc/netbox/reports:z,ro
@@ -17,23 +21,33 @@ services:
   netbox-worker:
     <<: *netbox
     depends_on:
-    - redis
-    - postgres
+      netbox:
+        condition: service_healthy
     command:
     - /opt/netbox/venv/bin/python
     - /opt/netbox/netbox/manage.py
     - rqworker
+    healthcheck:
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      test: "ps -aux | grep -v grep | grep -q rqworker || exit 1"
   netbox-housekeeping:
     <<: *netbox
     depends_on:
-    - redis
-    - postgres
+      netbox:
+        condition: service_healthy
     command:
     - /opt/netbox/housekeeping.sh
+    healthcheck:
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      test: "ps -aux | grep -v grep | grep -q housekeeping || exit 1"
 
   # postgres
   postgres:
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
@@ -56,7 +70,7 @@ services:
     - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis-cache.env
     volumes:
-    - netbox-redis-cache-data:/data    
+    - netbox-redis-cache-data:/data
 
 volumes:
   netbox-media-files:
@@ -66,4 +80,4 @@ volumes:
   netbox-redis-data:
     driver: local
   netbox-redis-cache-data:
-    driver: local    
+    driver: local

@@ -13,6 +13,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       libpq-dev \
       libsasl2-dev \
       libssl-dev \
+      libxml2-dev \
+      libxml2-dev \
+      libxmlsec1 \
+      libxmlsec1-dev \
+      libxmlsec1-openssl \
+      libxslt-dev \
+      pkg-config \
       python3-dev \
       python3-pip \
       python3-venv \
@@ -24,7 +31,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
-RUN /opt/netbox/venv/bin/pip install \
+RUN sed -i -e '/psycopg2-binary/d' requirements.txt && \
+    /opt/netbox/venv/bin/pip install \
       -r /requirements.txt \
       -r /requirements-container.txt
 
@@ -46,6 +54,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       curl \
       libldap-common \
       libpq5 \
+      libxmlsec1-openssl \
       openssl \
       python3 \
       python3-distutils \
