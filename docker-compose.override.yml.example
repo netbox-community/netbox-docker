@@ -7,7 +7,7 @@ services:
       # Time for which the health check can fail after the container is started.
       # This depends mostly on the performance of your database. On the first start,
       # when all tables need to be created the start_period should be higher than on
-      # subsequent starts. For the first start after major version upgrades of Netbox
+      # subsequent starts. For the first start after major version upgrades of NetBox
       # the start_period might also need to be set higher.
       # Default value in our docker-compose.yml is 60s
       start_period: 90s
