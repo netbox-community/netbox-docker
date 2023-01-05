@@ -40,8 +40,8 @@ services:
     ports:
       - 8000:8080
 EOF
-docker-compose pull
-docker-compose up
+docker compose pull
+docker compose up
 ```
 
 The whole application will be available after a few minutes.
@@ -123,7 +123,7 @@ This project relies only on _Docker_ and _docker-compose_ meeting these requirem
 * The _containerd version_ must be at least `1.5.6`.
 * The _docker-compose version_ must be at least `1.28.0`.
 
-To check the version installed on your system run `docker --version` and `docker-compose --version`.
+To check the version installed on your system run `docker --version` and `docker compose version`.
 
 ## Updating
 
