@@ -61,18 +61,22 @@ LDAP_CA_CERT_FILE = environ.get('LDAP_CA_CERT_FILE', None)
 
 AUTH_LDAP_USER_SEARCH_BASEDN = environ.get('AUTH_LDAP_USER_SEARCH_BASEDN', '')
 AUTH_LDAP_USER_SEARCH_ATTR = environ.get('AUTH_LDAP_USER_SEARCH_ATTR', 'sAMAccountName')
-AUTH_LDAP_USER_SEARCH = LDAPSearch(
-    AUTH_LDAP_USER_SEARCH_BASEDN,
-    ldap.SCOPE_SUBTREE,
-    "(" + AUTH_LDAP_USER_SEARCH_ATTR + "=%(user)s)"
+AUTH_LDAP_USER_SEARCH_FILTER: str = environ.get(
+    'AUTH_LDAP_USER_SEARCH_FILTER', f'({AUTH_LDAP_USER_SEARCH_ATTR}=%(user)s)'
 )
 
 # This search ought to return all groups to which the user belongs. django_auth_ldap uses this to determine group
 # heirarchy.
+
 AUTH_LDAP_GROUP_SEARCH_BASEDN = environ.get('AUTH_LDAP_GROUP_SEARCH_BASEDN', '')
 AUTH_LDAP_GROUP_SEARCH_CLASS = environ.get('AUTH_LDAP_GROUP_SEARCH_CLASS', 'group')
-AUTH_LDAP_GROUP_SEARCH = LDAPSearch(AUTH_LDAP_GROUP_SEARCH_BASEDN, ldap.SCOPE_SUBTREE,
-                                    "(objectClass=" + AUTH_LDAP_GROUP_SEARCH_CLASS + ")")
+
+AUTH_LDAP_GROUP_SEARCH_FILTER: str = environ.get(
+    'AUTH_LDAP_GROUP_SEARCH_FILTER', f'(objectclass={AUTH_LDAP_GROUP_SEARCH_CLASS})'
+)
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    AUTH_LDAP_GROUP_SEARCH_BASEDN, ldap.SCOPE_SUBTREE, AUTH_LDAP_GROUP_SEARCH_FILTER
+)
 AUTH_LDAP_GROUP_TYPE = _import_group_type(environ.get('AUTH_LDAP_GROUP_TYPE', 'GroupOfNamesType'))
 
 # Define a group required to login.
