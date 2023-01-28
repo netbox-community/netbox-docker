@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: netboxcommunity/netbox:${VERSION-v3.4-2.4.0}
+    image: docker.io/netboxcommunity/netbox:${VERSION-v3.4-2.4.0}
     depends_on:
     - postgres
     - redis
@@ -47,14 +47,14 @@ services:
 
   # postgres
   postgres:
-    image: postgres:15-alpine
+    image: docker.io/postgres:15-alpine
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
 
   # redis
   redis:
-    image: redis:7-alpine
+    image: docker.io/redis:7-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
