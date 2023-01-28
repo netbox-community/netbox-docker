@@ -19,3 +19,14 @@ gh_env() {
     echo "${@}" >>"${GITHUB_ENV}"
   fi
 }
+
+###
+# Prints the output to the file defined in ${GITHUB_OUTPUT}.
+# Only executes if ${GH_ACTION} is defined.
+# Example Usage: gh_env "FOO_VAR=bar_value"
+###
+gh_out() {
+  if [ -n "${GH_ACTION}" ]; then
+    echo "${@}" >>"$GITHUB_OUTPUT"
+  fi
+}
