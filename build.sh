@@ -170,7 +170,7 @@ if [ "${2}" != "--push-only" ] && [ -z "${SKIP_GIT}" ]; then
   REMOTE_EXISTS=$(git ls-remote --heads --tags "${URL}" "${NETBOX_BRANCH}" | wc -l)
   if [ "${REMOTE_EXISTS}" == "0" ]; then
     echo "❌ Remote branch '${NETBOX_BRANCH}' not found in '${URL}'; Nothing to do"
-    gh_echo "::set-output name=skipped::true"
+    gh_out "skipped=true"
     exit 0
   fi
   echo "🌐 Checking out '${NETBOX_BRANCH}' of NetBox from the url '${URL}' into '${NETBOX_PATH}'"
@@ -349,10 +349,10 @@ fi
 
 if [ "${SHOULD_BUILD}" != "true" ]; then
   echo "Build skipped because sources didn't change"
-  echo "::set-output name=skipped::true"
+  gh_out "skipped=true"
   exit 0 # Nothing to do -> exit
 else
-  gh_echo "::set-output name=skipped::false"
+  gh_out "skipped=false"
 fi
 gh_echo "::endgroup::"
 

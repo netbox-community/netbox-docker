@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v3
       - id: set-netbox-docker-version
         name: Get Version of NetBox Docker
-        run: echo "::set-output name=version::$(cat VERSION)"
+        run: echo "version=$(cat VERSION)" >>"$GITHUB_OUTPUT"
         shell: bash
       - id: qemu-setup
         name: Set up QEMU
