@@ -1,5 +1,9 @@
 #!/bin/bash
 # Builds the latest released version
+
+# Check if we have everything needed for the build
+source ./build-functions/check-commands.sh
+
 source ./build-functions/gh-functions.sh
 
 echo "▶️ $0 $*"
