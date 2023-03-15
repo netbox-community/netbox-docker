@@ -82,6 +82,13 @@ END
   echo "💡 Superuser Username: ${SUPERUSER_NAME}, E-Mail: ${SUPERUSER_EMAIL}"
 fi
 
+./manage.py shell --interface python <<END
+from users.models import Token
+old_default_token = Token.objects.get(key="0123456789abcdef0123456789abcdef01234567")
+if old_default_token:
+    print("⚠️ Warning: You have the old default admin token in your database. This token is widely known; please remove it.")
+END
+
 echo "✅ Initialisation is done."
 
 # Launch whatever is passed by docker
