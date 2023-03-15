@@ -47,12 +47,14 @@ docker compose up
 The whole application will be available after a few minutes.
 Open the URL `http://0.0.0.0:8000/` in a web-browser.
 You should see the NetBox homepage.
-In the top-right corner you can login.
-The default credentials are:
 
-* Username: **admin**
-* Password: **admin**
-* API Token: **0123456789abcdef0123456789abcdef01234567**
+To create the first admin user run this command:
+
+```bash
+docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
+```
+
+If you need to restart Netbox from an empty database often, you can also set the `SUPERUSER_*` variables in your `docker-compose.override.yml` as shown in the example.
 
 [wiki-getting-started]: https://github.com/netbox-community/netbox-docker/wiki/Getting-Started
 
