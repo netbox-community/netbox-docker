@@ -137,13 +137,8 @@ END_OF_HELP
   fi
 fi
 
-NEEDED_COMMANDS="curl jq docker skopeo"
-for c in $NEEDED_COMMANDS; do
-  if ! command -v "$c" &>/dev/null; then
-    echo "⚠️  '$c' is not installed. Can't proceed with build."
-    exit 1
-  fi
-done
+# Check if we have everything needed for the build
+source ./build-functions/check-commands.sh
 
 source ./build-functions/gh-functions.sh
 
