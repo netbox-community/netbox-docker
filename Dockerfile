@@ -66,8 +66,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update -qq \
     && apt-get install \
       --yes -qq --no-install-recommends \
-      unit=1.27.0-1~jammy \
-      unit-python3.10=1.27.0-1~jammy \
+      unit=1.29.1-1~jammy \
+      unit-python3.10=1.29.1-1~jammy \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv
@@ -94,7 +94,7 @@ RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
       && SECRET_KEY="dummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
 
-ENV LANG=C.UTF-8 PATH=/opt/netbox/venv/bin:$PATH
+ENV LANG=C.utf8 PATH=/opt/netbox/venv/bin:$PATH
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
 CMD [ "/opt/netbox/docker-entrypoint.sh", "/opt/netbox/launch-netbox.sh" ]

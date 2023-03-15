@@ -1,26 +1,27 @@
 #!/bin/bash
 # Builds the latest released version
 
+# Check if we have everything needed for the build
+source ./build-functions/check-commands.sh
+
+source ./build-functions/gh-functions.sh
+
 echo "▶️ $0 $*"
 
-###
-# Check for the jq library needed for parsing JSON
-###
-if ! command -v jq; then
-  echo "⚠️  jq command missing from \$PATH!"
-  exit 1
-fi
+CURL_ARGS=(
+  --silent
+)
 
 ###
-# Checking for the presence of GITHUB_OAUTH_CLIENT_ID
-# and GITHUB_OAUTH_CLIENT_SECRET
+# Checking for the presence of GITHUB_TOKEN
 ###
-if [ -n "${GITHUB_OAUTH_CLIENT_ID}" ] && [ -n "${GITHUB_OAUTH_CLIENT_SECRET}" ]; then
+if [ -n "${GITHUB_TOKEN}" ]; then
   echo "🗝 Performing authenticated Github API calls."
-  GITHUB_OAUTH_PARAMS="client_id=${GITHUB_OAUTH_CLIENT_ID}&client_secret=${GITHUB_OAUTH_CLIENT_SECRET}"
+  CURL_ARGS+=(
+    --header "Authorization: Bearer ${GITHUB_TOKEN}"
+  )
 else
   echo "🕶 Performing unauthenticated Github API calls. This might result in lower Github rate limits!"
-  GITHUB_OAUTH_PARAMS=""
 fi
 
 ###
@@ -42,31 +43,27 @@ fi
 ###
 ORIGINAL_GITHUB_REPO="netbox-community/netbox"
 GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
-URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/releases?${GITHUB_OAUTH_PARAMS}"
+URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/releases"
 
 # Composing the JQ commans to extract the most recent version number
 JQ_LATEST="group_by(.prerelease) | .[] | sort_by(.published_at) | reverse | .[0] | select(.prerelease==${PRERELEASE-false}) | .tag_name"
 
-CURL="curl -sS"
+CURL="curl"
 
 # Querying the Github API to fetch the most recent version number
-VERSION=$($CURL "${URL_RELEASES}" | jq -r "${JQ_LATEST}")
+VERSION=$($CURL "${CURL_ARGS[@]}" "${URL_RELEASES}" | jq -r "${JQ_LATEST}" 2>/dev/null)
 
 ###
 # Check if the prerelease version is actually higher than stable version
 ###
 if [ "${PRERELEASE}" == "true" ]; then
   JQ_STABLE="group_by(.prerelease) | .[] | sort_by(.published_at) | reverse | .[0] | select(.prerelease==false) | .tag_name"
-  STABLE_VERSION=$($CURL "${URL_RELEASES}" | jq -r "${JQ_STABLE}")
+  STABLE_VERSION=$($CURL "${CURL_ARGS[@]}" "${URL_RELEASES}" | jq -r "${JQ_STABLE}" 2>/dev/null)
 
-  # shellcheck disable=SC2003
-  MAJOR_STABLE=$(expr match "${STABLE_VERSION}" 'v\([0-9]\+\)')
-  # shellcheck disable=SC2003
-  MINOR_STABLE=$(expr match "${STABLE_VERSION}" 'v[0-9]\+\.\([0-9]\+\)')
-  # shellcheck disable=SC2003
-  MAJOR_UNSTABLE=$(expr match "${VERSION}" 'v\([0-9]\+\)')
-  # shellcheck disable=SC2003
-  MINOR_UNSTABLE=$(expr match "${VERSION}" 'v[0-9]\+\.\([0-9]\+\)')
+  MAJOR_STABLE=$(expr "${STABLE_VERSION}" : 'v\([0-9]\+\)')
+  MINOR_STABLE=$(expr "${STABLE_VERSION}" : 'v[0-9]\+\.\([0-9]\+\)')
+  MAJOR_UNSTABLE=$(expr "${VERSION}" : 'v\([0-9]\+\)')
+  MINOR_UNSTABLE=$(expr "${VERSION}" : 'v[0-9]\+\.\([0-9]\+\)')
 
   if {
     [ "${MAJOR_STABLE}" -eq "${MAJOR_UNSTABLE}" ] &&
@@ -75,10 +72,7 @@ if [ "${PRERELEASE}" == "true" ]; then
 
     echo "❎ Latest unstable version '${VERSION}' is not higher than the latest stable version '$STABLE_VERSION'."
     if [ -z "$DEBUG" ]; then
-      if [ -n "${GH_ACTION}" ]; then
-        echo "::set-output name=skipped::true"
-      fi
-
+      gh_out "skipped=true"
       exit 0
     else
       echo "⚠️ Would exit here with code '0', but DEBUG is enabled."

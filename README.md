@@ -3,7 +3,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/netbox-community/netbox-docker)][github-release]
 [![GitHub stars](https://img.shields.io/github/stars/netbox-community/netbox-docker)][github-stargazers]
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/netbox-community/netbox-docker)
-![Github release workflow](https://img.shields.io/github/workflow/status/netbox-community/netbox-docker/release)
+![Github release workflow](https://img.shields.io/github/actions/workflow/status/netbox-community/netbox-docker/release.yml?branch=release)
 ![Docker Pulls](https://img.shields.io/docker/pulls/netboxcommunity/netbox)
 [![GitHub license](https://img.shields.io/github/license/netbox-community/netbox-docker)][netbox-docker-license]
 
@@ -40,19 +40,21 @@ services:
     ports:
       - 8000:8080
 EOF
-docker-compose pull
-docker-compose up
+docker compose pull
+docker compose up
 ```
 
 The whole application will be available after a few minutes.
 Open the URL `http://0.0.0.0:8000/` in a web-browser.
 You should see the NetBox homepage.
-In the top-right corner you can login.
-The default credentials are:
 
-* Username: **admin**
-* Password: **admin**
-* API Token: **0123456789abcdef0123456789abcdef01234567**
+To create the first admin user run this command:
+
+```bash
+docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
+```
+
+If you need to restart Netbox from an empty database often, you can also set the `SUPERUSER_*` variables in your `docker-compose.override.yml` as shown in the example.
 
 [wiki-getting-started]: https://github.com/netbox-community/netbox-docker/wiki/Getting-Started
 
@@ -123,7 +125,7 @@ This project relies only on _Docker_ and _docker-compose_ meeting these requirem
 * The _containerd version_ must be at least `1.5.6`.
 * The _docker-compose version_ must be at least `1.28.0`.
 
-To check the version installed on your system run `docker --version` and `docker-compose --version`.
+To check the version installed on your system run `docker --version` and `docker compose version`.
 
 ## Updating
 

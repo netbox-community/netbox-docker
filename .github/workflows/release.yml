@@ -25,6 +25,7 @@ jobs:
     name: Builds new NetBox Docker Images
     env:
       GH_ACTION: enable
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       IMAGE_NAMES: docker.io/netboxcommunity/netbox quay.io/netboxcommunity/netbox ghcr.io/netbox-community/netbox
     steps:
       - id: source-checkout
@@ -32,7 +33,7 @@ jobs:
         uses: actions/checkout@v3
       - id: set-netbox-docker-version
         name: Get Version of NetBox Docker
-        run: echo "::set-output name=version::$(cat VERSION)"
+        run: echo "version=$(cat VERSION)" >>"$GITHUB_OUTPUT"
         shell: bash
       - id: qemu-setup
         name: Set up QEMU

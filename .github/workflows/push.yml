@@ -55,6 +55,7 @@ jobs:
       fail-fast: false
     env:
       GH_ACTION: enable
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       IMAGE_NAMES: docker.io/netboxcommunity/netbox
     runs-on: ubuntu-latest
     name: Builds new NetBox Docker Images

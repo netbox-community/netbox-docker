@@ -1,6 +1,6 @@
 django-auth-ldap==4.1.0
-django-storages[azure,boto3,dropbox,google,libcloud,sftp]==1.13.1
+django-storages[azure,boto3,dropbox,google,libcloud,sftp]==1.13.2
 napalm==4.0.0
 psycopg2==2.9.5
-python3-saml==1.14.0
+python3-saml==1.15.0
 social-auth-core[all]==4.3.0
