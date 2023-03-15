@@ -137,6 +137,14 @@ END_OF_HELP
   fi
 fi
 
+NEEDED_COMMANDS="curl jq docker skopeo"
+for c in $NEEDED_COMMANDS; do
+  if ! command -v "$c" &>/dev/null; then
+    echo "⚠️  '$c' is not installed. Can't proceed with build."
+    exit 1
+  fi
+done
+
 source ./build-functions/gh-functions.sh
 
 IMAGE_NAMES="${IMAGE_NAMES-docker.io/netboxcommunity/netbox}"
@@ -215,7 +223,7 @@ fi
 # Determining the value for DOCKER_FROM
 ###
 if [ -z "$DOCKER_FROM" ]; then
-  DOCKER_FROM="ubuntu:22.04"
+  DOCKER_FROM="docker.io/ubuntu:22.04"
 fi
 
 ###
@@ -300,6 +308,7 @@ if [ -n "${TARGET_DOCKER_SHORT_TAG}" ]; then
   done
 fi
 
+FINAL_DOCKER_TAG="${IMAGE_NAME_TAGS[0]}"
 gh_env "FINAL_DOCKER_TAG=${IMAGE_NAME_TAGS[0]}"
 
 ###
@@ -316,19 +325,13 @@ if [ -z "${GH_ACTION}" ]; then
   # Asuming non Github builds should always proceed
   SHOULD_BUILD="true"
   BUILD_REASON="${BUILD_REASON} interactive"
-elif [[ "${IMAGE_NAME_TAGS[0]}" = docker.io* ]]; then
+else
   source ./build-functions/get-public-image-config.sh
-  IFS=':' read -ra DOCKER_FROM_SPLIT <<<"${DOCKER_FROM}"
-  if ! [[ ${DOCKER_FROM_SPLIT[0]} =~ .*/.* ]]; then
-    # Need to use "library/..." for images the have no two part name
-    DOCKER_FROM_SPLIT[0]="library/${DOCKER_FROM_SPLIT[0]}"
-  fi
-  IFS='/' read -ra ORG_REPO <<<"${IMAGE_NAMES[0]}"
-  echo "Checking labels for '${ORG_REPO[1]}' and '${ORG_REPO[2]}'"
-  BASE_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM_SPLIT[0]}" "${DOCKER_FROM_SPLIT[1]}")
-  mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${ORG_REPO[1]}"/"${ORG_REPO[2]}" "${TAG}")
-  NETBOX_GIT_REF_OLD=$(get_image_label netbox.git-ref "${ORG_REPO[1]}"/"${ORG_REPO[2]}" "${TAG}")
-  GIT_REF_OLD=$(get_image_label org.opencontainers.image.revision "${ORG_REPO[1]}"/"${ORG_REPO[2]}" "${TAG}")
+  echo "Checking labels for '${FINAL_DOCKER_TAG}'"
+  BASE_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM}")
+  mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${FINAL_DOCKER_TAG}")
+  NETBOX_GIT_REF_OLD=$(get_image_label netbox.git-ref "${FINAL_DOCKER_TAG}")
+  GIT_REF_OLD=$(get_image_label org.opencontainers.image.revision "${FINAL_DOCKER_TAG}")
 
   if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${BASE_LAST_LAYER}\$"; then
     SHOULD_BUILD="true"
@@ -342,9 +345,6 @@ elif [[ "${IMAGE_NAME_TAGS[0]}" = docker.io* ]]; then
     SHOULD_BUILD="true"
     BUILD_REASON="${BUILD_REASON} netbox-docker"
   fi
-else
-  SHOULD_BUILD="true"
-  BUILD_REASON="${BUILD_REASON} no-check"
 fi
 
 if [ "${SHOULD_BUILD}" != "true" ]; then
