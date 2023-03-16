@@ -6,11 +6,6 @@ get_image_label() {
   skopeo inspect "docker://$image" | jq -r ".Labels[\"$label\"]"
 }
 
-get_image_layers() {
-  local image=$1
-  skopeo inspect "docker://$image" | jq -r ".Layers"
-}
-
 get_image_last_layer() {
   local image=$1
   skopeo inspect "docker://$image" | jq -r ".Layers | last"
