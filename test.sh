@@ -100,7 +100,9 @@ test_cleanup() {
   gh_echo "::group:: Docker compose logs"
   $doco logs --no-color
   gh_echo "::endgroup::"
+  gh_echo "::group:: Docker compose down"
   $doco down --volumes
+  gh_echo "::endgroup::"
 }
 
 echo "🐳🐳🐳 Start testing '${IMAGE}'"
