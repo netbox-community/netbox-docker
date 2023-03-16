@@ -1,6 +1,6 @@
 version: '3.4'
 services:
-  netbox:
+  netbox: &netbox
     image: ${IMAGE-netboxcommunity/netbox:latest}
     depends_on:
       postgres:
@@ -12,11 +12,32 @@ services:
     env_file: env/netbox.env
     user: 'unit:root'
     volumes:
-    - ./configuration:/etc/netbox/config:z,ro
     - ./test-configuration/logging.py:/etc/netbox/config/logging.py:z,ro
-    - ./reports:/etc/netbox/reports:z,ro
-    - ./scripts:/etc/netbox/scripts:z,ro
-    - netbox-media-files:/opt/netbox/netbox/media:z
+    healthcheck:
+      start_period: 120s
+      timeout: 3s
+      interval: 15s
+      test: "curl -f http://localhost:8080/api/ || exit 1"
+  netbox-worker:
+    <<: *netbox
+    command:
+    - /opt/netbox/venv/bin/python
+    - /opt/netbox/netbox/manage.py
+    - rqworker
+    healthcheck:
+      start_period: 40s
+      timeout: 3s
+      interval: 15s
+      test: "ps -aux | grep -v grep | grep -q rqworker || exit 1"
+  netbox-housekeeping:
+    <<: *netbox
+    command:
+    - /opt/netbox/housekeeping.sh
+    healthcheck:
+      start_period: 40s
+      timeout: 3s
+      interval: 15s
+      test: "ps -aux | grep -v grep | grep -q housekeeping || exit 1"
   postgres:
     image: postgres:15-alpine
     env_file: env/postgres.env
