@@ -14,6 +14,8 @@
 # exit when a command exits with an exit code != 0
 set -e
 
+source ./build-functions/gh-functions.sh
+
 # IMAGE is used by `docker-compose.yml` do determine the tag
 # of the Docker Image that is to be used
 if [ "${1}x" != "x" ]; then
@@ -35,28 +37,69 @@ if [ -z "${IMAGE}" ]; then
 fi
 
 # The docker compose command to use
-doco="docker compose --file docker-compose.test.yml --project-name netbox_docker_test"
+doco="docker compose --file docker-compose.test.yml --file docker-compose.test.override.yml --project-name netbox_docker_test"
 
 test_setup() {
+  gh_echo "::group:: Test setup"
   echo "🏗 Setup up test environment"
   $doco up --detach --quiet-pull --wait --force-recreate --renew-anon-volumes --no-start
   $doco start postgres
   $doco start redis
   $doco start redis-cache
+  gh_echo "::endgroup::"
 }
 
 test_netbox_unit_tests() {
+  gh_echo "::group:: Netbox unit tests"
   echo "⏱ Running NetBox Unit Tests"
   $doco run --rm netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py test
+  gh_echo "::endgroup::"
 }
 
 test_compose_db_setup() {
+  gh_echo "::group:: Netbox DB migrations"
   echo "⏱ Running NetBox DB migrations"
   $doco run --rm netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py migrate
+  gh_echo "::endgroup::"
+}
+
+test_netbox_start() {
+  gh_echo "::group:: Start Netbox service"
+  echo "⏱ Starting NetBox services"
+  $doco up --detach --wait
+  gh_echo "::endgroup::"
+}
+
+test_netbox_web() {
+  gh_echo "::group:: Web service test"
+  echo "⏱ Starting web service test"
+  RESP_CODE=$(
+    curl \
+      --silent \
+      --output /dev/null \
+      --write-out '%{http_code}' \
+      --request GET \
+      --connect-timeout 5 \
+      --max-time 10 \
+      --retry 5 \
+      --retry-delay 0 \
+      --retry-max-time 40 \
+      http://127.0.0.1:8000/
+  )
+  if [ "$RESP_CODE" == "200" ]; then
+    echo "Webservice running"
+  else
+    echo "⚠️ Got response code '$RESP_CODE' but expected '200'"
+    exit 1
+  fi
+  gh_echo "::endgroup::"
 }
 
 test_cleanup() {
   echo "💣 Cleaning Up"
+  gh_echo "::group:: Docker compose logs"
+  $doco logs --no-color
+  gh_echo "::endgroup::"
   $doco down --volumes
 }
 
@@ -68,5 +111,7 @@ test_setup
 
 test_netbox_unit_tests
 test_compose_db_setup
+test_netbox_start
+test_netbox_web
 
 echo "🐳🐳🐳 Done testing '${IMAGE}'"
