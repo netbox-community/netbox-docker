@@ -324,11 +324,11 @@ else
   source ./build-functions/get-public-image-config.sh
   echo "Checking labels for '${FINAL_DOCKER_TAG}'"
   BASE_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM}")
-  mapfile -t IMAGES_LAYERS_OLD < <(get_image_layers "${FINAL_DOCKER_TAG}")
+  OLD_BASE_LAST_LAYER=$(get_image_label netbox.last-base-image-layer "${FINAL_DOCKER_TAG}")
   NETBOX_GIT_REF_OLD=$(get_image_label netbox.git-ref "${FINAL_DOCKER_TAG}")
   GIT_REF_OLD=$(get_image_label org.opencontainers.image.revision "${FINAL_DOCKER_TAG}")
 
-  if ! printf '%s\n' "${IMAGES_LAYERS_OLD[@]}" | grep -q -P "^${BASE_LAST_LAYER}\$"; then
+  if [ "${BASE_LAST_LAYER}" != "${OLD_BASE_LAST_LAYER}" ]; then
     SHOULD_BUILD="true"
     BUILD_REASON="${BUILD_REASON} ubuntu"
   fi
@@ -388,6 +388,7 @@ fi
 if [ -n "${BUILD_REASON}" ]; then
   BUILD_REASON=$(sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$BUILD_REASON")
   DOCKER_BUILD_ARGS+=(--label "netbox.build-reason=${BUILD_REASON}")
+  DOCKER_BUILD_ARGS+=(--label "netbox.last-base-image-layer=${BASE_LAST_LAYER}")
 fi
 
 # --build-arg
