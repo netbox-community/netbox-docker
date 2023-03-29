@@ -6,9 +6,9 @@ services:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
       redis-cache:
-        condition: service_started
+        condition: service_healthy
     env_file: env/netbox.env
     user: 'unit:root'
     volumes:
@@ -42,23 +42,24 @@ services:
     image: postgres:15-alpine
     env_file: env/postgres.env
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: "pg_isready -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER" ## $$ because of docker-compose
       interval: 10s
       timeout: 5s
       retries: 5
-  redis:
+  redis: &redis
     image: redis:7-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis.env
+    healthcheck:
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      test: "timeout 2 redis-cli ping"
   redis-cache:
-    image: redis:7-alpine
-    command:
-    - sh
-    - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    <<: *redis
     env_file: env/redis-cache.env
 volumes:
   netbox-media-files:
