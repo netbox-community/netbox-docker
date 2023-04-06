@@ -14,7 +14,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       libsasl2-dev \
       libssl-dev \
       libxml2-dev \
-      libxml2-dev \
       libxmlsec1 \
       libxmlsec1-dev \
       libxmlsec1-openssl \
@@ -31,7 +30,11 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
-RUN sed -i -e '/psycopg2-binary/d' requirements.txt && \
+RUN sed -i -e '/psycopg2-binary/d' /requirements.txt && \
+    # We need 'social-auth-core[all]' in the Docker image. But if we put it in our own requirements-container.txt
+    # we have potential version conflicts and the build will fail.
+    # That's why we just replace it in the original requirements.txt.
+    sed -i -e 's/social-auth-core\[openidconnect\]/social-auth-core\[all\]/g' /requirements.txt && \
     /opt/netbox/venv/bin/pip install \
       -r /requirements.txt \
       -r /requirements-container.txt
@@ -74,6 +77,8 @@ COPY --from=builder /opt/netbox/venv /opt/netbox/venv
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH} /opt/netbox
+# Copy the modified 'requirements*.txt' files, to have the files actually used to install
+COPY --from=builder /requirements.txt /requirements-container.txt /opt/netbox/
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/ldap_config.docker.py /opt/netbox/netbox/netbox/ldap_config.py
