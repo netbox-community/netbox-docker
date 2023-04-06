@@ -77,7 +77,7 @@ COPY --from=builder /opt/netbox/venv /opt/netbox/venv
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH} /opt/netbox
-# Copy the modified 'requirements*.txt' files, to have the files actually used to install
+# Copy the modified 'requirements*.txt' files, to have the files actually used during installation
 COPY --from=builder /requirements.txt /requirements-container.txt /opt/netbox/
 
 COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
