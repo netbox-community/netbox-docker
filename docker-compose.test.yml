@@ -14,7 +14,7 @@ services:
     volumes:
     - ./test-configuration/logging.py:/etc/netbox/config/logging.py:z,ro
     healthcheck:
-      start_period: 120s
+      start_period: ${NETBOX_START_PERIOD-120s}
       timeout: 3s
       interval: 15s
       test: "curl -f http://localhost:8080/api/ || exit 1"
