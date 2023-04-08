@@ -239,20 +239,6 @@ MEDIA_ROOT = environ.get('MEDIA_ROOT', join(_BASE_DIR, 'media'))
 # Expose Prometheus monitoring metrics at the HTTP endpoint '/metrics'
 METRICS_ENABLED = _environ_get_and_map('METRICS_ENABLED', 'False', _AS_BOOL)
 
-# Credentials that NetBox will uses to authenticate to devices when connecting via NAPALM.
-if 'NAPALM_USERNAME' in environ:
-    NAPALM_USERNAME = environ.get('NAPALM_USERNAME', None)
-if 'NAPALM_PASSWORD' in environ:
-    NAPALM_PASSWORD = _read_secret('napalm_password', environ.get('NAPALM_PASSWORD', None))
-
-# NAPALM timeout (in seconds). (Default: 30)
-if 'NAPALM_TIMEOUT' in environ:
-    NAPALM_TIMEOUT = _environ_get_and_map('NAPALM_TIMEOUT', None, _AS_INT)
-
-# # NAPALM optional arguments (see http://napalm.readthedocs.io/en/latest/support/#optional-arguments). Arguments must
-# # be provided as a dictionary.
-# NAPALM_ARGS = None
-
 # Determine how many objects to display per page within a list. (Default: 50)
 if 'PAGINATE_COUNT' in environ:
     PAGINATE_COUNT = _environ_get_and_map('PAGINATE_COUNT', None, _AS_INT)
@@ -301,16 +287,8 @@ REMOTE_AUTH_DEFAULT_GROUPS = _environ_get_and_map('REMOTE_AUTH_DEFAULT_GROUPS', 
 RELEASE_CHECK_URL = environ.get('RELEASE_CHECK_URL', None)
 # RELEASE_CHECK_URL = 'https://api.github.com/repos/netbox-community/netbox/releases'
 
-# The file path where custom reports will be stored. A trailing slash is not needed. Note that the default value of
-# this setting is derived from the installed location.
-REPORTS_ROOT = environ.get('REPORTS_ROOT', '/etc/netbox/reports')
-
 # Maximum execution time for background tasks, in seconds.
 RQ_DEFAULT_TIMEOUT = _environ_get_and_map('RQ_DEFAULT_TIMEOUT', 300, _AS_INT)
-
-# The file path where custom scripts will be stored. A trailing slash is not needed. Note that the default value of
-# this setting is derived from the installed location.
-SCRIPTS_ROOT = environ.get('SCRIPTS_ROOT', '/etc/netbox/scripts')
 
 # The name to use for the csrf token cookie.
 CSRF_COOKIE_NAME = environ.get('CSRF_COOKIE_NAME', 'csrftoken')

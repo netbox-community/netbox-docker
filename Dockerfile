@@ -30,7 +30,11 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
-RUN sed -i -e '/psycopg2-binary/d' /requirements.txt && \
+RUN \
+    # We compile 'psycopg2' in the build process
+    sed -i -e '/psycopg2-binary/d' /requirements.txt && \
+    # Gunicorn is not needed because we use Nginx Unit
+    sed -i -e '/gunicorn/d' /requirements.txt && \
     # We need 'social-auth-core[all]' in the Docker image. But if we put it in our own requirements-container.txt
     # we have potential version conflicts and the build will fail.
     # That's why we just replace it in the original requirements.txt.
@@ -93,8 +97,8 @@ WORKDIR /opt/netbox/netbox
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
 RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
-      && chown -R unit:root media /opt/unit/ \
-      && chmod -R g+w media /opt/unit/ \
+      && chown -R unit:root /opt/unit/ media reports scripts \
+      && chmod -R g+w /opt/unit/ media reports scripts \
       && cd /opt/netbox/ && SECRET_KEY="dummy" /opt/netbox/venv/bin/python -m mkdocs build \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
       && SECRET_KEY="dummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input

@@ -15,12 +15,6 @@
 #     'file', 'ftp', 'ftps', 'http', 'https', 'irc', 'mailto', 'sftp', 'ssh', 'tel', 'telnet', 'tftp', 'vnc', 'xmpp',
 # )
 
-
-## NAPALM optional arguments (see http://napalm.readthedocs.io/en/latest/support/#optional-arguments). Arguments must
-## be provided as a dictionary.
-# NAPALM_ARGS = {}
-
-
 ## Enable installed plugins. Add the name of each plugin to the list.
 # from netbox.configuration.configuration import PLUGINS
 # PLUGINS.append('my_plugin')

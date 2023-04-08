@@ -15,9 +15,9 @@ services:
       test: "curl -f http://localhost:8080/api/ || exit 1"
     volumes:
     - ./configuration:/etc/netbox/config:z,ro
-    - ./reports:/etc/netbox/reports:z,ro
-    - ./scripts:/etc/netbox/scripts:z,ro
-    - netbox-media-files:/opt/netbox/netbox/media:z
+    - netbox-media-files:/opt/netbox/netbox/media:z,rw
+    - netbox-reports-files:/opt/netbox/netbox/reports:z,rw
+    - netbox-scripts-files:/opt/netbox/netbox/scripts:z,rw
   netbox-worker:
     <<: *netbox
     depends_on:
@@ -77,7 +77,11 @@ volumes:
     driver: local
   netbox-postgres-data:
     driver: local
+  netbox-redis-cache-data:
+    driver: local
   netbox-redis-data:
     driver: local
-  netbox-redis-cache-data:
+  netbox-reports-files:
+    driver: local
+  netbox-scripts-files:
     driver: local
