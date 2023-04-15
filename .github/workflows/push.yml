@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: '3.9'
       - name: Lint Code Base
-        uses: github/super-linter@v4
+        uses: github/super-linter@v5
         env:
           DEFAULT_BRANCH: develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,6 +75,11 @@ jobs:
         env:
           BUILDX_PLATFORM: ${{ matrix.platform }}
           BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
+      - id: arm-time-limit
+        name: Set Netbox container start_period higher on ARM64
+        if: matrix.platform == 'linux/arm64'
+        run: |
+          echo "NETBOX_START_PERIOD=240s" >>"${GITHUB_ENV}"
       - id: docker-test
         name: Test the image
         run: IMAGE="${FINAL_DOCKER_TAG}" ./test.sh
