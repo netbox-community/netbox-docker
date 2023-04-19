@@ -1,5 +1,11 @@
 #!/bin/bash
 
+check_if_tags_exists() {
+  local image=$1
+  local tag=$2
+  skopeo list-tags "docker://$image" | jq -r ".Tags | contains([\"$tag\"])"
+}
+
 get_image_label() {
   local label=$1
   local image=$2
