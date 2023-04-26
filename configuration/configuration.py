@@ -56,7 +56,9 @@ _BASE_DIR = dirname(dirname(abspath(__file__)))
 # This is a list of valid fully-qualified domain names (FQDNs) for the NetBox server. NetBox will not permit write
 # access to the server via any other hostnames. The first FQDN in the list will be treated as the preferred name.
 #
-# Example: ALLOWED_HOSTS = ['netbox.example.com', 'netbox.internal.local']
+# Example: ALLOWED_HOSTS = localhost 127.0.0.1 netbox.example.com netbox.internal.local
+# or
+# Example: ALLOWED_HOSTS = *
 ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS', '*').split(' ')
 # ensure that '*' or 'localhost' is always in ALLOWED_HOSTS (needed for health checks)
 if '*' not in ALLOWED_HOSTS and 'localhost' not in ALLOWED_HOSTS:
