@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: docker.io/netboxcommunity/netbox:${VERSION-v3.4-2.6.0}
+    image: docker.io/netboxcommunity/netbox:${VERSION-v3.5-2.6.1}
     depends_on:
     - postgres
     - redis
