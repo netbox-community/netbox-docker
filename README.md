@@ -99,7 +99,7 @@ For each of the above tag, there is an extra tag:
 ## Documentation
 
 Please refer [to our wiki on GitHub][netbox-docker-wiki] for further information on how to use the NetBox Docker image properly.
-The wiki covers advanced topics such as using files for secrets, configuring TLS, deployment to Kubernetes, monitoring and configuring NAPALM and LDAP.
+The wiki covers advanced topics such as using files for secrets, configuring TLS, deployment to Kubernetes, monitoring and configuring LDAP.
 
 Our wiki is a community effort.
 Feel free to correct errors, update outdated information or provide additional guides and insights.

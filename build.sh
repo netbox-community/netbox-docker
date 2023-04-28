@@ -139,7 +139,8 @@ fi
 
 # Check if we have everything needed for the build
 source ./build-functions/check-commands.sh
-
+# Load all build functions
+source ./build-functions/get-public-image-config.sh
 source ./build-functions/gh-functions.sh
 
 IMAGE_NAMES="${IMAGE_NAMES-docker.io/netboxcommunity/netbox}"
@@ -309,19 +310,22 @@ gh_env "FINAL_DOCKER_TAG=${IMAGE_NAME_TAGS[0]}"
 ###
 # Checking if the build is necessary,
 # meaning build only if one of those values changed:
+# - a new tag is beeing created
 # - base image digest
 # - netbox git ref (Label: netbox.git-ref)
 # - netbox-docker git ref (Label: org.opencontainers.image.revision)
 ###
-# Load information from registry (only for docker.io)
+# Load information from registry (only for first registry in "IMAGE_NAMES")
 SHOULD_BUILD="false"
 BUILD_REASON=""
 if [ -z "${GH_ACTION}" ]; then
   # Asuming non Github builds should always proceed
   SHOULD_BUILD="true"
   BUILD_REASON="${BUILD_REASON} interactive"
+elif [ "false" == "$(check_if_tags_exists "${IMAGE_NAMES[0]}" "$TARGET_DOCKER_TAG")" ]; then
+  SHOULD_BUILD="true"
+  BUILD_REASON="${BUILD_REASON} newtag"
 else
-  source ./build-functions/get-public-image-config.sh
   echo "Checking labels for '${FINAL_DOCKER_TAG}'"
   BASE_LAST_LAYER=$(get_image_last_layer "${DOCKER_FROM}")
   OLD_BASE_LAST_LAYER=$(get_image_label netbox.last-base-image-layer "${FINAL_DOCKER_TAG}")
