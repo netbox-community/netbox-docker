@@ -141,8 +141,11 @@ if 'CHANGELOG_RETENTION' in environ:
     CHANGELOG_RETENTION = _environ_get_and_map('CHANGELOG_RETENTION', None, _AS_INT)
 
 # Maximum number of days to retain job results (scripts and reports). Set to 0 to retain job results in the database indefinitely. (Default: 90)
-if 'JOBRESULT_RETENTION' in environ:
-    JOBRESULT_RETENTION = _environ_get_and_map('JOBRESULT_RETENTION', None, _AS_INT)
+if 'JOB_RETENTION' in environ:
+    JOB_RETENTION = _environ_get_and_map('JOB_RETENTION', None, _AS_INT)
+# JOBRESULT_RETENTION was renamed to JOB_RETENTION in the v3.5.0 release of NetBox. For backwards compatibility, map JOBRESULT_RETENTION to JOB_RETENTION
+else if 'JOBRESULT_RETENTION' in environ:
+    JOB_RETENTION = _environ_get_and_map('JOBRESULT_RETENTION', None, _AS_INT)
 
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
 # allowed. Otherwise, define a list of allowed origins using either CORS_ORIGIN_WHITELIST or
