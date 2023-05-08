@@ -144,7 +144,7 @@ if 'CHANGELOG_RETENTION' in environ:
 if 'JOB_RETENTION' in environ:
     JOB_RETENTION = _environ_get_and_map('JOB_RETENTION', None, _AS_INT)
 # JOBRESULT_RETENTION was renamed to JOB_RETENTION in the v3.5.0 release of NetBox. For backwards compatibility, map JOBRESULT_RETENTION to JOB_RETENTION
-else if 'JOBRESULT_RETENTION' in environ:
+elif 'JOBRESULT_RETENTION' in environ:
     JOB_RETENTION = _environ_get_and_map('JOBRESULT_RETENTION', None, _AS_INT)
 
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
