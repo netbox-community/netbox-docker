@@ -40,8 +40,8 @@ services:
     ports:
       - 8000:8080
 EOF
-docker compose pull
-docker compose up
+docker-compose pull
+docker-compose up
 ```
 
 The whole application will be available after a few minutes.
