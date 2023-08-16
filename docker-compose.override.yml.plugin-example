@@ -1,0 +1,20 @@
+# See: https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
+version: '3.4' # This is NOT the version of NetBox! No need to adjust :)
+services:
+  netbox:
+    image: netbox:latest-plugins
+    ports:
+      - 8000:8080
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
+  netbox-worker:
+    image: netbox:latest-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
+  netbox-housekeeping:
+    image: netbox:latest-plugins
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins

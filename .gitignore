@@ -10,6 +10,7 @@ configuration/ldap/*
 !configuration/ldap/extra.py
 !configuration/ldap/ldap_config.py
 !configuration/logging.py
-!configuration/plugins.py
+!configuration/plugins.py.example
 prometheus.yml
 super-linter.log
+plugin_requirements.txt
