@@ -275,7 +275,7 @@ if 'RACK_ELEVATION_DEFAULT_UNIT_WIDTH' in environ:
 
 # Remote authentication support
 REMOTE_AUTH_ENABLED = _environ_get_and_map('REMOTE_AUTH_ENABLED', 'False', _AS_BOOL)
-REMOTE_AUTH_BACKEND = environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend')
+REMOTE_AUTH_BACKEND = _environ_get_and_map('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend', _AS_LIST)
 REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
 REMOTE_AUTH_AUTO_CREATE_USER = _environ_get_and_map('REMOTE_AUTH_AUTO_CREATE_USER', 'False', _AS_BOOL)
 REMOTE_AUTH_DEFAULT_GROUPS = _environ_get_and_map('REMOTE_AUTH_DEFAULT_GROUPS', '', _AS_LIST)
