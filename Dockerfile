@@ -62,6 +62,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       libldap-common \
       libpq5 \
       libxmlsec1-openssl \
+      openssh-client \
       openssl \
       python3 \
       python3-distutils \
