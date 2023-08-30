@@ -141,8 +141,11 @@ if 'CHANGELOG_RETENTION' in environ:
     CHANGELOG_RETENTION = _environ_get_and_map('CHANGELOG_RETENTION', None, _AS_INT)
 
 # Maximum number of days to retain job results (scripts and reports). Set to 0 to retain job results in the database indefinitely. (Default: 90)
-if 'JOBRESULT_RETENTION' in environ:
-    JOBRESULT_RETENTION = _environ_get_and_map('JOBRESULT_RETENTION', None, _AS_INT)
+if 'JOB_RETENTION' in environ:
+    JOB_RETENTION = _environ_get_and_map('JOB_RETENTION', None, _AS_INT)
+# JOBRESULT_RETENTION was renamed to JOB_RETENTION in the v3.5.0 release of NetBox. For backwards compatibility, map JOBRESULT_RETENTION to JOB_RETENTION
+elif 'JOBRESULT_RETENTION' in environ:
+    JOB_RETENTION = _environ_get_and_map('JOBRESULT_RETENTION', None, _AS_INT)
 
 # API Cross-Origin Resource Sharing (CORS) settings. If CORS_ORIGIN_ALLOW_ALL is set to True, all origins will be
 # allowed. Otherwise, define a list of allowed origins using either CORS_ORIGIN_WHITELIST or
@@ -272,9 +275,9 @@ if 'RACK_ELEVATION_DEFAULT_UNIT_WIDTH' in environ:
 
 # Remote authentication support
 REMOTE_AUTH_ENABLED = _environ_get_and_map('REMOTE_AUTH_ENABLED', 'False', _AS_BOOL)
-REMOTE_AUTH_BACKEND = environ.get('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend')
+REMOTE_AUTH_BACKEND = _environ_get_and_map('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend', _AS_LIST)
 REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
-REMOTE_AUTH_AUTO_CREATE_USER = _environ_get_and_map('REMOTE_AUTH_AUTO_CREATE_USER', 'True', _AS_BOOL)
+REMOTE_AUTH_AUTO_CREATE_USER = _environ_get_and_map('REMOTE_AUTH_AUTO_CREATE_USER', 'False', _AS_BOOL)
 REMOTE_AUTH_DEFAULT_GROUPS = _environ_get_and_map('REMOTE_AUTH_DEFAULT_GROUPS', '', _AS_LIST)
 # REMOTE_AUTH_DEFAULT_PERMISSIONS = {}
 

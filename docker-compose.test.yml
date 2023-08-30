@@ -12,7 +12,7 @@ services:
     env_file: env/netbox.env
     user: 'unit:root'
     volumes:
-    - ./test-configuration/logging.py:/etc/netbox/config/logging.py:z,ro
+    - ./test-configuration/test_config.py:/etc/netbox/config/test_config.py:z,ro
     healthcheck:
       start_period: ${NETBOX_START_PERIOD-120s}
       timeout: 3s

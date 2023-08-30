@@ -31,8 +31,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
 RUN \
-    # We compile 'psycopg2' in the build process
-    sed -i -e '/psycopg2-binary/d' /requirements.txt && \
+    # We compile 'psycopg' in the build process
+    sed -i -e '/psycopg/d' /requirements.txt && \
     # Gunicorn is not needed because we use Nginx Unit
     sed -i -e '/gunicorn/d' /requirements.txt && \
     # We need 'social-auth-core[all]' in the Docker image. But if we put it in our own requirements-container.txt
@@ -62,19 +62,20 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       libldap-common \
       libpq5 \
       libxmlsec1-openssl \
+      openssh-client \
       openssl \
       python3 \
       python3-distutils \
       tini \
-    && curl -sL https://nginx.org/keys/nginx_signing.key \
-      > /etc/apt/trusted.gpg.d/nginx.asc && \
-    echo "deb https://packages.nginx.org/unit/ubuntu/ jammy unit" \
+    && curl --silent --output /usr/share/keyrings/nginx-keyring.gpg \
+      https://unit.nginx.org/keys/nginx-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ lunar unit" \
       > /etc/apt/sources.list.d/unit.list \
     && apt-get update -qq \
     && apt-get install \
       --yes -qq --no-install-recommends \
-      unit=1.29.1-1~jammy \
-      unit-python3.10=1.29.1-1~jammy \
+      unit=1.30.0-1~lunar \
+      unit-python3.11=1.30.0-1~lunar \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv

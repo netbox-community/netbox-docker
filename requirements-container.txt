@@ -1,4 +1,5 @@
-django-auth-ldap==4.3.0
+django-auth-ldap==4.5.0
 django-storages[azure,boto3,dropbox,google,libcloud,sftp]==1.13.2
-psycopg2==2.9.6
+dulwich==0.21.5
+psycopg[c,pool]==3.1.10
 python3-saml==1.15.0

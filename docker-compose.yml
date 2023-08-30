@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: docker.io/netboxcommunity/netbox:${VERSION-v3.5-2.6.1}
+    image: docker.io/netboxcommunity/netbox:${VERSION-v3.6-2.7.0}
     depends_on:
     - postgres
     - redis
@@ -15,9 +15,9 @@ services:
       test: "curl -f http://localhost:8080/api/ || exit 1"
     volumes:
     - ./configuration:/etc/netbox/config:z,ro
-    - netbox-media-files:/opt/netbox/netbox/media:z,rw
-    - netbox-reports-files:/opt/netbox/netbox/reports:z,rw
-    - netbox-scripts-files:/opt/netbox/netbox/scripts:z,rw
+    - netbox-media-files:/opt/netbox/netbox/media:rw
+    - netbox-reports-files:/opt/netbox/netbox/reports:rw
+    - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
   netbox-worker:
     <<: *netbox
     depends_on:
