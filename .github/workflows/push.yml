@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Checks syntax of our code
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Full git history is needed to get a proper
           # list of changed files within `super-linter`
@@ -62,7 +62,7 @@ jobs:
     steps:
       - id: git-checkout
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - id: qemu-setup
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2

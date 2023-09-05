@@ -30,7 +30,7 @@ jobs:
     steps:
       - id: source-checkout
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - id: set-netbox-docker-version
         name: Get Version of NetBox Docker
         run: echo "version=$(cat VERSION)" >>"$GITHUB_OUTPUT"
