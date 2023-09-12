@@ -51,7 +51,7 @@ jobs:
       # docker.io
       - id: docker-io-login
         name: Login to docker.io
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: docker.io
           username: ${{ secrets.dockerhub_username }}
@@ -60,7 +60,7 @@ jobs:
       # quay.io
       - id: quay-io-login
         name: Login to Quay.io
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: quay.io
           username: ${{ secrets.quayio_username }}
@@ -69,7 +69,7 @@ jobs:
       # ghcr.io
       - id: ghcr-io-login
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
