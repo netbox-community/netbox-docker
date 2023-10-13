@@ -5,9 +5,11 @@ on:
   push:
     branches-ignore:
       - release
+      - oxcert
   pull_request:
     branches-ignore:
       - release
+      - oxcert
 
 jobs:
   lint:
@@ -51,12 +53,11 @@ jobs:
           - ./build.sh develop
         platform:
           - linux/amd64
-          - linux/arm64
       fail-fast: false
     env:
       GH_ACTION: enable
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      IMAGE_NAMES: docker.io/netboxcommunity/netbox
+      IMAGE_NAMES: ghcr.io/oxcert/netbox
     runs-on: ubuntu-latest
     name: Builds new NetBox Docker Images
     steps:

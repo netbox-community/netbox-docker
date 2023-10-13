@@ -45,7 +45,7 @@ TAG         The version part of the image tag.
 
 IMAGE_NAMES The names used for the image including the registry
             Used for tagging the image.
-            ${_GREEN}Default:${_CLEAR} docker.io/netboxcommunity/netbox
+            ${_GREEN}Default:${_CLEAR} ghcr.io/oxcert/netbox
             ${_CYAN}Example:${_CLEAR} 'docker.io/netboxcommunity/netbox quay.io/netboxcommunity/netbox'
 
 DOCKER_TAG  The name of the tag which is applied to the image.
@@ -143,7 +143,7 @@ source ./build-functions/check-commands.sh
 source ./build-functions/get-public-image-config.sh
 source ./build-functions/gh-functions.sh
 
-IMAGE_NAMES="${IMAGE_NAMES-docker.io/netboxcommunity/netbox}"
+IMAGE_NAMES="${IMAGE_NAMES-ghcr.io/oxcert/netbox}"
 IFS=' ' read -ra IMAGE_NAMES <<<"${IMAGE_NAMES}"
 
 ###

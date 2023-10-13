@@ -1,5 +1,11 @@
 # netbox-docker
 
+This is OxCERT's fork of the [netbox-docker](https://github.com/netbox-community/netbox-docker/wiki) repository.
+
+We have a local branch [oxcert](https://github.com/oxcert/netbox-docker/tree/oxcert) which has been set as the default branch in this repository.
+The idea is to keep the [release](https://github.com/oxcert/netbox-docker/tree/release) branch in synch with upstream but keep all our changes in
+the oxcert branch, from where we build our netbox containers, etc. When there are upstream changes, we merge them in from the release branch.
+
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/netbox-community/netbox-docker)][github-release]
 [![GitHub stars](https://img.shields.io/github/stars/netbox-community/netbox-docker)][github-stargazers]
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/netbox-community/netbox-docker)
