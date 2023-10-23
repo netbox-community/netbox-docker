@@ -19,8 +19,7 @@ jobs:
           - ./build.sh feature
           - ./build.sh develop
         platform:
-          - linux/amd64
-          - linux/arm64
+          - linux/amd64,linux/arm64
       fail-fast: false
     runs-on: ubuntu-latest
     name: Builds new NetBox Docker Images
