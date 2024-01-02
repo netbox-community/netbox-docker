@@ -39,7 +39,7 @@ services:
       interval: 15s
       test: "ps -aux | grep -v grep | grep -q housekeeping || exit 1"
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     env_file: env/postgres.env
     healthcheck:
       test: "pg_isready -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER" ## $$ because of docker-compose

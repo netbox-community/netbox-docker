@@ -74,8 +74,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update -qq \
     && apt-get install \
       --yes -qq --no-install-recommends \
-      unit=1.30.0-1~lunar \
-      unit-python3.11=1.30.0-1~lunar \
+      unit=1.31.1-1~lunar \
+      unit-python3.11=1.31.1-1~lunar \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv
