@@ -103,7 +103,7 @@ if 'REDIS_SENTINELS' in environ:
             'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map('REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY', environ.get('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False'), _AS_BOOL),
         },
     }
-else
+else:
     REDIS = {
         'tasks': {
             'HOST': environ.get('REDIS_HOST', 'localhost'),
