@@ -86,6 +86,9 @@ REDIS = {
     'tasks': {
         'HOST': environ.get('REDIS_HOST', 'localhost'),
         'PORT': _environ_get_and_map('REDIS_PORT', 6379, _AS_INT),
+        'SENTINELS': [tuple(uri.split(':')) for uri in _environ_get_and_map('REDIS_SENTINELS', '', _AS_LIST) if uri != ''],
+        'SENTINEL_SERVICE': environ.get('REDIS_SENTINEL_SERVICE', 'default'),
+        'SENTINEL_TIMEOUT': _environ_get_and_map('REDIS_SENTINEL_TIMEOUT', 10, _AS_INT),
         'USERNAME': environ.get('REDIS_USERNAME', ''),
         'PASSWORD': _read_secret('redis_password', environ.get('REDIS_PASSWORD', '')),
         'DATABASE': _environ_get_and_map('REDIS_DATABASE', 0, _AS_INT),
@@ -95,6 +98,8 @@ REDIS = {
     'caching': {
         'HOST': environ.get('REDIS_CACHE_HOST', environ.get('REDIS_HOST', 'localhost')),
         'PORT': _environ_get_and_map('REDIS_CACHE_PORT', environ.get('REDIS_PORT', '6379'), _AS_INT),
+        'SENTINELS': [tuple(uri.split(':')) for uri in _environ_get_and_map('REDIS_CACHE_SENTINELS', '', _AS_LIST) if uri != ''],
+        'SENTINEL_SERVICE': environ.get('REDIS_CACHE_SENTINEL_SERVICE', environ.get('REDIS_SENTINEL_SERVICE', 'default')),
         'USERNAME': environ.get('REDIS_CACHE_USERNAME', environ.get('REDIS_USERNAME', '')),
         'PASSWORD': _read_secret('redis_cache_password', environ.get('REDIS_CACHE_PASSWORD', environ.get('REDIS_PASSWORD', ''))),
         'DATABASE': _environ_get_and_map('REDIS_CACHE_DATABASE', '1', _AS_INT),
