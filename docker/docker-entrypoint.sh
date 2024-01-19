@@ -87,7 +87,7 @@ from users.models import Token
 try:
     old_default_token = Token.objects.get(key="0123456789abcdef0123456789abcdef01234567")
     if old_default_token:
-        print("⚠️ Warning: You have the old default admin token in your database. This token is widely known; please remove it.")
+        print("⚠️ Warning: You have the old default admin API token in your database. This token is widely known; please remove it. Log in as your superuser and check API Tokens in your user menu.")
 except Token.DoesNotExist:
     pass
 END
