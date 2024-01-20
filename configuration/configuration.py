@@ -183,6 +183,13 @@ EMAIL = {
 if 'ENFORCE_GLOBAL_UNIQUE' in environ:
     ENFORCE_GLOBAL_UNIQUE = _environ_get_and_map('ENFORCE_GLOBAL_UNIQUE', None, _AS_BOOL)
 
+# By default, netbox sends census reporting data using a single HTTP request each time a worker starts.
+# This data enables the project maintainers to estimate how many NetBox deployments exist and track the adoption of new versions over time.
+# The only data reported by this function are the NetBox version, Python version, and a pseudorandom unique identifier.
+# To opt out of census reporting, set CENSUS_REPORTING_ENABLED to False.
+if 'CENSUS_REPORTING_ENABLED' in environ:
+    CENSUS_REPORTING_ENABLED = _environ_get_and_map('CENSUS_REPORTING_ENABLED', None, _AS_BOOL)
+
 # Exempt certain models from the enforcement of view permissions. Models listed here will be viewable by all users and
 # by anonymous users. List models in the form `<app>.<model>`. Add '*' to this list to exempt all models.
 EXEMPT_VIEW_PERMISSIONS = _environ_get_and_map('EXEMPT_VIEW_PERMISSIONS', '', _AS_LIST)
