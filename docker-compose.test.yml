@@ -2,6 +2,7 @@ version: '3.4'
 services:
   netbox: &netbox
     image: ${IMAGE-netboxcommunity/netbox:latest}
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -40,6 +41,7 @@ services:
       test: "ps -aux | grep -v grep | grep -q housekeeping || exit 1"
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     env_file: env/postgres.env
     healthcheck:
       test: "pg_isready -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER" ## $$ because of docker-compose
@@ -48,6 +50,7 @@ services:
       retries: 5
   redis: &redis
     image: redis:7-alpine
+    restart: unless-stopped
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
