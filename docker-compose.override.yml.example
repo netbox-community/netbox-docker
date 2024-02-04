@@ -14,10 +14,10 @@ services:
       # the start_period might also need to be set higher.
       # Default value in our docker-compose.yml is 60s
       # start_period: 90s
-    # environment:
-      # SKIP_SUPERUSER: "false"
-      # SUPERUSER_API_TOKEN: ""
-      # SUPERUSER_EMAIL: ""
-      # SUPERUSER_NAME: ""
-      # SUPERUSER_PASSWORD: ""
+# environment:
+  # SKIP_SUPERUSER: "false"
+  # SUPERUSER_API_TOKEN: ""
+  # SUPERUSER_EMAIL: ""
+  # SUPERUSER_NAME: ""
+  # SUPERUSER_PASSWORD: ""
 
