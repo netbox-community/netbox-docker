@@ -49,35 +49,36 @@ jobs:
           - PRERELEASE=true ./build-latest.sh
           - ./build.sh feature
           - ./build.sh develop
-        platform:
-          - linux/amd64
-          - linux/arm64
+        os:
+          - ubuntu-latest
+          - self-hosted
       fail-fast: false
     env:
       GH_ACTION: enable
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       IMAGE_NAMES: docker.io/netboxcommunity/netbox
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     name: Builds new NetBox Docker Images
     steps:
       - id: git-checkout
         name: Checkout
         uses: actions/checkout@v4
-      - id: qemu-setup
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
       - id: buildx-setup
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - id: arm-buildx-platform
+        name: Set BUILDX_PLATFORM to ARM64
+        if: matrix.os == 'self-hosted'
+        run: |
+          echo "BUILDX_PLATFORM=linux/arm64" >>"${GITHUB_ENV}"
       - id: docker-build
-        name: Build the image for '${{ matrix.platform }}' with '${{ matrix.build_cmd }}'
+        name: Build the image for '${{ matrix.os }}' with '${{ matrix.build_cmd }}'
         run: ${{ matrix.build_cmd }}
         env:
-          BUILDX_PLATFORM: ${{ matrix.platform }}
           BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
       - id: arm-time-limit
         name: Set Netbox container start_period higher on ARM64
-        if: matrix.platform == 'linux/arm64'
+        if: matrix.os == 'self-hosted'
         run: |
           echo "NETBOX_START_PERIOD=240s" >>"${GITHUB_ENV}"
       - id: docker-test

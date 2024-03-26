@@ -61,7 +61,7 @@ DOCKERFILE  The name of Dockerfile to use.
             ${_GREEN}Default:${_CLEAR} Dockerfile
 
 DOCKER_FROM The base image to use.
-            ${_GREEN}Default:${_CLEAR} 'ubuntu:23.04'
+            ${_GREEN}Default:${_CLEAR} 'ubuntu:23.10'
 
 BUILDX_PLATFORMS
             Specifies the platform(s) to build the image for.
@@ -219,7 +219,7 @@ fi
 # Determining the value for DOCKER_FROM
 ###
 if [ -z "$DOCKER_FROM" ]; then
-  DOCKER_FROM="docker.io/ubuntu:23.04"
+  DOCKER_FROM="docker.io/ubuntu:23.10"
 fi
 
 ###

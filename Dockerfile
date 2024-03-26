@@ -69,13 +69,13 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       tini \
     && curl --silent --output /usr/share/keyrings/nginx-keyring.gpg \
       https://unit.nginx.org/keys/nginx-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ lunar unit" \
+    && echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ mantic unit" \
       > /etc/apt/sources.list.d/unit.list \
     && apt-get update -qq \
     && apt-get install \
       --yes -qq --no-install-recommends \
-      unit=1.31.1-1~lunar \
-      unit-python3.11=1.31.1-1~lunar \
+      unit=1.32.0-1~mantic \
+      unit-python3.11=1.32.0-1~mantic \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv
