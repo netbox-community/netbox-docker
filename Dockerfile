@@ -97,9 +97,11 @@ WORKDIR /opt/netbox/netbox
 
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
-RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
+RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ /opt/netbox/plugins \
       && chown -R unit:root /opt/unit/ media reports scripts \
       && chmod -R g+w /opt/unit/ media reports scripts \
+      # Add additional path to sys.path, to enable plugin installation without having to build a new Docker image
+      && echo "/opt/netbox/plugins" > /opt/netbox/venv/lib/python3.11/site-packages/plugins.pth \
       && cd /opt/netbox/ && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python -m mkdocs build \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
       && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
