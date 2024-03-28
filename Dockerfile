@@ -31,8 +31,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
 RUN \
-    # We compile 'psycopg' in the build process
-    sed -i -e '/psycopg/d' /requirements.txt && \
     # Gunicorn is not needed because we use Nginx Unit
     sed -i -e '/gunicorn/d' /requirements.txt && \
     # We need 'social-auth-core[all]' in the Docker image. But if we put it in our own requirements-container.txt
