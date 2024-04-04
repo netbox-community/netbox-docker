@@ -1,4 +1,4 @@
-django-auth-ldap==4.7.0
+django-auth-ldap==4.8.0
 django-storages[azure,boto3,dropbox,google,libcloud,sftp]==1.14.2
 dulwich==0.21.7
 psycopg[c,pool]==3.1.18
