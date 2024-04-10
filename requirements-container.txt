@@ -3,4 +3,4 @@ django-storages[azure,boto3,dropbox,google,libcloud,sftp]==1.14.2
 dulwich==0.21.7
 psycopg[c,pool]==3.1.18
 python3-saml==1.16.0 --no-binary lxml
-sentry-sdk==1.44.1
+sentry-sdk==1.45.0
