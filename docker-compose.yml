@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   netbox: &netbox
-    image: docker.io/netboxcommunity/netbox:${VERSION-v3.7-2.8.0}
+    image: netbox-plugins:latest
     depends_on:
     - postgres
     - redis
@@ -9,7 +9,7 @@ services:
     env_file: env/netbox.env
     user: 'unit:root'
     healthcheck:
-      start_period: 60s
+      start_period: 120s
       timeout: 3s
       interval: 15s
       test: "curl -f http://localhost:8080/api/ || exit 1"

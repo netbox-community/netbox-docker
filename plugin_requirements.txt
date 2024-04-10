@@ -1,1 +1,6 @@
 netbox-topology-views
+netbox_routing
+netbox-plugin-dns
+netbox-secrets
+netbox-inventory
+
