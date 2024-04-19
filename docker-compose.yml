@@ -48,7 +48,7 @@ services:
   postgres:
     image: docker.io/postgres:16-alpine
     healthcheck:
-      test: pg_isready -d db_prod
+      test: pg_isready -q -U netbox -d netbox
       interval: 10s
       timeout: 30s
       retries: 5
