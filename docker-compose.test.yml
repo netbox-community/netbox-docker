@@ -53,7 +53,7 @@ services:
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - valkey-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    - valkey-server --save "" --appendonly no --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis.env
     healthcheck:
       test: "[ $$(valkey-cli --pass \"$${REDIS_PASSWORD}\" ping) = 'PONG' ]"
