@@ -53,20 +53,30 @@ services:
 
   # redis
   redis:
-    image: docker.io/redis:7-alpine
+    image: docker.io/valkey/valkey:7.2-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    - valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    healthcheck:
+      test: "[ $$(valkey-cli --pass \"$${REDIS_PASSWORD}\" ping) = 'PONG' ]"
+      interval: 1s
+      timeout: 3s
+      retries: 5
     env_file: env/redis.env
     volumes:
     - netbox-redis-data:/data
   redis-cache:
-    image: docker.io/redis:7-alpine
+    image: docker.io/valkey/valkey:7.2-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    - valkey-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    healthcheck:
+      test: "[ $$(valkey-cli --pass \"$${REDIS_PASSWORD}\" ping) = 'PONG' ]"
+      interval: 1s
+      timeout: 3s
+      retries: 5
     env_file: env/redis-cache.env
     volumes:
     - netbox-redis-cache-data:/data
