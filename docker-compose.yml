@@ -47,6 +47,12 @@ services:
   # postgres
   postgres:
     image: docker.io/postgres:16-alpine
+    healthcheck:
+      test: pg_isready -d db_prod
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 20s
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
