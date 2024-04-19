@@ -8,10 +8,10 @@ services:
     env_file: env/netbox.env
     user: 'unit:root'
     healthcheck:
+      test: curl -f http://localhost:8081/login/ || exit 1
       start_period: 90s
       timeout: 3s
       interval: 15s
-      test: "curl -f http://localhost:8080/login/ || exit 1"
     volumes:
     - ./configuration:/etc/netbox/config:z,ro
     - netbox-media-files:/opt/netbox/netbox/media:rw
@@ -27,10 +27,10 @@ services:
     - /opt/netbox/netbox/manage.py
     - rqworker
     healthcheck:
+      test: ps -aux | grep -v grep | grep -q rqworker || exit 1
       start_period: 20s
       timeout: 3s
       interval: 15s
-      test: "ps -aux | grep -v grep | grep -q rqworker || exit 1"
   netbox-housekeeping:
     <<: *netbox
     depends_on:
@@ -39,20 +39,20 @@ services:
     command:
     - /opt/netbox/housekeeping.sh
     healthcheck:
+      test: ps -aux | grep -v grep | grep -q housekeeping || exit 1
       start_period: 20s
       timeout: 3s
       interval: 15s
-      test: "ps -aux | grep -v grep | grep -q housekeeping || exit 1"
 
   # postgres
   postgres:
     image: docker.io/postgres:16-alpine
     healthcheck:
-      test: pg_isready -q -U netbox -d netbox
-      interval: 10s
-      timeout: 30s
-      retries: 5
+      test: pg_isready -q -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER
       start_period: 20s
+      timeout: 30s
+      interval: 10s
+      retries: 5
     env_file: env/postgres.env
     volumes:
     - netbox-postgres-data:/var/lib/postgresql/data
@@ -64,10 +64,11 @@ services:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
-    healthcheck:
+    healthcheck: &redis-healthcheck
       test: "[ $$(valkey-cli --pass \"$${REDIS_PASSWORD}\" ping) = 'PONG' ]"
-      interval: 1s
+      start_period: 5s
       timeout: 3s
+      interval: 1s
       retries: 5
     env_file: env/redis.env
     volumes:
@@ -78,11 +79,7 @@ services:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
     - valkey-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
-    healthcheck:
-      test: "[ $$(valkey-cli --pass \"$${REDIS_PASSWORD}\" ping) = 'PONG' ]"
-      interval: 1s
-      timeout: 3s
-      retries: 5
+    healthcheck: *redis-healthcheck
     env_file: env/redis-cache.env
     volumes:
     - netbox-redis-cache-data:/data
