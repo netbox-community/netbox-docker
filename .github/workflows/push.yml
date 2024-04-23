@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: '3.9'
       - name: Lint Code Base
-        uses: github/super-linter@v5
+        uses: github/super-linter@v6
         env:
           DEFAULT_BRANCH: develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
