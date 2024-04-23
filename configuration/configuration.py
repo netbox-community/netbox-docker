@@ -312,6 +312,23 @@ CSRF_TRUSTED_ORIGINS = _environ_get_and_map('CSRF_TRUSTED_ORIGINS', '', _AS_LIST
 # The name to use for the session cookie.
 SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME', 'sessionid')
 
+# If true, the `includeSubDomains` directive will be included in the HTTP Strict Transport Security (HSTS) header.
+# This directive instructs the browser to apply the HSTS policy to all subdomains of the current domain.
+SECURE_HSTS_INCLUDE_SUBDOMAINS = _environ_get_and_map('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False', _AS_BOOL)
+
+# If true, the `preload` directive will be included in the HTTP Strict Transport Security (HSTS) header.
+# This directive instructs the browser to preload the site in HTTPS. Browsers that use the HSTS preload list will force the
+# site to be accessed via HTTPS even if the user types HTTP in the address bar.
+SECURE_HSTS_PRELOAD = _environ_get_and_map('SECURE_HSTS_PRELOAD', 'False', _AS_BOOL)
+
+# If set to a non-zero integer value, the SecurityMiddleware sets the HTTP Strict Transport Security (HSTS) header on all
+# responses that do not already have it. This will instruct the browser that the website must be accessed via HTTPS,
+# blocking any HTTP request.
+SECURE_HSTS_SECONDS = _environ_get_and_map('SECURE_HSTS_SECONDS', 0, _AS_INT)
+
+# If true, all non-HTTPS requests will be automatically redirected to use HTTPS.
+SECURE_SSL_REDIRECT = _environ_get_and_map('SECURE_SSL_REDIRECT', 'False', _AS_BOOL)
+
 # By default, NetBox will store session data in the database. Alternatively, a file path can be specified here to use
 # local file storage instead. (This can be useful for enabling authentication on a standby instance with read-only
 # database access.) Note that the user as which NetBox runs must have read and write permissions to this path.
