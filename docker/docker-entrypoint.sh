@@ -86,17 +86,19 @@ fi
 ## Doc
 ## https://docs.djangoproject.com/en/5.0/ref/models/querysets/#delete
 if [ "$SUPERUSER_PASSWORD_OVERWRITE" == "true" ]; then
-echo "will overwrite superuser password for Superuser Username: ${SUPERUSER_NAME}"
+echo "will overwrite superuser password and api token for Superuser Username: ${SUPERUSER_NAME}"
   ./manage.py shell --interface python <<END
 from django.contrib.auth.models import User
 from users.models import Token
-u=User.objects.get(username='${SUPERUSER_NAME}')
-u.set_password('${SUPERUSER_PASSWORD}')
-u.save()
-Token.objects.filter(user=u).delete()
-Token.objects.create(user=u, key='${SUPERUSER_API_TOKEN}')
+if User.objects.filter(username='${SUPERUSER_NAME}'):
+    u=User.objects.get(username='${SUPERUSER_NAME}')
+    u.set_password('${SUPERUSER_PASSWORD}')
+    u.save()
+    Token.objects.filter(user=u).delete()
+    Token.objects.create(user=u, key='${SUPERUSER_API_TOKEN}')
 END
-echo "💡 Superuser password and API token updated"
+
+  echo "💡 Superuser password and API Token updated"
 fi
 
 
