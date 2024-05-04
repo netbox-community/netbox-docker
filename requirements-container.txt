@@ -1,5 +1,5 @@
 django-auth-ldap==4.8.0
 django-storages[azure,boto3,dropbox,google,libcloud,sftp]==1.14.2
-dulwich==0.21.7
+dulwich==0.22.1
 python3-saml==1.16.0 --no-binary lxml
-sentry-sdk==1.45.0
+sentry-sdk==2.0.1
