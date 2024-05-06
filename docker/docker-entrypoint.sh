@@ -72,10 +72,9 @@ else
   fi
 
   ./manage.py shell --interface python <<END
-from django.contrib.auth.models import User
-from users.models import Token
+from users.models import Token, User
 if not User.objects.filter(username='${SUPERUSER_NAME}'):
-    u=User.objects.create_superuser('${SUPERUSER_NAME}', '${SUPERUSER_EMAIL}', '${SUPERUSER_PASSWORD}')
+    u = User.objects.create_superuser('${SUPERUSER_NAME}', '${SUPERUSER_EMAIL}', '${SUPERUSER_PASSWORD}')
     Token.objects.create(user=u, key='${SUPERUSER_API_TOKEN}')
 END
 
