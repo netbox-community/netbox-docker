@@ -5,9 +5,14 @@ on:
   push:
     branches-ignore:
       - release
+      - renovate/**
   pull_request:
     branches-ignore:
       - release
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -23,15 +28,17 @@ jobs:
         with:
           python-version: '3.9'
       - name: Lint Code Base
-        uses: github/super-linter@v5
+        uses: github/super-linter@v6
         env:
           DEFAULT_BRANCH: develop
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SUPPRESS_POSSUM: true
           LINTER_RULES_PATH: /
           VALIDATE_ALL_CODEBASE: false
+          VALIDATE_CHECKOV: false
           VALIDATE_DOCKERFILE: false
           VALIDATE_GITLEAKS: false
+          VALIDATE_JSCPD: false
           FILTER_REGEX_EXCLUDE: (.*/)?(LICENSE|configuration/.*)
           EDITORCONFIG_FILE_NAME: .ecrc
           DOCKERFILE_HADOLINT_FILE_NAME: .hadolint.yaml
@@ -49,35 +56,36 @@ jobs:
           - PRERELEASE=true ./build-latest.sh
           - ./build.sh feature
           - ./build.sh develop
-        platform:
-          - linux/amd64
-          - linux/arm64
+        os:
+          - ubuntu-latest
+          - self-hosted
       fail-fast: false
     env:
       GH_ACTION: enable
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       IMAGE_NAMES: docker.io/netboxcommunity/netbox
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     name: Builds new NetBox Docker Images
     steps:
       - id: git-checkout
         name: Checkout
         uses: actions/checkout@v4
-      - id: qemu-setup
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
       - id: buildx-setup
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - id: arm-buildx-platform
+        name: Set BUILDX_PLATFORM to ARM64
+        if: matrix.os == 'self-hosted'
+        run: |
+          echo "BUILDX_PLATFORM=linux/arm64" >>"${GITHUB_ENV}"
       - id: docker-build
-        name: Build the image for '${{ matrix.platform }}' with '${{ matrix.build_cmd }}'
+        name: Build the image for '${{ matrix.os }}' with '${{ matrix.build_cmd }}'
         run: ${{ matrix.build_cmd }}
         env:
-          BUILDX_PLATFORM: ${{ matrix.platform }}
           BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
       - id: arm-time-limit
         name: Set Netbox container start_period higher on ARM64
-        if: matrix.platform == 'linux/arm64'
+        if: matrix.os == 'self-hosted'
         run: |
           echo "NETBOX_START_PERIOD=240s" >>"${GITHUB_ENV}"
       - id: docker-test

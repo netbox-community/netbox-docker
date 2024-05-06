@@ -86,6 +86,9 @@ REDIS = {
     'tasks': {
         'HOST': environ.get('REDIS_HOST', 'localhost'),
         'PORT': _environ_get_and_map('REDIS_PORT', 6379, _AS_INT),
+        'SENTINELS': [tuple(uri.split(':')) for uri in _environ_get_and_map('REDIS_SENTINELS', '', _AS_LIST) if uri != ''],
+        'SENTINEL_SERVICE': environ.get('REDIS_SENTINEL_SERVICE', 'default'),
+        'SENTINEL_TIMEOUT': _environ_get_and_map('REDIS_SENTINEL_TIMEOUT', 10, _AS_INT),
         'USERNAME': environ.get('REDIS_USERNAME', ''),
         'PASSWORD': _read_secret('redis_password', environ.get('REDIS_PASSWORD', '')),
         'DATABASE': _environ_get_and_map('REDIS_DATABASE', 0, _AS_INT),
@@ -95,6 +98,8 @@ REDIS = {
     'caching': {
         'HOST': environ.get('REDIS_CACHE_HOST', environ.get('REDIS_HOST', 'localhost')),
         'PORT': _environ_get_and_map('REDIS_CACHE_PORT', environ.get('REDIS_PORT', '6379'), _AS_INT),
+        'SENTINELS': [tuple(uri.split(':')) for uri in _environ_get_and_map('REDIS_CACHE_SENTINELS', '', _AS_LIST) if uri != ''],
+        'SENTINEL_SERVICE': environ.get('REDIS_CACHE_SENTINEL_SERVICE', environ.get('REDIS_SENTINEL_SERVICE', 'default')),
         'USERNAME': environ.get('REDIS_CACHE_USERNAME', environ.get('REDIS_USERNAME', '')),
         'PASSWORD': _read_secret('redis_cache_password', environ.get('REDIS_CACHE_PASSWORD', environ.get('REDIS_PASSWORD', ''))),
         'DATABASE': _environ_get_and_map('REDIS_CACHE_DATABASE', '1', _AS_INT),
@@ -182,6 +187,13 @@ EMAIL = {
 # (all prefixes and IP addresses not assigned to a VRF), set ENFORCE_GLOBAL_UNIQUE to True.
 if 'ENFORCE_GLOBAL_UNIQUE' in environ:
     ENFORCE_GLOBAL_UNIQUE = _environ_get_and_map('ENFORCE_GLOBAL_UNIQUE', None, _AS_BOOL)
+
+# By default, netbox sends census reporting data using a single HTTP request each time a worker starts.
+# This data enables the project maintainers to estimate how many NetBox deployments exist and track the adoption of new versions over time.
+# The only data reported by this function are the NetBox version, Python version, and a pseudorandom unique identifier.
+# To opt out of census reporting, set CENSUS_REPORTING_ENABLED to False.
+if 'CENSUS_REPORTING_ENABLED' in environ:
+    CENSUS_REPORTING_ENABLED = _environ_get_and_map('CENSUS_REPORTING_ENABLED', None, _AS_BOOL)
 
 # Exempt certain models from the enforcement of view permissions. Models listed here will be viewable by all users and
 # by anonymous users. List models in the form `<app>.<model>`. Add '*' to this list to exempt all models.
@@ -300,6 +312,23 @@ CSRF_TRUSTED_ORIGINS = _environ_get_and_map('CSRF_TRUSTED_ORIGINS', '', _AS_LIST
 # The name to use for the session cookie.
 SESSION_COOKIE_NAME = environ.get('SESSION_COOKIE_NAME', 'sessionid')
 
+# If true, the `includeSubDomains` directive will be included in the HTTP Strict Transport Security (HSTS) header.
+# This directive instructs the browser to apply the HSTS policy to all subdomains of the current domain.
+SECURE_HSTS_INCLUDE_SUBDOMAINS = _environ_get_and_map('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False', _AS_BOOL)
+
+# If true, the `preload` directive will be included in the HTTP Strict Transport Security (HSTS) header.
+# This directive instructs the browser to preload the site in HTTPS. Browsers that use the HSTS preload list will force the
+# site to be accessed via HTTPS even if the user types HTTP in the address bar.
+SECURE_HSTS_PRELOAD = _environ_get_and_map('SECURE_HSTS_PRELOAD', 'False', _AS_BOOL)
+
+# If set to a non-zero integer value, the SecurityMiddleware sets the HTTP Strict Transport Security (HSTS) header on all
+# responses that do not already have it. This will instruct the browser that the website must be accessed via HTTPS,
+# blocking any HTTP request.
+SECURE_HSTS_SECONDS = _environ_get_and_map('SECURE_HSTS_SECONDS', 0, _AS_INT)
+
+# If true, all non-HTTPS requests will be automatically redirected to use HTTPS.
+SECURE_SSL_REDIRECT = _environ_get_and_map('SECURE_SSL_REDIRECT', 'False', _AS_BOOL)
+
 # By default, NetBox will store session data in the database. Alternatively, a file path can be specified here to use
 # local file storage instead. (This can be useful for enabling authentication on a standby instance with read-only
 # database access.) Note that the user as which NetBox runs must have read and write permissions to this path.
@@ -308,11 +337,3 @@ SESSION_FILE_PATH = environ.get('SESSION_FILE_PATH', environ.get('SESSIONS_ROOT'
 # Time zone (default: UTC)
 TIME_ZONE = environ.get('TIME_ZONE', 'UTC')
 
-# Date/time formatting. See the following link for supported formats:
-# https://docs.djangoproject.com/en/stable/ref/templates/builtins/#date
-DATE_FORMAT = environ.get('DATE_FORMAT', 'N j, Y')
-SHORT_DATE_FORMAT = environ.get('SHORT_DATE_FORMAT', 'Y-m-d')
-TIME_FORMAT = environ.get('TIME_FORMAT', 'g:i a')
-SHORT_TIME_FORMAT = environ.get('SHORT_TIME_FORMAT', 'H:i:s')
-DATETIME_FORMAT = environ.get('DATETIME_FORMAT', 'N j, Y g:i a')
-SHORT_DATETIME_FORMAT = environ.get('SHORT_DATETIME_FORMAT', 'Y-m-d H:i')
