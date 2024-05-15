@@ -1,11 +1,18 @@
 #!/bin/bash
 # Runs on every start of the NetBox Docker container
 
-# Stop when an error occures
+# Stop when an error occurs
 set -e
 
 # Allows NetBox to be run as non-root users
 umask 002
+
+if [ -d /opt/init/pre ]; then
+  find /opt/init/pre -type f -name \*.sh | sort -u | while read -r FILE; do
+    echo "⚙️ Running pre-init script '${FILE}'..."
+    /bin/bash -e "${FILE}" "$@"
+  done
+fi
 
 # Load correct Python3 env
 # shellcheck disable=SC1091
@@ -91,8 +98,15 @@ except Token.DoesNotExist:
     pass
 END
 
+if [ -d /opt/init/post ]; then
+  find /opt/init/post -type f -name \*.sh | sort -u | while read -r FILE; do
+    echo "⚙️ Running post-init script '${FILE}'..."
+    /bin/bash -e "${FILE}" "$@"
+  done
+fi
+
 echo "✅ Initialisation is done."
 
 # Launch whatever is passed by docker
-# (i.e. the RUN instruction in the Dockerfile)
+# (i.e. the CMD instruction in the Dockerfile)
 exec "$@"
