@@ -8,11 +8,16 @@
 [![GitHub license](https://img.shields.io/github/license/netbox-community/netbox-docker)][netbox-docker-license]
 
 [The GitHub repository][netbox-docker-github] houses the components needed to build NetBox as a container.
-Images are built regularly using the code in that repository and are pushed to [Docker Hub][netbox-dockerhub], [Quay.io][netbox-quayio] and [GitHub Container Registry][netbox-ghcr].
+Images are built regularly using the code in that repository
+and are pushed to [Docker Hub][netbox-dockerhub],
+[Quay.io][netbox-quayio] and [GitHub Container Registry][netbox-ghcr].
+_NetBox Docker_ is a project developed and maintained by the _NetBox_ community.
 
 Do you have any questions?
 Before opening an issue on Github,
-please join [our Slack][netbox-docker-slack] and ask for help in the [`#netbox-docker`][netbox-docker-slack-channel] channel.
+please join [our Slack][netbox-docker-slack]
+and ask for help in the [`#netbox-docker`][netbox-docker-slack-channel] channel,
+or start a new [GitHub Discussion][github-discussions].
 
 [github-stargazers]: https://github.com/netbox-community/netbox-docker/stargazers
 [github-release]: https://github.com/netbox-community/netbox-docker/releases
@@ -24,6 +29,7 @@ please join [our Slack][netbox-docker-slack] and ask for help in the [`#netbox-d
 [netbox-docker-slack-channel]: https://netdev-community.slack.com/archives/C01P0GEVBU7
 [netbox-slack-channel]: https://netdev-community.slack.com/archives/C01P0FRSXRV
 [netbox-docker-license]: https://github.com/netbox-community/netbox-docker/blob/release/LICENSE
+[github-discussions]: https://github.com/netbox-community/netbox-docker/discussions
 
 ## Quickstart
 
@@ -53,7 +59,8 @@ To create the first admin user run this command:
 docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
 ```
 
-If you need to restart Netbox from an empty database often, you can also set the `SUPERUSER_*` variables in your `docker-compose.override.yml` as shown in the example.
+If you need to restart Netbox from an empty database often,
+you can also set the `SUPERUSER_*` variables in your `docker-compose.override.yml`.
 
 [wiki-getting-started]: https://github.com/netbox-community/netbox-docker/wiki/Getting-Started
 
@@ -109,7 +116,7 @@ Feel free to correct errors, update outdated information or provide additional g
 
 Feel free to ask questions in our [GitHub Community][netbox-community]
 or [join our Slack][netbox-docker-slack] and ask [in our channel `#netbox-docker`][netbox-docker-slack-channel],
-which is free to use and where there are almost always people online that can help you in the Slack channel.
+which is free to use and where there are almost always people online that can help you.
 
 If you need help with using NetBox or developing for it or against it's API
 you may find [the `#netbox` channel][netbox-slack-channel] on the same Slack instance very helpful.
@@ -129,7 +136,7 @@ To check the version installed on your system run `docker --version` and `docker
 ## Updating
 
 Please read [the release notes][releases] carefully when updating to a new image version.
-Note that the version of the NetBox Docker container image must stay in sync with the code.
+Note that the version of the NetBox Docker container image must stay in sync with the version of the git repository.
 
 If you update for the first time, be sure [to follow our _How To Update NetBox Docker_ guide in the wiki][netbox-docker-wiki-updating].
 
@@ -138,7 +145,8 @@ If you update for the first time, be sure [to follow our _How To Update NetBox D
 
 ## Rebuilding the Image
 
-`./build.sh` can be used to rebuild the container image. See `./build.sh --help` for more information.
+`./build.sh` can be used to rebuild the container image.
+See `./build.sh --help` for more information or `./build-latest.sh` for an example.
 
 For more details on custom builds [consult our wiki][netbox-docker-wiki-build].
 
@@ -147,13 +155,15 @@ For more details on custom builds [consult our wiki][netbox-docker-wiki-build].
 ## Tests
 
 We have a test script.
-It runs NetBox's own unit tests and ensures that all initializers work:
+It runs NetBox's own unit tests and ensures that NetBox starts:
 
 ```bash
-IMAGE=netboxcommunity/netbox:latest ./test.sh
+IMAGE=docker.io/netboxcommunity/netbox:latest ./test.sh
 ```
 
 ## Support
 
 This repository is currently maintained by the community.
+The community is expected to help each other.
+
 Please consider sponsoring the maintainers of this project.
