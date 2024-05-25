@@ -84,7 +84,7 @@ test_netbox_web() {
       --retry 5 \
       --retry-delay 0 \
       --retry-max-time 40 \
-      http://127.0.0.1:8000/
+      http://127.0.0.1:8000/login/
   )
   if [ "$RESP_CODE" == "200" ]; then
     echo "Webservice running"
