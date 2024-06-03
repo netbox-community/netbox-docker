@@ -16,5 +16,4 @@ The last maintainer stepping down is asked to archive the project on GitHub to i
 
 Everyone is welcome to sign up as maintainer by creating a PR and add their own username to the list.
 The current maintainers shall discuss the application.
-They may turn down an application.
-They shall provide a reason when doing so.
+They may turn down an application if they don't feel confident that the new maintainer is a positive addition.
