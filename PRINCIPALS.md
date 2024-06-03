@@ -21,26 +21,27 @@ The goal of the _NetBox Docker_ project is to provide a container to run the bas
 The container should feel like a native container -- as if it were provided by NetBox itself:
 
 - Configuration via environment variables where feasible.
+  - Except: Whenever a `dict` is required as value of a configuration setting,
+    then it must not be provided through an environment variable.
 - Configuration of secrets via secret files.
 - Log output to standard out (STDOUT/&1) / standard error (STDERR/&2).
 - Volumes for data and cache directories.
+  - Otherwise no mounts shall be necessary.
 - Runs a non-root user by default.
 - One process / role for each instance.
 
-There is one exception for the configuration:
-Whenever a `dict` is required as value of a configuration setting, then it must not be provided through an environment variable.
-
 The container generally does not provide more features than the basic NetBox project itself provides.
-It may provide additional Python dependencies than the upstream project, so that all features of NetBox can be used in the container.
-It may provide helpers, so that the container feels and behaves like a native container.
+It may provide additional Python dependencies than the upstream project,
+so that all configurable features of NetBox can be used in the container without further modification.
+The container may provide helpers, so that it feels and behaves like a native container.
 
-The container does not come with pre-bundled plugins.
+The container does not bundle any community plugins.
 
 ## Maintenance Principals
 
 The main goals of maintainig _NetBox Docker_ are:
 
-- Keeping the project on a high quality level.
+- Keeping the project at a high quality level.
 - Keeping the maintenance effort minimal.
 - Coordinating development efforts.
 
@@ -60,3 +61,9 @@ We welcome contributions, as long as they are in line with the principals above.
 
 The maintainers of NetBox Docker are not the support team.
 The community is expected to help each other out.
+
+Always remember:
+Behind every screen (or screen-reader) on the other end is a fellow human.
+Be nice and respectful, thankful for help,
+and value ideas and contributions,
+even when they don't fit the goals.
