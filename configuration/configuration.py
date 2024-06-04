@@ -200,10 +200,10 @@ if 'CENSUS_REPORTING_ENABLED' in environ:
 EXEMPT_VIEW_PERMISSIONS = _environ_get_and_map('EXEMPT_VIEW_PERMISSIONS', '', _AS_LIST)
 
 # HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for webhooks).
-# HTTP_PROXIES = {
-#     'http': 'http://10.10.1.10:3128',
-#     'https': 'http://10.10.1.10:1080',
-# }
+HTTP_PROXIES = {
+    'http': environ.get('HTTP_PROXY', None),
+    'https': environ.get('HTTPS_PROXY', None),
+}
 
 # IP addresses recognized as internal to the system. The debugging toolbar will be available only to clients accessing
 # NetBox from an internal IP.
