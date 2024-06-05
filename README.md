@@ -40,7 +40,7 @@ services:
       - 8000:8080
 EOF
 docker compose pull
-docker compose up
+docker compose up -d
 ```
 
 The whole application will be available after a few minutes.
