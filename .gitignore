@@ -1,7 +1,6 @@
 *.sql.gz
 .netbox
 .python-version
-docker-compose.override.yml
 *.pem
 configuration/*
 !configuration/configuration.py
