@@ -71,8 +71,12 @@ DATABASE = {
                                                     # PostgreSQL password
     'HOST': environ.get('DB_HOST', 'localhost'),    # Database server
     'PORT': environ.get('DB_PORT', ''),             # Database port (leave blank for default)
-    'OPTIONS': {'sslmode': environ.get('DB_SSLMODE', 'prefer')},
-                                                    # Database connection SSLMODE
+    'OPTIONS': {
+          'sslmode': environ.get('DB_SSLMODE', 'prefer'), # Database connection SSLMODE
+          'sslcert': environ.get('DB_CLIENT_SSL_CERT', None),
+          'sslkey':  environ.get('DB_CLIENT_SSL_KEY',  None),
+          'sslrootcert': environ.get('DB_CLIENT_SSL_CA', None)
+        },
     'CONN_MAX_AGE': _environ_get_and_map('DB_CONN_MAX_AGE', '300', _AS_INT),
                                                     # Max database connection age
     'DISABLE_SERVER_SIDE_CURSORS': _environ_get_and_map('DB_DISABLE_SERVER_SIDE_CURSORS', 'False', _AS_BOOL),
