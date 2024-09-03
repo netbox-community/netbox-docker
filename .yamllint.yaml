@@ -1,5 +1,4 @@
 ---
-
 rules:
   line-length:
     max: 160
