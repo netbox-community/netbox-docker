@@ -200,10 +200,10 @@ if 'CENSUS_REPORTING_ENABLED' in environ:
 EXEMPT_VIEW_PERMISSIONS = _environ_get_and_map('EXEMPT_VIEW_PERMISSIONS', '', _AS_LIST)
 
 # HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for webhooks).
-# HTTP_PROXIES = {
-#     'http': 'http://10.10.1.10:3128',
-#     'https': 'http://10.10.1.10:1080',
-# }
+HTTP_PROXIES = {
+    'http': environ.get('HTTP_PROXY', None),
+    'https': environ.get('HTTPS_PROXY', None),
+}
 
 # IP addresses recognized as internal to the system. The debugging toolbar will be available only to clients accessing
 # NetBox from an internal IP.
@@ -221,9 +221,9 @@ if 'GRAPHQL_ENABLED' in environ:
 # authenticated to NetBox indefinitely.
 LOGIN_PERSISTENCE = _environ_get_and_map('LOGIN_PERSISTENCE', 'False', _AS_BOOL)
 
-# Setting this to True will permit only authenticated users to access any part of NetBox. By default, anonymous users
-# are permitted to access most data in NetBox (excluding secrets) but not make any changes.
-LOGIN_REQUIRED = _environ_get_and_map('LOGIN_REQUIRED', 'False', _AS_BOOL)
+# When enabled, only authenticated users are permitted to access any part of NetBox.
+# Disabling this will allow unauthenticated users to access most areas of NetBox (but not make any changes).
+LOGIN_REQUIRED = _environ_get_and_map('LOGIN_REQUIRED', 'True', _AS_BOOL)
 
 # The length of time (in seconds) for which a user will remain logged into the web UI before being prompted to
 # re-authenticate. (Default: 1209600 [14 days])
@@ -286,12 +286,23 @@ if 'RACK_ELEVATION_DEFAULT_UNIT_WIDTH' in environ:
     RACK_ELEVATION_DEFAULT_UNIT_WIDTH = _environ_get_and_map('RACK_ELEVATION_DEFAULT_UNIT_WIDTH', None, _AS_INT)
 
 # Remote authentication support
-REMOTE_AUTH_ENABLED = _environ_get_and_map('REMOTE_AUTH_ENABLED', 'False', _AS_BOOL)
-REMOTE_AUTH_BACKEND = _environ_get_and_map('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend', _AS_LIST)
-REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
+REMOTE_AUTH_AUTO_CREATE_GROUPS = _environ_get_and_map('REMOTE_AUTH_AUTO_CREATE_GROUPS', 'False', _AS_BOOL)
 REMOTE_AUTH_AUTO_CREATE_USER = _environ_get_and_map('REMOTE_AUTH_AUTO_CREATE_USER', 'False', _AS_BOOL)
+REMOTE_AUTH_BACKEND = _environ_get_and_map('REMOTE_AUTH_BACKEND', 'netbox.authentication.RemoteUserBackend', _AS_LIST)
 REMOTE_AUTH_DEFAULT_GROUPS = _environ_get_and_map('REMOTE_AUTH_DEFAULT_GROUPS', '', _AS_LIST)
-# REMOTE_AUTH_DEFAULT_PERMISSIONS = {}
+# REMOTE_AUTH_DEFAULT_PERMISSIONS = {} # dicts can't be configured via environment variables. See extra.py instead.
+REMOTE_AUTH_ENABLED = _environ_get_and_map('REMOTE_AUTH_ENABLED', 'False', _AS_BOOL)
+REMOTE_AUTH_GROUP_HEADER = _environ_get_and_map('REMOTE_AUTH_GROUP_HEADER', 'HTTP_REMOTE_USER_GROUP')
+REMOTE_AUTH_GROUP_SEPARATOR = _environ_get_and_map('REMOTE_AUTH_GROUP_SEPARATOR', '|')
+REMOTE_AUTH_GROUP_SYNC_ENABLED = _environ_get_and_map('REMOTE_AUTH_GROUP_SYNC_ENABLED', 'False', _AS_BOOL)
+REMOTE_AUTH_HEADER = environ.get('REMOTE_AUTH_HEADER', 'HTTP_REMOTE_USER')
+REMOTE_AUTH_USER_EMAIL = environ.get('REMOTE_AUTH_USER_EMAIL', 'HTTP_REMOTE_USER_EMAIL')
+REMOTE_AUTH_USER_FIRST_NAME = environ.get('REMOTE_AUTH_USER_FIRST_NAME', 'HTTP_REMOTE_USER_FIRST_NAME')
+REMOTE_AUTH_USER_LAST_NAME = environ.get('REMOTE_AUTH_USER_LAST_NAME', 'HTTP_REMOTE_USER_LAST_NAME')
+REMOTE_AUTH_SUPERUSER_GROUPS = _environ_get_and_map('REMOTE_AUTH_SUPERUSER_GROUPS', '', _AS_LIST)
+REMOTE_AUTH_SUPERUSERS = _environ_get_and_map('REMOTE_AUTH_SUPERUSERS', '', _AS_LIST)
+REMOTE_AUTH_STAFF_GROUPS = _environ_get_and_map('REMOTE_AUTH_STAFF_GROUPS', '', _AS_LIST)
+REMOTE_AUTH_STAFF_USERS = _environ_get_and_map('REMOTE_AUTH_STAFF_USERS', '', _AS_LIST)
 
 # This repository is used to check whether there is a new release of NetBox available. Set to None to disable the
 # version check or use the URL below to check for release in the official NetBox repository.

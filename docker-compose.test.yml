@@ -1,6 +1,6 @@
 services:
   netbox: &netbox
-    image: ${IMAGE-netboxcommunity/netbox:latest}
+    image: ${IMAGE-docker.io/netboxcommunity/netbox:latest}
     depends_on:
       postgres:
         condition: service_healthy
@@ -13,10 +13,10 @@ services:
     volumes:
     - ./test-configuration/test_config.py:/etc/netbox/config/test_config.py:z,ro
     healthcheck:
+      test: curl -f http://localhost:8080/login/ || exit 1
       start_period: ${NETBOX_START_PERIOD-120s}
       timeout: 3s
       interval: 15s
-      test: "curl -f http://localhost:8080/api/ || exit 1"
   netbox-worker:
     <<: *netbox
     command:
@@ -24,42 +24,47 @@ services:
     - /opt/netbox/netbox/manage.py
     - rqworker
     healthcheck:
+      test: ps -aux | grep -v grep | grep -q rqworker || exit 1
       start_period: 40s
       timeout: 3s
       interval: 15s
-      test: "ps -aux | grep -v grep | grep -q rqworker || exit 1"
   netbox-housekeeping:
     <<: *netbox
     command:
     - /opt/netbox/housekeeping.sh
     healthcheck:
+      test: ps -aux | grep -v grep | grep -q housekeeping || exit 1
       start_period: 40s
       timeout: 3s
       interval: 15s
-      test: "ps -aux | grep -v grep | grep -q housekeeping || exit 1"
+
   postgres:
-    image: postgres:16-alpine
+    image: docker.io/postgres:16-alpine
     env_file: env/postgres.env
     healthcheck:
-      test: "pg_isready -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER" ## $$ because of docker-compose
-      interval: 10s
+      test: pg_isready -q -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER ## $$ because of docker-compose
+      start_period: 20s
+      interval: 1s
       timeout: 5s
       retries: 5
+
   redis: &redis
-    image: redis:7-alpine
+    image: docker.io/valkey/valkey:8.0-alpine
     command:
     - sh
     - -c # this is to evaluate the $REDIS_PASSWORD from the env
-    - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+    - valkey-server --save "" --appendonly no --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
     env_file: env/redis.env
     healthcheck:
-      start_period: 20s
+      test: "[ $$(valkey-cli --pass \"$${REDIS_PASSWORD}\" ping) = 'PONG' ]"
+      start_period: 5s
       timeout: 3s
-      interval: 15s
-      test: "timeout 2 redis-cli ping"
+      interval: 1s
+      retries: 5
   redis-cache:
     <<: *redis
     env_file: env/redis-cache.env
+
 volumes:
   netbox-media-files:
     driver: local

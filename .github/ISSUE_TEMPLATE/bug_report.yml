@@ -1,148 +1,148 @@
 name: Bug report
 description: Create a report about a malfunction of the Docker setup
 body:
-- type: markdown
-  attributes:
-    value: |
-      Please only raise an issue if you're certain that you've found a bug.
-      Else, see these other means to get help:
+  - type: markdown
+    attributes:
+      value: |
+        Please only raise an issue if you're certain that you've found a bug.
+        Else, see these other means to get help:
 
-      - See our troubleshooting section:
-        https://github.com/netbox-community/netbox-docker/wiki/Troubleshooting
-      - Have a look at the rest of the wiki:
-        https://github.com/netbox-community/netbox-docker/wiki
-      - Check the release notes:
-        https://github.com/netbox-community/netbox-docker/releases
-      - Look through the issues already resolved:
-        https://github.com/netbox-community/netbox-docker/issues?q=is%3Aclosed
+        - See our troubleshooting section:
+          https://github.com/netbox-community/netbox-docker/wiki/Troubleshooting
+        - Have a look at the rest of the wiki:
+          https://github.com/netbox-community/netbox-docker/wiki
+        - Check the release notes:
+          https://github.com/netbox-community/netbox-docker/releases
+        - Look through the issues already resolved:
+          https://github.com/netbox-community/netbox-docker/issues?q=is%3Aclosed
 
-      If you did not find what you're looking for,
-      try the help of our community:
+        If you did not find what you're looking for,
+        try the help of our community:
 
-      - Post to Github Discussions:
-        https://github.com/netbox-community/netbox-docker/discussions
-      - Join the `#netbox-docker` channel on our Slack:
-        https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
-      - Ask on the NetBox mailing list:
-        https://groups.google.com/d/forum/netbox-discuss
+        - Post to Github Discussions:
+          https://github.com/netbox-community/netbox-docker/discussions
+        - Join the `#netbox-docker` channel on our Slack:
+          https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
+        - Ask on the NetBox mailing list:
+          https://groups.google.com/d/forum/netbox-discuss
 
-      Please don't open an issue to open a PR.
-      Just submit the PR, that's good enough.
-- type: textarea
-  id: current-behavior
-  attributes:
-    label: Current Behavior
-    description: Please describe what you did and how you think it misbehaved
-    placeholder: I tried to … by doing …, but it …
-  validations:
-    required: true
-- type: textarea
-  id: expected-behavior
-  attributes:
-    label: Expected Behavior
-    description: Please describe what you expected instead
-    placeholder: I expected that … when I do …
-  validations:
-    required: true
-- type: input
-  id: docker-compose-version
-  attributes:
-    label: Docker Compose Version
-    description: Please paste the output of `docker-compose version`
-    placeholder: Docker Compose version vX.Y.Z
-  validations:
-    required: true
-- type: textarea
-  id: docker-version
-  attributes:
-    label: Docker Version
-    description: Please paste the output of `docker version`
-    render: text
-    placeholder: |
-      Client:
-      Cloud integration: 1.0.17
-      Version:           20.10.8
-      API version:       1.41
-      Go version:        go1.16.6
-      Git commit:        3967b7d
-      Built:             Fri Jul 30 19:55:20 2021
-      OS/Arch:           darwin/amd64
-      Context:           default
-      Experimental:      true
+        Please don't open an issue to open a PR.
+        Just submit the PR, that's good enough.
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: Please describe what you did and how you think it misbehaved
+      placeholder: I tried to … by doing …, but it …
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: Please describe what you expected instead
+      placeholder: I expected that … when I do …
+    validations:
+      required: true
+  - type: input
+    id: docker-compose-version
+    attributes:
+      label: Docker Compose Version
+      description: Please paste the output of `docker-compose version`
+      placeholder: Docker Compose version vX.Y.Z
+    validations:
+      required: true
+  - type: textarea
+    id: docker-version
+    attributes:
+      label: Docker Version
+      description: Please paste the output of `docker version`
+      render: text
+      placeholder: |
+        Client:
+        Cloud integration: 1.0.17
+        Version:           20.10.8
+        API version:       1.41
+        Go version:        go1.16.6
+        Git commit:        3967b7d
+        Built:             Fri Jul 30 19:55:20 2021
+        OS/Arch:           darwin/amd64
+        Context:           default
+        Experimental:      true
 
-      Server: Docker Engine - Community
-      Engine:
-        Version:          20.10.8
-        API version:      1.41 (minimum version 1.12)
-        Go version:       go1.16.6
-        Git commit:       75249d8
-        Built:            Fri Jul 30 19:52:10 2021
-        OS/Arch:          linux/amd64
-        Experimental:     false
-      containerd:
-        Version:          1.4.9
-        GitCommit:        e25210fe30a0a703442421b0f60afac609f950a3
-      runc:
-        Version:          1.0.1
-        GitCommit:        v1.0.1-0-g4144b63
-      docker-init:
-        Version:          0.19.0
-        GitCommit:        de40ad0
-  validations:
-    required: true
-- type: input
-  id: git-rev
-  attributes:
-    label: The git Revision
-    description: Please paste the output of `git rev-parse HEAD`
-  validations:
-    required: true
-- type: textarea
-  id: git-status
-  attributes:
-    label: The git Status
-    description: Please paste the output of `git status`
-    render: text
-    placeholder: |
-      On branch main
-      nothing to commit, working tree clean
-  validations:
-    required: true
-- type: input
-  id: run-command
-  attributes:
-    label: Startup Command
-    description: Please specify the command you used to start the project
-    placeholder: docker compose up
-  validations:
-    required: true
-- type: textarea
-  id: netbox-logs
-  attributes:
-    label: NetBox Logs
-    description: Please paste the output of `docker-compose logs netbox` (or `docker compose logs netbox`)
-    render: text
-    placeholder: |
-      netbox_1  | ⚙️ Applying database migrations
-      netbox_1  | 🧬 loaded config '/etc/netbox/config/configuration.py'
-      netbox_1  | 🧬 loaded config '/etc/netbox/config/a.py'
-      netbox_1  | 🧬 loaded config '/etc/netbox/config/extra.py'
-      netbox_1  | 🧬 loaded config '/etc/netbox/config/logging.py'
-      netbox_1  | 🧬 loaded config '/etc/netbox/config/plugins.py'
-      ...
-  validations:
-    required: true
-- type: textarea
-  id: docker-compose-override-yml
-  attributes:
-    label: Content of docker-compose.override.yml
-    description: Please paste the output of `cat docker-compose.override.yml`
-    render: yaml
-    placeholder: |
-      version: '3.4'
-      services:
-        netbox:
-          ports:
-            - '8080:8080'
-  validations:
-    required: true
+        Server: Docker Engine - Community
+        Engine:
+          Version:          20.10.8
+          API version:      1.41 (minimum version 1.12)
+          Go version:       go1.16.6
+          Git commit:       75249d8
+          Built:            Fri Jul 30 19:52:10 2021
+          OS/Arch:          linux/amd64
+          Experimental:     false
+        containerd:
+          Version:          1.4.9
+          GitCommit:        e25210fe30a0a703442421b0f60afac609f950a3
+        runc:
+          Version:          1.0.1
+          GitCommit:        v1.0.1-0-g4144b63
+        docker-init:
+          Version:          0.19.0
+          GitCommit:        de40ad0
+    validations:
+      required: true
+  - type: input
+    id: git-rev
+    attributes:
+      label: The git Revision
+      description: Please paste the output of `git rev-parse HEAD`
+    validations:
+      required: true
+  - type: textarea
+    id: git-status
+    attributes:
+      label: The git Status
+      description: Please paste the output of `git status`
+      render: text
+      placeholder: |
+        On branch main
+        nothing to commit, working tree clean
+    validations:
+      required: true
+  - type: input
+    id: run-command
+    attributes:
+      label: Startup Command
+      description: Please specify the command you used to start the project
+      placeholder: docker compose up
+    validations:
+      required: true
+  - type: textarea
+    id: netbox-logs
+    attributes:
+      label: NetBox Logs
+      description: Please paste the output of `docker-compose logs netbox` (or `docker compose logs netbox`)
+      render: text
+      placeholder: |
+        netbox_1  | ⚙️ Applying database migrations
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/configuration.py'
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/a.py'
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/extra.py'
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/logging.py'
+        netbox_1  | 🧬 loaded config '/etc/netbox/config/plugins.py'
+        ...
+    validations:
+      required: true
+  - type: textarea
+    id: docker-compose-override-yml
+    attributes:
+      label: Content of docker-compose.override.yml
+      description: Please paste the output of `cat docker-compose.override.yml`
+      render: yaml
+      placeholder: |
+        version: '3.4'
+        services:
+          netbox:
+            ports:
+              - '8080:8080'
+    validations:
+      required: true

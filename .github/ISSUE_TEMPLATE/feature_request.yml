@@ -1,68 +1,68 @@
 name: Feature or Change Request
 description: Request a new feature or a change of the current behavior
 body:
-- type: markdown
-  attributes:
-    value: |
-      This issue type is to propose new features for the Docker setup.
-      To just spin an idea, see the Github Discussions section, please.
+  - type: markdown
+    attributes:
+      value: |
+        This issue type is to propose new features for the Docker setup.
+        To just spin an idea, see the Github Discussions section, please.
 
-      Before asking for help, see these links first:
+        Before asking for help, see these links first:
 
-      - See our troubleshooting section:
-        https://github.com/netbox-community/netbox-docker/wiki/Troubleshooting
-      - Have a look at the rest of the wiki:
-        https://github.com/netbox-community/netbox-docker/wiki
-      - Check the release notes:
-        https://github.com/netbox-community/netbox-docker/releases
-      - Look through the issues already resolved:
-        https://github.com/netbox-community/netbox-docker/issues?q=is%3Aclosed
+        - See our troubleshooting section:
+          https://github.com/netbox-community/netbox-docker/wiki/Troubleshooting
+        - Have a look at the rest of the wiki:
+          https://github.com/netbox-community/netbox-docker/wiki
+        - Check the release notes:
+          https://github.com/netbox-community/netbox-docker/releases
+        - Look through the issues already resolved:
+          https://github.com/netbox-community/netbox-docker/issues?q=is%3Aclosed
 
-      If you did not find what you're looking for,
-      try the help of our community:
+        If you did not find what you're looking for,
+        try the help of our community:
 
-      - Post to Github Discussions:
-        https://github.com/netbox-community/netbox-docker/discussions
-      - Join the `#netbox-docker` channel on our Slack:
-        https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
-      - Ask on the NetBox mailing list:
-        https://groups.google.com/d/forum/netbox-discuss
+        - Post to Github Discussions:
+          https://github.com/netbox-community/netbox-docker/discussions
+        - Join the `#netbox-docker` channel on our Slack:
+          https://join.slack.com/t/netdev-community/shared_invite/zt-mtts8g0n-Sm6Wutn62q_M4OdsaIycrQ
+        - Ask on the NetBox mailing list:
+          https://groups.google.com/d/forum/netbox-discuss
 
-      Please don't open an issue to open a PR.
-      Just submit the PR, that's good enough.
-- type: textarea
-  id: desired-behavior
-  attributes:
-    label: Desired Behavior
-    description: Please describe the desired behavior
-    placeholder: To me, it would be useful, if … because …
-  validations:
-    required: true
-- type: textarea
-  id: contrast-to-current
-  attributes:
-    label: Contrast to Current Behavior
-    description: Please describe how the desired behavior is different from the current behavior
-    placeholder: The current behavior is …, but this lacks …
-  validations:
-    required: true
-- type: textarea
-  id: required-changes
-  attributes:
-    label: Required Changes
-    description: If you can, please elaborate what changes will be required to implement the desired behavior
-    placeholder: I suggest to change the file …
-  validations:
-    required: false
-- type: textarea
-  id: discussion
-  attributes:
-    label: 'Discussion: Benefits and Drawbacks'
-    description: |
-      Please make your case here:
-      - Why do you think this project and the community will benefit from your suggestion?
-      - What are the drawbacks of this change? Is it backwards-compatible?
-      - Anything else that you think is relevant to the discussion of this feature/change request.
-    placeholder: I suggest to change the file …
-  validations:
-    required: false
+        Please don't open an issue to open a PR.
+        Just submit the PR, that's good enough.
+  - type: textarea
+    id: desired-behavior
+    attributes:
+      label: Desired Behavior
+      description: Please describe the desired behavior
+      placeholder: To me, it would be useful, if … because …
+    validations:
+      required: true
+  - type: textarea
+    id: contrast-to-current
+    attributes:
+      label: Contrast to Current Behavior
+      description: Please describe how the desired behavior is different from the current behavior
+      placeholder: The current behavior is …, but this lacks …
+    validations:
+      required: true
+  - type: textarea
+    id: required-changes
+    attributes:
+      label: Required Changes
+      description: If you can, please elaborate what changes will be required to implement the desired behavior
+      placeholder: I suggest to change the file …
+    validations:
+      required: false
+  - type: textarea
+    id: discussion
+    attributes:
+      label: "Discussion: Benefits and Drawbacks"
+      description: |
+        Please make your case here:
+        - Why do you think this project and the community will benefit from your suggestion?
+        - What are the drawbacks of this change? Is it backwards-compatible?
+        - Anything else that you think is relevant to the discussion of this feature/change request.
+      placeholder: I suggest to change the file …
+    validations:
+      required: false
