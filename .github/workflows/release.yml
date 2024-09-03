@@ -6,7 +6,7 @@ on:
     types:
       - published
   schedule:
-    - cron: '45 5 * * *'
+    - cron: "45 5 * * *"
   workflow_dispatch:
 
 jobs:
