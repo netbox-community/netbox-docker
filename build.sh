@@ -103,6 +103,8 @@ GH_ACTION   If defined, special 'echo' statements are enabled that set the
             - FINAL_DOCKER_TAG: The final value of the DOCKER_TAG env variable
             ${_GREEN}Default:${_CLEAR} undefined
 
+CHECK_ONLY  Only checks if the build is needed and sets the GH Action output.
+
 ${_BOLD}Examples:${_CLEAR}
 
 ${0} master
@@ -354,6 +356,11 @@ else
   gh_out "skipped=false"
 fi
 gh_echo "::endgroup::"
+
+if [ "${CHECK_ONLY}" = "true" ]; then
+  echo "Only check if build needed was requested. Exiting"
+  exit 0
+fi
 
 ###
 # Build the image
