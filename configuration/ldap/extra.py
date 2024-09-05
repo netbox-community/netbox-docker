@@ -1,10 +1,11 @@
 ####
 ## This file contains extra configuration options that can't be configured
 ## directly through environment variables.
-## All variables set here overwrite any existing found in ldap_config.py
+## All vairables set here overwrite any existing found in ldap_config.py
 ####
 
 # # This Python script inherits all the imports from ldap_config.py
+# from django_auth_ldap.config import LDAPGroupQuery # Imported since not in ldap_config.py
 
 # # Sets a base requirement of membetship to netbox-user-ro, netbox-user-rw, or netbox-user-admin.
 # AUTH_LDAP_REQUIRE_GROUP = (

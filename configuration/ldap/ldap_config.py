@@ -2,7 +2,7 @@ from importlib import import_module
 from os import environ
 
 import ldap
-from django_auth_ldap.config import LDAPGroupQuery, LDAPSearch
+from django_auth_ldap.config import LDAPSearch
 
 
 # Read secret from file
@@ -86,22 +86,12 @@ AUTH_LDAP_GROUP_TYPE = _import_group_type(environ.get('AUTH_LDAP_GROUP_TYPE', 'G
 # Define a group required to login.
 AUTH_LDAP_REQUIRE_GROUP = environ.get('AUTH_LDAP_REQUIRE_GROUP_DN')
 
-# If non-empty string, AUTH_LDAP_REQUIRE_GROUP will be treated as a list delimited by this separator
-AUTH_LDAP_REQUIRE_GROUP_SEPARATOR = environ.get('AUTH_LDAP_REQUIRE_GROUP_DN_SEPARATOR', '')
-
 # Define special user types using groups. Exercise great caution when assigning superuser status.
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
 
 if AUTH_LDAP_REQUIRE_GROUP is not None:
-    # Build an LDAPGroupQuery when AUTH_LDAP_REQUIRE_GROUP should be treated as a list
-    if AUTH_LDAP_REQUIRE_GROUP_SEPARATOR:
-        _groups = list(filter(None, AUTH_LDAP_REQUIRE_GROUP.split(AUTH_LDAP_REQUIRE_GROUP_SEPARATOR)))
-        AUTH_LDAP_REQUIRE_GROUP = LDAPGroupQuery(_groups[0])
-        for i in range(1, len(_groups)):
-            AUTH_LDAP_REQUIRE_GROUP |= LDAPGroupQuery(_groups[i])
-
     AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-        "is_active": AUTH_LDAP_REQUIRE_GROUP,
+        "is_active": environ.get('AUTH_LDAP_REQUIRE_GROUP_DN', ''),
         "is_staff": environ.get('AUTH_LDAP_IS_ADMIN_DN', ''),
         "is_superuser": environ.get('AUTH_LDAP_IS_SUPERUSER_DN', '')
     }
