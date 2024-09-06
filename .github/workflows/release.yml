@@ -56,6 +56,7 @@ jobs:
           version: "lab:latest"
           driver: cloud
           endpoint: "netboxcommunity/netbox-default"
+        if: steps.check-build-needed.outputs.skipped != 'true'
       # quay.io
       - id: quay-io-login
         name: Login to Quay.io
