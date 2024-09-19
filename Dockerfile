@@ -1,5 +1,5 @@
 ARG FROM
-FROM ${FROM} as builder
+FROM ${FROM} AS builder
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update -qq \
@@ -46,7 +46,7 @@ RUN \
 ###
 
 ARG FROM
-FROM ${FROM} as main
+FROM ${FROM} AS main
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update -qq \
@@ -64,15 +64,15 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       openssl \
       python3 \
       tini \
-    && curl --silent --output /etc/apt/keyrings/nginx-keyring.gpg \
+    && curl --silent --output /usr/share/keyrings/nginx-keyring.gpg \
       https://unit.nginx.org/keys/nginx-keyring.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ mantic unit" \
+    && echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ noble unit" \
       > /etc/apt/sources.list.d/unit.list \
     && apt-get update -qq \
     && apt-get install \
       --yes -qq --no-install-recommends \
-      unit=1.32.1-1~mantic \
-      unit-python3.12=1.32.1-1~mantic \
+      unit=1.33.0-1~noble \
+      unit-python3.12=1.33.0-1~noble \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv
