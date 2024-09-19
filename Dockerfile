@@ -22,6 +22,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       python3-dev \
       python3-pip \
       python3-venv \
+      xmlsec1 \
     && python3 -m venv /opt/netbox/venv \
     && /opt/netbox/venv/bin/python3 -m pip install --upgrade \
       pip \
