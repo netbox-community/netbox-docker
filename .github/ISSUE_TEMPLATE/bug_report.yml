@@ -48,7 +48,7 @@ body:
     id: docker-compose-version
     attributes:
       label: Docker Compose Version
-      description: Please paste the output of `docker-compose version`
+      description: Please paste the output of `docker-compose version` (or `docker compose version`)
       placeholder: Docker Compose version vX.Y.Z
     validations:
       required: true
@@ -139,7 +139,6 @@ body:
       description: Please paste the output of `cat docker-compose.override.yml`
       render: yaml
       placeholder: |
-        version: '3.4'
         services:
           netbox:
             ports:
