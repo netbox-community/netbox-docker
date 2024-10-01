@@ -139,7 +139,6 @@ body:
       description: Please paste the output of `cat docker-compose.override.yml`
       render: yaml
       placeholder: |
-        version: '3.4'
         services:
           netbox:
             ports:
