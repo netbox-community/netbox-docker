@@ -66,6 +66,18 @@ COPY docker/launch-netbox.sh /opt/netbox/launch-netbox.sh
 COPY configuration/ /etc/netbox/config/
 COPY docker/nginx-unit.json /etc/unit/
 
+# Plugins and plugin configuration
+COPY ./plugin_requirements.txt /opt/netbox/
+COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/plugins.py /etc/netbox/config/plugins.py
+
+# Plugin configuration only possible via settings.py
+COPY ./local_settings.py /opt/netbox/netbox/netbox/
+
+# Install plugins
+RUN /opt/netbox/venv/bin/pip install  --no-warn-script-location -r /opt/netbox/plugin_requirements.txt
+RUN SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
+
 WORKDIR /opt/netbox/netbox
 
 # Must set permissions for '/opt/netbox/netbox/media' directory
