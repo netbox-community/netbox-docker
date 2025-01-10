@@ -1,0 +1,74 @@
+version: '3.4'
+
+volumes:
+  traefik-certs:
+
+services:
+  # Replace database service from upstream with dummy because we are using an external database
+  postgres:
+    image: registry.suse.com/bci/bci-minimal:latest
+    command: "true"
+    entrypoint: "true"
+    healthcheck:
+      test: ["NONE"]
+    volumes: []
+  # "Real" overrides below
+  netbox:
+    env_file: /etc/opt/netbox-docker/netbox.env
+    build:
+      args:
+        FROM: registry.suse.com/bci/python:3.11
+        NETBOX_PATH: ${NETBOX_PATH}
+      context: .
+      dockerfile: Dockerfile
+      target: main
+    image: netbox:${TAG}
+    pull_policy: never
+    ports:
+      - 8000:8080
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.frontend.rule: "Host(`${NETBOX_HOSTNAME}`)"
+      traefik.http.routers.frontend.entrypoints: web
+      traefik.http.routers.frontend.middlewares: https_redirect
+      traefik.http.routers.frontendtls.rule: "Host(`${NETBOX_HOSTNAME}`)"
+      traefik.http.routers.frontendtls.entrypoints: websecure
+      traefik.http.routers.frontendtls.tls: true
+      traefik.http.routers.frontendtls.tls.certresolver: myresolver
+      traefik.http.middlewares.https_redirect.redirectscheme.scheme: https
+      traefik.http.middlewares.https_redirect.redirectscheme.permanent: true
+      traefik.http.services.frontend.loadbalancer.server.port: 8080
+      traefik.http.services.frontend.loadbalancer.passhostheader: true
+  netbox-worker:
+    image: netbox:${TAG}
+    pull_policy: never
+  netbox-housekeeping:
+    image: netbox:${TAG}
+    pull_policy: never
+  traefik:
+    image: traefik:v2.8
+    container_name: traefik
+    hostname: traefik
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.caserver=${ACME_SERVER}"
+      - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/certs/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-certs:/certs
+      - /var/lib/ca-certificates/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:ro
+    restart: unless-stopped
+  redis:
+    env_file: /etc/opt/netbox-docker/redis.env
+  redis-cache:
+    env_file: /etc/opt/netbox-docker/redis-cache.env
