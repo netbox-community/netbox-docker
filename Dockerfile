@@ -1,32 +1,23 @@
 ARG FROM
 FROM ${FROM} AS builder
 
-RUN export DEBIAN_FRONTEND=noninteractive \
-    && apt-get update -qq \
-    && apt-get upgrade \
-      --yes -qq --no-install-recommends \
-    && apt-get install \
-      --yes -qq --no-install-recommends \
-      build-essential \
-      ca-certificates \
-      libldap-dev \
-      libpq-dev \
-      libsasl2-dev \
-      libssl-dev \
-      libxml2-dev \
-      libxmlsec1 \
-      libxmlsec1-dev \
-      libxmlsec1-openssl \
-      libxslt-dev \
-      pkg-config \
-      python3-dev \
-      python3-pip \
-      python3-venv \
+RUN \
+    zypper -n in \
+      gcc \
+      openldap2-devel \
+      postgresql-devel \
+      postgresql-server-devel \
+      cyrus-sasl-devel \
+      libopenssl-devel \
+      libxml2-devel \
+      libxml-security-c-devel \
+      libxslt-devel \
     && python3 -m venv /opt/netbox/venv \
     && /opt/netbox/venv/bin/python3 -m pip install --upgrade \
       pip \
       setuptools \
-      wheel
+      wheel \
+    && zypper -n cc -a && rm -r /var/{cache,log}/*
 
 ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
@@ -48,32 +39,17 @@ RUN \
 ARG FROM
 FROM ${FROM} AS main
 
-RUN export DEBIAN_FRONTEND=noninteractive \
-    && apt-get update -qq \
-    && apt-get upgrade \
-      --yes -qq --no-install-recommends \
-    && apt-get install \
-      --yes -qq --no-install-recommends \
+RUN \
+    zypper -n in \
       bzip2 \
-      ca-certificates \
-      curl \
-      libldap-common \
       libpq5 \
-      libxmlsec1-openssl \
-      openssh-client \
-      openssl \
-      python3 \
-      tini \
-    && curl --silent --output /usr/share/keyrings/nginx-keyring.gpg \
-      https://unit.nginx.org/keys/nginx-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ noble unit" \
-      > /etc/apt/sources.list.d/unit.list \
-    && apt-get update -qq \
-    && apt-get install \
-      --yes -qq --no-install-recommends \
-      unit=1.34.0-1~noble \
-      unit-python3.12=1.34.0-1~noble \
-    && rm -rf /var/lib/apt/lists/*
+      libxmlsec1-openssl1 \
+      openssh-clients \
+      catatonit \
+    && zypper -n ar -G -f -p 100 https://packages.nginx.org/unit/fedora/38/x86_64/ nginx-unit \
+    && zypper -n in \
+      unit-python311 \
+    && zypper -n cc -a && rm -r /var/{cache,log}/*
 
 COPY --from=builder /opt/netbox/venv /opt/netbox/venv
 
@@ -102,7 +78,7 @@ RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
       && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
 
 ENV LANG=C.utf8 PATH=/opt/netbox/venv/bin:$PATH
-ENTRYPOINT [ "/usr/bin/tini", "--" ]
+ENTRYPOINT [ "catatonit", "--" ]
 
 CMD [ "/opt/netbox/docker-entrypoint.sh", "/opt/netbox/launch-netbox.sh" ]
 
