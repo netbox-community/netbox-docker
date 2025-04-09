@@ -7,6 +7,17 @@ services:
       - redis-cache
     env_file: env/netbox.env
     user: "unit:root"
+    deploy:
+      resources:
+        limits:
+          memory: "4g"
+          cpus: "5"
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.netbox.rule=Host(`netbox.dfestaging.jennyme.co.za`)
+        - traefik.http.routers.netbox.tls.certresolver=myresolver # Use the ACME resolver
+        - traefik.http.routers.netbox.entrypoints=websecure # Use the HTTPS entrypoint
+        - traefik.http.services.netbox.loadbalancer.server.port=8000
     healthcheck:
       test: curl -f http://localhost:8080/login/ || exit 1
       start_period: 90s
@@ -17,6 +28,9 @@ services:
       - netbox-media-files:/opt/netbox/netbox/media:rw
       - netbox-reports-files:/opt/netbox/netbox/reports:rw
       - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
+    networks:
+      - netbox
+      - dfe_network
   netbox-worker:
     <<: *netbox
     depends_on:
@@ -31,6 +45,9 @@ services:
       start_period: 20s
       timeout: 3s
       interval: 15s
+    networks:
+      - netbox
+      - dfe_network
   netbox-housekeeping:
     <<: *netbox
     depends_on:
@@ -43,6 +60,9 @@ services:
       start_period: 20s
       timeout: 3s
       interval: 15s
+    networks:
+      - netbox
+      - dfe_network
 
   # postgres
   #postgres:
@@ -73,6 +93,9 @@ services:
     env_file: env/redis.env
     volumes:
       - netbox-redis-data:/data
+    networks:
+      - netbox
+      - dfe_network
   redis-cache:
     image: docker.io/valkey/valkey:8.1-alpine
     command:
@@ -83,6 +106,9 @@ services:
     env_file: env/redis-cache.env
     volumes:
       - netbox-redis-cache-data:/data
+    networks:
+      - netbox
+      - dfe_network
 
 volumes:
   netbox-media-files:
@@ -97,3 +123,12 @@ volumes:
     driver: local
   netbox-scripts-files:
     driver: local
+
+
+networks:
+  netbox:
+    driver: "overlay"
+    #driver: bridge
+    attachable: true
+  dfe_network:
+    external: true
