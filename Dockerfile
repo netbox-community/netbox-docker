@@ -46,8 +46,10 @@ RUN \
 ARG FROM
 FROM ${FROM} AS main
 
+ARG NGINX_KEYRING_SHA256_SUM=7d3d5a7adf37e17d6882e2f6f55324b9a8f978ef3c99c50fe801af67c9847c91
+# hadolint ignore=DL3020
+ADD --chown=0:0 --chmod=444 --checksum=sha256:${NGINX_KEYRING_SHA256_SUM} https://unit.nginx.org/keys/nginx-keyring.gpg /usr/share/keyrings/nginx-keyring.gpg
 COPY docker/unit.list /etc/apt/sources.list.d/unit.list
-ADD --chmod=444 --chown=0:0 https://unit.nginx.org/keys/nginx-keyring.gpg /usr/share/keyrings/nginx-keyring.gpg
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update -qq \
     && apt-get upgrade \
