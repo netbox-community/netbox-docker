@@ -12,3 +12,5 @@ configuration/ldap/*
 !configuration/logging.py
 !configuration/plugins.py
 super-linter.log
+data
+data-backup
