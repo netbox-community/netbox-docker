@@ -19,4 +19,10 @@ services:
       # SUPERUSER_EMAIL: ""
       # SUPERUSER_NAME: ""
       # SUPERUSER_PASSWORD: ""
-
+      # SSO Configuration
+      # SOCIAL_AUTH_OKTA_OPENIDCONNECT_KEY: "your_okta_client_id"
+      # SOCIAL_AUTH_OKTA_OPENIDCONNECT_API_URL: "https://your-domain.okta.com"
+      # SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: "your_google_client_id"
+    # secrets:
+      # - okta_openidconnect_secret
+      # - google_oauth2_secret
