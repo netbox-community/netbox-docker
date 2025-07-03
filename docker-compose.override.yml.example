@@ -26,3 +26,10 @@ services:
     # secrets:
       # - okta_openidconnect_secret
       # - google_oauth2_secret
+
+# Uncomment to use Docker secrets for SSO credentials
+# secrets:
+#   okta_openidconnect_secret:
+#     file: ./secrets/okta_secret.txt
+#   google_oauth2_secret:
+#     file: ./secrets/google_secret.txt
