@@ -1,7 +1,7 @@
 ARG FROM
 FROM ${FROM} AS builder
 
-COPY --from=ghcr.io/astral-sh/uv:0.7 /uv /usr/local/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.8 /uv /usr/local/bin/
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update -qq \
     && apt-get upgrade \
@@ -89,7 +89,7 @@ WORKDIR /opt/netbox/netbox
 
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
-RUN mkdir -p static /opt/unit/state/ /opt/unit/tmp/ \
+RUN mkdir -p static media /opt/unit/state/ /opt/unit/tmp/ \
       && chown -R unit:root /opt/unit/ media reports scripts \
       && chmod -R g+w /opt/unit/ media reports scripts \
       && cd /opt/netbox/ && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python -m mkdocs build \
