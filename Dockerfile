@@ -27,7 +27,7 @@ ARG NETBOX_PATH
 COPY ${NETBOX_PATH}/requirements.txt requirements-container.txt /
 ENV VIRTUAL_ENV=/opt/netbox/venv
 RUN \
-    # Gunicorn is not needed because we use Nginx Unit
+    # Gunicorn is not needed because we use Granian
     sed -i -e '/gunicorn/d' /requirements.txt && \
     # We need 'social-auth-core[all]' in the Docker image. But if we put it in our own requirements-container.txt
     # we have potential version conflicts and the build will fail.
@@ -46,8 +46,6 @@ RUN \
 ARG FROM
 FROM ${FROM} AS main
 
-COPY docker/unit.list /etc/apt/sources.list.d/unit.list
-ADD --chmod=444 --chown=0:0 https://unit.nginx.org/keys/nginx-keyring.gpg /usr/share/keyrings/nginx-keyring.gpg
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update -qq \
     && apt-get upgrade \
@@ -64,8 +62,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       openssl \
       python3 \
       tini \
-      unit-python3.12=1.34.2-1~noble \
-      unit=1.34.2-1~noble \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the modified 'requirements*.txt' files, to have the files actually used during installation
@@ -81,21 +77,21 @@ COPY docker/ldap_config.docker.py /opt/netbox/netbox/netbox/ldap_config.py
 COPY docker/docker-entrypoint.sh /opt/netbox/docker-entrypoint.sh
 COPY docker/launch-netbox.sh /opt/netbox/launch-netbox.sh
 COPY configuration/ /etc/netbox/config/
-COPY docker/nginx-unit.json /etc/unit/
+COPY docker/granian.py /opt/netbox/netbox/netbox/granian.py
 COPY VERSION /opt/netbox/VERSION
 
 WORKDIR /opt/netbox/netbox
 
 # Must set permissions for '/opt/netbox/netbox/media' directory
 # to g+w so that pictures can be uploaded to netbox.
-RUN mkdir -p static media /opt/unit/state/ /opt/unit/tmp/ \
-      && chown -R unit:root /opt/unit/ media reports scripts \
-      && chmod -R g+w /opt/unit/ media reports scripts \
-      && cd /opt/netbox/ && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python -m mkdocs build \
-          --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
-      && DEBUG="true" SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input \
-      && mkdir /opt/netbox/netbox/local \
-      && echo "build: Docker-$(cat /opt/netbox/VERSION)" > /opt/netbox/netbox/local/release.yaml
+RUN useradd --home-dir /opt/netbox/ --no-create-home --no-user-group --system --shell /bin/false --uid 999 --gid 0 netbox \
+    && mkdir -p static media local \
+    && chown -R netbox:root media reports scripts \
+    && chmod -R g+w media reports scripts \
+    && cd /opt/netbox/ && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python -m mkdocs build \
+        --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
+    && DEBUG="true" SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input \
+    && echo "build: Docker-$(cat /opt/netbox/VERSION)" > /opt/netbox/netbox/local/release.yaml
 
 ENV LANG=C.utf8 PATH=/opt/netbox/venv/bin:$PATH VIRTUAL_ENV=/opt/netbox/venv UV_NO_CACHE=1
 ENTRYPOINT [ "/usr/bin/tini", "--" ]

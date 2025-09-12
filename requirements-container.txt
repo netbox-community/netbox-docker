@@ -1,5 +1,6 @@
 django-auth-ldap==5.2.0
 dulwich==0.24.10
+granian[uvloop]==2.5.7
 python3-saml==1.16.0
 --no-binary lxml
 --no-binary xmlsec

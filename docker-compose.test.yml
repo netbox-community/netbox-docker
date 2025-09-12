@@ -9,7 +9,7 @@ services:
       redis-cache:
         condition: service_healthy
     env_file: env/netbox.env
-    user: "unit:root"
+    user: "netbox:root"
     volumes:
       - ./test-configuration/test_config.py:/etc/netbox/config/test_config.py:z,ro
     healthcheck:
