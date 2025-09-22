@@ -109,3 +109,6 @@ AUTH_LDAP_USER_ATTR_MAP = {
     "last_name": environ.get('AUTH_LDAP_ATTR_LASTNAME', 'sn'),
     "email": environ.get('AUTH_LDAP_ATTR_MAIL', 'mail')
 }
+
+# Update user object with the latest values from the LDAP directory every time the user logs in.
+AUTH_LDAP_ALWAYS_UPDATE_USER = environ.get('AUTH_LDAP_ALWAYS_UPDATE_USER', 'True').lower() == 'true'

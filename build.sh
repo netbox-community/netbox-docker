@@ -62,7 +62,7 @@ DOCKERFILE  The name of Dockerfile to use.
 DOCKER_FROM The base image to use.
             ${_GREEN}Default:${_CLEAR} 'ubuntu:24.04'
 
-BUILDX_PLATFORMS
+BUILDX_PLATFORM
             Specifies the platform(s) to build the image for.
             ${_CYAN}Example:${_CLEAR} 'linux/amd64,linux/arm64'
             ${_GREEN}Default:${_CLEAR} 'linux/amd64'

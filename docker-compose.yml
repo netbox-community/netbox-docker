@@ -1,6 +1,6 @@
 services:
   netbox: &netbox
-    image: docker.io/netboxcommunity/netbox:${VERSION-v4.3-3.3.0}
+    image: docker.io/netboxcommunity/netbox:${VERSION-v4.4-3.4.0}
     depends_on:
       - postgres
       - redis
@@ -28,18 +28,6 @@ services:
       - rqworker
     healthcheck:
       test: ps -aux | grep -v grep | grep -q rqworker || exit 1
-      start_period: 20s
-      timeout: 3s
-      interval: 15s
-  netbox-housekeeping:
-    <<: *netbox
-    depends_on:
-      netbox:
-        condition: service_healthy
-    command:
-      - /opt/netbox/housekeeping.sh
-    healthcheck:
-      test: ps -aux | grep -v grep | grep -q housekeeping || exit 1
       start_period: 20s
       timeout: 3s
       interval: 15s
