@@ -17,8 +17,14 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  netbox-housekeeping:
+  housekeeping:
+    extends:
+      service: netbox 
+    command: /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py housekeeping
     restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
     logging:
       driver: "json-file"
       options:
@@ -48,4 +54,3 @@ services:
       options:
         max-size: "20m"
         max-file: "5"
-        
