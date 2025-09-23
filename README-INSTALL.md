@@ -9,6 +9,7 @@
 - **Git repository**: Unser geforktes `netbox-docker` Repository eintragen.
 - **Repository reference**: Branch wählen (z. B. `main`).
 - **Compose path**: `docker-compose.yml` 
+- **Additional paths +Add file**: `docker-compose.override.yml`
 - **Enable relative path volumes**: aktivieren.
 - **Base path**: `/var/docker` als relative path setzen.
 
