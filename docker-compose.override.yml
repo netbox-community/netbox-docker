@@ -8,7 +8,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    image: ghcr.io/netbox-community/netbox:v4.4-3-plugins
     volumes:
       - ./requirements-plugins.txt:/plugins/requirements-plugins.txt:ro
     command: >
