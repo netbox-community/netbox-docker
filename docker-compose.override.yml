@@ -8,10 +8,11 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    image: ghcr.io/netbox-community/netbox:v4.4-3-plugins
     volumes:
       - ./requirements-plugins.txt:/plugins/requirements-plugins.txt:ro
     command: >
-      sh -lc "/opt/netbox/venv/bin/pip install --no-cache-dir -r /plugins/requirements-plugins.txt
+      sh -lc "/opt/netbox/venv/bin/python -m pip install --no-cache-dir -r /plugins/requirements-plugins.txt
       && /opt/netbox/docker-entrypoint.sh"
 
   netbox-worker:
