@@ -1,0 +1,4 @@
+netbox-topology-views>=4.2.0,<5.0.0
+netbox-device-lifecycle-mgmt>=1.1.0,<2.0.0
+netbox-plugin-prometheus-sd>=0.3.0,<1.0.0
+netbox-qrcode>=0.0.17,<1.0.0

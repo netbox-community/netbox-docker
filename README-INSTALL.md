@@ -6,12 +6,10 @@
 
 **Portainer UI → Stacks → Add stack → Repository**
 
-* **Git repository**: Unser geforktes `netbox-docker` Repository eintragen.
-* **Repository reference**: Haupt-Branch wählen (z. B. `main`).
-* **Compose path**: `docker-compose.yml` (oder gewünschtes Compose-File) setzen.
+* **Git repository**: User forked `netbox-docker` Repository 
+* **Repository reference**: main branch
+* **Compose path**: `docker-compose.yml` 
 * **Enable relative path volumes**: aktivieren.
-* **Base path**: `/var/docker` setzen.
+* **Base path**: `/var/docker` als relative path setzen.
 
 ---
-
-Weitere Schritte folgen …
