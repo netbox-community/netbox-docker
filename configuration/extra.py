@@ -48,7 +48,52 @@
 # now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 # BANNER_TOP = f'<marquee width="200px">This instance started on {now}.</marquee>'
 
-try:
-    from .extra_local import *
-except ImportError:
-    pass
+# Zusätzliche Status-Felder für IP-Adressen
+FIELD_CHOICES = {
+    'ipam.IPAddress.status': (
+        ('free',       'Free',       'lime'),
+        ('deprecated', 'Deprecated', 'red'),
+        ('reserved',   'Reserved',   'yellow'),
+        ('dhcp',       'DHCP',       'blue'),
+        ('active',     'Active',     'cyan'),
+        ('gateway',    'Gateway',    'darkkhaki'),
+    )
+}
+
+from netbox.configuration.configuration import PLUGINS, PLUGINS_CONFIG
+
+PLUGINS += [
+    'netbox_topology_views',
+    'netbox_device_lifecycle_mgmt',
+    'netbox_prometheus_sd',
+    'netbox_qrcode',
+]
+
+PLUGINS_CONFIG.update({
+    # NetBox Topology Views
+    'netbox_topology_views': {
+        # Beispiel: Standard-Layout für Graphen
+        'default_device_bay_parent': True,
+        'exclude_virtual_interfaces': True,
+    },
+
+    # Device Lifecycle Management
+    'netbox_device_lifecycle_mgmt': {
+        # Tage vor EoX-Benachrichtigung
+        'expiry_notice_days': 180,
+    },
+
+    # Prometheus Service Discovery
+    'netbox_prometheus_sd': {
+        # Export-Path (innerhalb des Containers erreichbar)
+        'path': '/etc/netbox/prometheus-sd',
+        'reload_command': None,  # oder z. B. 'systemctl reload prometheus'
+    },
+
+    # QRCode
+    'netbox_qrcode': {
+        'qr_code_size': 8,  # 1–10, bestimmt Pixelgröße
+        'qr_code_border': 4,
+        'qr_code_error_correction': 'M',  # L, M, Q, H
+    },
+})
