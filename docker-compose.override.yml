@@ -1,18 +1,14 @@
 services:
   netbox:
+    build:
+      context: .
+      dockerfile: Dockerfile-plugins
+      args:
+        FROM_TAG: v4.4-3
+    image: bboerni2/netbox:v4.4-3-plugins
     ports:
       - "8000:8080"
     restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    volumes:
-      - ./requirements-plugins.txt:/plugins/requirements-plugins.txt:ro
-    command: >
-      sh -lc "/opt/netbox/venv/bin/python -m pip install --no-cache-dir -r /plugins/requirements-plugins.txt
-      && /opt/netbox/docker-entrypoint.sh"
 
   netbox-worker:
     restart: unless-stopped

@@ -1,0 +1,11 @@
+# Dockerfile-plugins
+ARG FROM_TAG=v4.4-3
+FROM ghcr.io/netbox-community/netbox:${FROM_TAG}-plugins
+
+# Systemabhängigkeit: pip ins venv holen
+RUN python -m ensurepip && \
+    /opt/netbox/venv/bin/python -m pip install --upgrade pip
+
+# Plugins installieren
+COPY requirements-plugins.txt /plugins/requirements-plugins.txt
+RUN /opt/netbox/venv/bin/python -m pip install --no-cache-dir -r /plugins/requirements-plugins.txt
