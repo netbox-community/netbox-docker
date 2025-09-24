@@ -10,6 +10,3 @@ services:
 
   netbox-worker:
     restart: unless-stopped
-
-  netbox-housekeeping:
-    restart: unless-stopped
