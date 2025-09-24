@@ -1,6 +1,6 @@
 # Dockerfile-plugins
 ARG FROM_TAG=v4.4-3.4.0
-FROM ghcr.io/netbox-community/netbox:${FROM_TAG}-plugins
+FROM ghcr.io/netbox-community/netbox:${FROM_TAG}
 
 # Für Plugin-Install: kurz root werden
 USER root
