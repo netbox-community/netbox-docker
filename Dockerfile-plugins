@@ -2,10 +2,16 @@
 ARG FROM_TAG=v4.4-3
 FROM ghcr.io/netbox-community/netbox:${FROM_TAG}-plugins
 
-# pip ins venv bringen und upgraden
-RUN /opt/netbox/venv/bin/python -m ensurepip && \
-    /opt/netbox/venv/bin/python -m pip install --upgrade pip
+# Für Plugin-Install: kurz root werden
+USER root
+# Debian/Bookworm: ensurepip ist oft nicht im Image -> python3-pip nachinstallieren
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends python3-pip \
+ && rm -rf /var/lib/apt/lists/*
 
-# Plugins beim Build installieren
+# Plugins ins Image installieren (ins NetBox-venv)
 COPY requirements-plugins.txt /plugins/requirements-plugins.txt
 RUN /opt/netbox/venv/bin/python -m pip install --no-cache-dir -r /plugins/requirements-plugins.txt
+
+# Zurück zum default user
+USER netbox
