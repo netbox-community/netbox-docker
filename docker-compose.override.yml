@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile-plugins
       args:
-        FROM_TAG: v4.4-3
+        FROM_TAG: v4.4-3.4.0
     image: *netbox_image
     pull_policy: never
     ports:
