@@ -1,17 +1,18 @@
 # Dockerfile-plugins
-ARG FROM_TAG=v4.4-3.4.0
-FROM ghcr.io/netbox-community/netbox:${FROM_TAG}
+FROM docker.io/netboxcommunity/netbox:${VERSION-v4.4-3.4.0}
 
-# Für Plugin-Install: kurz root werden
+# falls du Dateien kopieren/collectstatic brauchst, kurz root:
 USER root
-# Debian/Bookworm: ensurepip ist oft nicht im Image -> python3-pip nachinstallieren
-RUN apt-get update \
- && apt-get install -y --no-install-recommends python3-pip \
- && rm -rf /var/lib/apt/lists/*
 
-# Plugins ins Image installieren (ins NetBox-venv)
-COPY requirements-plugins.txt /plugins/requirements-plugins.txt
-RUN /opt/netbox/venv/bin/python -m pip install --no-cache-dir -r /plugins/requirements-plugins.txt
+# 1) Plugin-Requirements ins Image legen
+#    (Datei kannst du weiter "requirements-plugins.txt" nennen)
+COPY requirements-plugins.txt /opt/netbox/plugin_requirements.txt
 
-# Zurück zum default user
+# 2) Plugins ins NetBox-venv installieren (nutzt das im Image vorhandene 'uv pip')
+# 3) (optional aber empfehlenswert) Statics sammeln, falls Plugins welche mitbringen
+RUN /usr/local/bin/uv pip install --no-cache-dir -r /opt/netbox/plugin_requirements.txt \
+ && DEBUG="true" SECRET_KEY="dummyKeyWithMinimumLength-------------------------" \
+    /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
+
+# zurück zum Default-User
 USER netbox
