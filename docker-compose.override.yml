@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile-plugins
     # optionaler lokaler Name statt Upstream-Tag:
     image: netbox-plugins:local
+    pull_policy: never
     # Plugins in NetBox aktivieren
     environment:
       PLUGINS: "netbox_topology_views,netbox_lifecycle,netbox_plugin_prometheus_sd,netbox_qrcode"
