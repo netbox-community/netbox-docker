@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-plugins
-    # lokaler Name statt Upstream-Tag:
+    # lokaler Name statt Upstream-Tag
     image: netbox-plugins:local
     pull_policy: never
     ports:
