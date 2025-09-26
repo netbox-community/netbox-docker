@@ -73,3 +73,15 @@ services:
       options:
         max-size: "20m"
         max-file: "5"
+
+  # docker-compose.override.yml – Zusatzservice
+  proxbox-api:
+    image: emersonfelipesp/proxbox-api:latest
+    environment:
+      # NetBox wird vom Backend via API beschrieben:
+      NETBOX_URL: http://netbox:8080
+      NETBOX_TOKEN: ${NETBOX_API_TOKEN}
+    depends_on:
+      netbox:
+        condition: service_started
+    restart: unless-stopped
