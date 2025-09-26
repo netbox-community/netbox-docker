@@ -4,9 +4,9 @@ services:
     # WICHTIG: eigenes Image bauen
     build:
       context: .
-      dockerfile: Dockerfile-plugins
+      dockerfile: Dockerfile-withplugins
     # lokaler Name statt Upstream-Tag
-    image: netbox-plugins:local
+    image: netbox-withplugins:local
     pull_policy: never
     ports:
       - "8000:8080"
@@ -23,7 +23,7 @@ services:
 
   netbox-worker:
     restart: unless-stopped
-    image: netbox-plugins:local
+    image: netbox-withplugins:local
     pull_policy: never
     logging:
       driver: "json-file"
@@ -36,7 +36,7 @@ services:
 
   netbox-housekeeping:
     restart: unless-stopped
-    image: netbox-plugins:local
+    image: netbox-withplugins:local
     pull_policy: never
     environment:
       DB_WAIT_TIMEOUT: "180"

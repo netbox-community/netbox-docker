@@ -27,10 +27,9 @@ netbox-docker unterstützt eine separate **`requirements-plugins.txt`**, die bei
 
 ### 2.2 `requirements-plugins.txt` 
 ```text
-# Versions bewusst pinned
 netbox-topology-views>=4.2.0,<5.0.0
-netbox-device-lifecycle-mgmt>=1.1.0,<2.0.0
-netbox-plugin-prometheus-sd>=0.3.0,<1.0.0
+netbox-lifecycle>=1.1.0,<2.0.0
+netbox-plugin-prometheus-sd>=1.2.0
 netbox-qrcode>=0.0.17,<1.0.0
 ```
 
@@ -42,5 +41,6 @@ Um einen ersten **Administrator-Account** (Superuser) anzulegen, kann der Befehl
 
 **Command (copy-fähig):**
 ```bash
-docker compose exec netbox python3 /opt/netbox/netbox/manage.py createsuperuser
+docker exec -it netbox-docker-netbox-1 \
+  /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py createsuperuser
 ```
