@@ -3,13 +3,15 @@ x-netbox-image: &netbox_image netboxplugins:local
 
 services:
   netbox:
+    # WICHTIG: eigenes Image bauen
     build:
       context: .
       dockerfile: Dockerfile-plugins
-      args:
-        FROM_TAG: v4.4-3
-    image: *netbox_image
-    pull_policy: never
+    # optionaler lokaler Name statt Upstream-Tag:
+    image: netbox-plugins:local
+    # Plugins in NetBox aktivieren
+    environment:
+      PLUGINS: "netbox_topology_views,netbox_lifecycle,netbox_plugin_prometheus_sd,netbox_qrcode"
     ports:
       - "8000:8080"
     restart: unless-stopped
