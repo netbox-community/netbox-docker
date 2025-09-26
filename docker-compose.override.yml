@@ -23,6 +23,21 @@ services:
 
   netbox-worker:
     restart: unless-stopped
+    image: netbox-plugins:local
+    pull_policy: never
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      netbox:
+        condition: service_started
+
+  netbox-housekeeping:
+    restart: unless-stopped
+    image: netbox-plugins:local
+    pull_policy: never
     logging:
       driver: "json-file"
       options:
