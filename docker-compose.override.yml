@@ -38,6 +38,9 @@ services:
     restart: unless-stopped
     image: netbox-plugins:local
     pull_policy: never
+    environment:
+      DB_WAIT_TIMEOUT: "180"
+      DB_WAIT_DEBUG: "1"
     logging:
       driver: "json-file"
       options:
