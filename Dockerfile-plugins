@@ -1,10 +1,5 @@
-# nutze das offizielle Basisimage – ohne "-plugins"
 FROM ghcr.io/netbox-community/netbox:v4.4-3.4.0
 
-# kopiere die Plugin-Requirements an einen eindeutigen Ort
 COPY requirements-plugins.txt /opt/netbox/requirements-plugins.txt
 
-# installiere Plugins
 RUN /usr/local/bin/uv pip install --no-cache-dir -r /opt/netbox/requirements-plugins.txt
-
-# KEIN collectstatic hier – das macht der init-Container zur Laufzeit

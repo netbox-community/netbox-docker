@@ -11,3 +11,18 @@
 #     ADD YOUR SETTINGS HERE
 #   }
 # }
+
+
+PLUGINS = [
+    "netbox_topology_views",
+    "netbox_lifecycle",
+    "netbox_prometheus_sd",
+    "netbox_qrcode",
+]
+
+PLUGINS_CONFIG = {
+    # Beispiel für Topology Views, falls nötig:
+    # "netbox_topology_views": {
+    #     "some_setting": "value"
+    # }
+}
