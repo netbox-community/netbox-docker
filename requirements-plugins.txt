@@ -2,4 +2,4 @@ netbox-topology-views>=4.2.0,<5.0.0
 netbox-lifecycle>=1.1.0,<2.0.0
 netbox-plugin-prometheus-sd>=1.2.0
 netbox-qrcode>=0.0.17,<1.0.0
-netbox_floorplan>=0.7.0,<0.8.0
+netbox-floorplan-plugin==0.8.0
