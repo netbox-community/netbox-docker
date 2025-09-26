@@ -13,8 +13,6 @@ PLUGINS = [
 ]
 
 PLUGINS_CONFIG = {
-    "netbox_proxbox": {
-    },
     "netbox_inventory": {
         "sync_serial_to_device": True,
         "sync_asset_tag_to_device": True,
