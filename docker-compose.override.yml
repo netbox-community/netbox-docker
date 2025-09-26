@@ -11,6 +11,15 @@ services:
     ports:
       - "8000:8080"
     restart: unless-stopped
+    healthcheck:
+      # längere Werte für den local Build
+      start_period: 180s
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    environment:
+      DB_WAIT_TIMEOUT: "180"
+      DB_WAIT_DEBUG: "1"
 
   netbox-worker:
     restart: unless-stopped
@@ -19,6 +28,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    depends_on:
+      netbox:
+        condition: service_started
 
   postgres:
     restart: unless-stopped
