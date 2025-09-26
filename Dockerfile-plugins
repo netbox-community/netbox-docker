@@ -1,18 +1,10 @@
-# Dockerfile-plugins
-FROM docker.io/netboxcommunity/netbox:${VERSION-v4.4-3.4.0}
+# nutze das offizielle Basisimage – ohne "-plugins"
+FROM ghcr.io/netbox-community/netbox:v4.4-3.4.0
 
-# falls du Dateien kopieren/collectstatic brauchst, kurz root:
-USER root
+# kopiere die Plugin-Requirements an einen eindeutigen Ort
+COPY requirements-plugins.txt /opt/netbox/requirements-plugins.txt
 
-# 1) Plugin-Requirements ins Image legen
-#    (Datei kannst du weiter "requirements-plugins.txt" nennen)
-COPY requirements-plugins.txt /opt/netbox/plugin_requirements.txt
+# installiere Plugins
+RUN /usr/local/bin/uv pip install --no-cache-dir -r /opt/netbox/requirements-plugins.txt
 
-# 2) Plugins ins NetBox-venv installieren (nutzt das im Image vorhandene 'uv pip')
-# 3) (optional aber empfehlenswert) Statics sammeln, falls Plugins welche mitbringen
-RUN /usr/local/bin/uv pip install --no-cache-dir -r /opt/netbox/plugin_requirements.txt \
- && DEBUG="true" SECRET_KEY="dummyKeyWithMinimumLength-------------------------" \
-    /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input
-
-# zurück zum Default-User
-USER netbox
+# KEIN collectstatic hier – das macht der init-Container zur Laufzeit
