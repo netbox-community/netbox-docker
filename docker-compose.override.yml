@@ -1,6 +1,4 @@
 
-x-netbox-image: &netbox_image netboxplugins:local
-
 services:
   netbox:
     # WICHTIG: eigenes Image bauen
