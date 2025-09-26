@@ -1,0 +1,23 @@
+Name,Object Types,Label,Group name,Type,Required,Validate Uniqueness,Description,ID,Related Object Type,Default,Search weight,Filter logic,Visible,Editable,Is Cloneable,Display weight,Choice Set,Choices,Minimum Value,Maximum Value,Validation Regex,Comments,Created,Last updated
+usage,"ipam.prefix,ipam.iprange",,,Text,False,False,Netzbelegung,11,,,0,Loose,Always,Yes,False,0,,,,,,,2024-10-08T07:36:40.591855+00:00,2024-10-15T09:15:39.303248+00:00
+AnyDeskAdresse,dcim.device,,,Text,False,False,,18,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-01-15T10:58:03.727241+00:00,2025-01-15T10:58:03.727255+00:00
+CortexStatus,dcim.device,,,Text,False,False,installierte Cortex Version,16,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-01-09T08:46:16.146951+00:00,2025-01-15T10:54:13.726954+00:00
+DHCP_address,dcim.device,,,Text,False,False,Daten aus DHCP Server sync am DC,19,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-02-12T12:10:31.759913+00:00,2025-02-12T12:10:31.759926+00:00
+IPAddress,"dcim.device,virtualization.virtualmachine",,,Text,False,False,Daten aus Cortex,7,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-09-17T14:06:36.706823+00:00,2025-01-15T10:53:34.750458+00:00
+IntuneDeviceID,dcim.device,,,Text,False,False,,10,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-09-26T06:13:14.880143+00:00,2024-09-26T06:13:14.880159+00:00
+LastLogon_usr,dcim.device,,,Text,False,False,,9,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-09-25T11:42:03.713769+00:00,2024-09-25T11:42:03.713782+00:00
+MacAddress,"dcim.device,ipam.ipaddress",,,Text,False,False,Daten aus Cortex,4,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-09-17T11:50:05.639094+00:00,2025-01-15T10:53:07.885442+00:00
+PrimaryUser,dcim.device,,,Text,False,False,,8,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-09-18T07:09:28.488363+00:00,2024-09-25T08:15:02.328134+00:00
+WifiMacaddress,"dcim.device,ipam.ipaddress",,,Text,False,False,Daten aus Intune,15,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-01-09T08:41:40.559652+00:00,2025-01-15T10:52:49.465086+00:00
+alt_hostname,dcim.device,,,Text,False,False,alternativer Hostname für Anydesk Abfrage,17,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-01-15T10:49:06.908246+00:00,2025-01-15T10:49:06.908258+00:00
+ccc_device_id,dcim.device,,,Text,False,False,Cisco Catalyst Center Device ID,21,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-03-05T08:02:13.592091+00:00,2025-03-05T08:02:13.592105+00:00
+cisco_catalyst_center,dcim.device,,,Selection,False,False,,20,,,1000,Loose,Always,Yes,False,100,dna01.balmung-medical.com,"Ort, Ort",,,,,2025-03-05T08:01:23.027855+00:00,2025-03-05T08:01:23.027870+00:00
+cluster_name,virtualization.virtualmachine,,,Text,False,False,,14,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-12-16T15:40:48.792817+00:00,2024-12-16T15:40:48.792831+00:00
+cluster_node,virtualization.virtualmachine,,,Text,False,False,,13,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-12-16T15:40:28.631066+00:00,2024-12-16T15:40:28.631084+00:00
+complianceState,dcim.device,,,Text,False,False,,3,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-09-17T10:01:47.290056+00:00,2024-09-17T10:01:47.290072+00:00
+datastore,virtualization.virtualmachine,,,Text,False,False,,25,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-05-19T13:45:39.860118+00:00,2025-05-19T13:45:39.860133+00:00
+folder,virtualization.virtualmachine,,,Text,False,False,,24,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-05-19T13:45:27.227583+00:00,2025-05-19T13:45:27.227599+00:00
+freeStorageSpace,"dcim.device,virtualization.virtualmachine",,,Text,False,False,,6,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-09-17T14:00:14.669423+00:00,2024-12-16T12:37:05.274111+00:00
+isEncrypted,dcim.device,,,Text,False,False,,5,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-09-17T13:44:27.313183+00:00,2024-09-17T13:44:27.313199+00:00
+usedMemoryMB,virtualization.virtualmachine,,,Text,False,False,,12,,,1000,Loose,Always,Yes,False,100,,,,,,,2024-12-16T12:38:33.792978+00:00,2024-12-16T12:38:33.792991+00:00
+uuid,virtualization.virtualmachine,,,Text,False,False,,23,,,1000,Loose,Always,Yes,False,100,,,,,,,2025-05-19T13:45:19.428402+00:00,2025-05-19T13:45:19.428417+00:00
