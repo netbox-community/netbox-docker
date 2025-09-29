@@ -5,5 +5,7 @@ pynetbox>=7.0.0
 netbox-lists
 netbox-inventory
 netbox-reorder-rack
+netboxlabs-diode-netbox-plugin
+
 # netbox-proxbox>=0.0.6b2
 # proxbox-api>=0.0.2

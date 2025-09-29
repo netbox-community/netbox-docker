@@ -17,10 +17,19 @@
 
 ## 2) NetBox-Plugins
 
-- `netbox-topology-views` – Interaktive L2/L3-Topologieansicht.
-- `netbox-device-lifecycle-mgmt` – Lifecycle-/EoX-Verwaltung für Geräte.
-- `netbox-plugin-prometheus-sd` – Service Discovery für Prometheus.
-- `netbox-qrcode` – QR-Codes für Objekte (Inventar/Asset-Labels).
+- `netbox-topology-views` (≥4.2.0, <5.0.0) – Interaktive L2/L3-Topologieansicht.
+- `netbox-lifecycle` (≥1.1.0, <2.0.0) – Lifecycle-/EoX-Verwaltung für Geräte.
+- `netbox-floorplan-plugin` (≥0.8.0) – Visualisierung von Racks/Assets in 2D-Gebäudeplänen.
+- `pynetbox` (≥7.0.0) – Python-Client für die NetBox-API (benötigt für einige Plugins).
+- `netbox-lists` – Flexible Listen-/Tabellenansichten für Objekte.
+- `netbox-inventory` – Inventar- und Asset-Verwaltung in NetBox.
+- `netbox-reorder-rack` – Intuitive Drag-and-Drop Reorganisation von Racks.
+- `netboxlabs-diode-netbox-plugin` (z. B. v1.3.1 oder aktuellste Version) – Daten-Ingestion via Diode (vereinfacht Hinzufügen/Aktualisieren von Netzwerkdaten) :contentReference[oaicite:0]{index=0}  
+
+**Temporär deaktiviert da Versionskonflikt (auskommentiert in `requirements-plugins.txt`):**
+- `netbox-proxbox` (≥0.0.6b2) – Integration von Proxmox Clustern in NetBox.
+- `proxbox-api` (≥0.0.2) – API-Helper für Proxbox.
+
 
 ### 2.1 Plugin-Installation mit netbox-docker
 netbox-docker unterstützt eine separate **`requirements-plugins.txt`**, die beim Image-Build installiert wird.
@@ -29,8 +38,13 @@ netbox-docker unterstützt eine separate **`requirements-plugins.txt`**, die bei
 ```text
 netbox-topology-views>=4.2.0,<5.0.0
 netbox-lifecycle>=1.1.0,<2.0.0
-netbox-plugin-prometheus-sd>=1.2.0
-netbox-qrcode>=0.0.17,<1.0.0
+netbox-floorplan-plugin>=0.8.0
+pynetbox>=7.0.0
+netbox-lists
+netbox-inventory
+netbox-reorder-rack
+# netbox-proxbox>=0.0.6b2
+# proxbox-api>=0.0.2
 ```
 
 ## 3) Portainer Stack deploy
