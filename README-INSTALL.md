@@ -40,6 +40,7 @@ netbox-topology-views>=4.2.0,<5.0.0
 netbox-lifecycle>=1.1.0,<2.0.0
 netbox-floorplan-plugin>=0.8.0
 pynetbox>=7.0.0
+netbox-initializers>=4.4.0
 netbox-lists
 netbox-inventory
 netbox-reorder-rack
@@ -53,8 +54,17 @@ netbox-reorder-rack
 
 Um einen ersten **Administrator-Account** (Superuser) anzulegen, kann der Befehl direkt im laufenden NetBox-Container ausgeführt werden.
 
-**Command (copy-fähig):**
+**Command**
 ```bash
 docker exec -it netbox-docker-netbox-1 \
   /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py createsuperuser
+```
+
+### 3.2 Defaults initialisieren
+
+Der hinterlegte default value stack für netbox_initializers plugin
+
+**Command**
+```bash
+docker exec -it netbox-docker-netbox-1   /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py   load_initializer_data --path /etc/netbox/config/initializers/extras
 ```
