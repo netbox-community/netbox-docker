@@ -1,0 +1,166 @@
+- name: ADVA
+  slug: adva
+- name: AFL
+  slug: afl
+- name: APC
+  slug: apc
+- name: Acbel
+  slug: acbel
+- name: Adtran
+  slug: adtran
+- name: Alcatel-Lucent
+  slug: alcatel-lucent
+- name: Allied Telesis
+  slug: allied-telesis
+- name: Apple
+  slug: apple
+- name: Arista
+  slug: arista
+- name: Artesyn
+  slug: artesyn
+- name: Bastion
+  slug: bastion
+- name: Broadcom Corporation
+  slug: broadcom-corporation
+- name: Brocade
+  slug: brocade
+- name: Calient
+  slug: calient
+- name: Certa
+  slug: certa
+- name: Check Point
+  slug: check-point
+- name: Ciena
+  slug: ciena
+- name: Cisco
+  slug: cisco
+- name: Commscope
+  slug: commscope
+- name: Corning
+  slug: corning
+- name: D-Link
+  slug: d-link
+- name: DataDirect Networks
+  slug: datadirect-networks
+- name: Datacom
+  slug: datacom
+- name: Datto
+  slug: datto
+- name: Dell
+  slug: dell
+- name: Delta
+  slug: delta
+- name: Diamond SA
+  slug: diamond-sa
+- name: ESXI
+  slug: esxi
+- name: Eaton
+  slug: eaton
+- name: Edgecore
+  slug: edgecore
+- name: Emulex
+  slug: emulex
+- name: Extreme Networks
+  slug: extreme-networks
+- name: F5
+  slug: f5
+- name: FS
+  slug: fs
+- name: FUJITSU
+  slug: fujitsu
+- name: FUJITSU CLIENT COMPUTING LIMITED
+  slug: fujitsu-client-computing-limited
+- name: Fortinet
+  slug: fortinet
+- name: GOOGLE
+  slug: google
+- name: Generic
+  slug: generic
+- name: HPE
+  slug: hpe
+- name: HUBER SUHNER
+  slug: huber-suhner
+- name: Huawei
+  slug: huawei
+- name: Intel
+  slug: intel
+- name: Juniper
+  slug: juniper
+- name: Lantronix
+  slug: lantronix
+- name: Lenovo
+  slug: lenovo
+- name: Leviton
+  slug: leviton
+- name: LiteOn
+  slug: liteon
+- name: MICROSOFT
+  slug: microsoft
+- name: Meinberg
+  slug: meinberg
+- name: Microsoft Corporation
+  slug: microsoft-corporation
+- name: MikroTik
+  slug: mikrotik
+- name: nan
+  slug: na
+- name: NEC
+  slug: nec
+- name: NetApp
+  slug: netapp
+- name: Netgear
+  slug: netgear
+- name: Nexconec
+  slug: nexconec
+- name: Nokia
+  slug: nokia
+- name: Palo Alto
+  slug: palo-alto
+- name: Panduit
+  slug: panduit
+- name: Pluribus
+  slug: pluribus
+- name: QNAP
+  slug: qnap
+- name: Qlogic
+  slug: qlogic
+- name: Reichle & De-Massari
+  slug: reichle-de-massari
+- name: Riello
+  slug: riello
+- name: Rockwell Automation
+  slug: rockwell-automation
+- name: SSD
+  slug: ssd
+- name: Schweitzer Engineering Laboratories
+  slug: schweitzer-engineering-laboratories
+- name: Softline
+  slug: softline
+- name: SonicWall
+  slug: sonicwall
+- name: Sophos
+  slug: sophos
+- name: Supermicro
+  slug: supermicro
+- name: Synology
+  slug: synology
+- name: Thales
+  slug: thales
+- name: Ubiquiti
+  slug: ubiquiti
+- name: UfiSpace
+  slug: ufispace
+- name: Xiaomi
+  slug: xiaomi
+- name: Yealink
+  slug: yealink
+- name: Yealink Client System
+  slug: yealink-client-system
+- name: ZPE
+  slug: zpe
+- name: ZTE
+  slug: zte
+- name: Zebra Technologies
+  slug: zebra-technologies
+- name: samsung
+  slug: samsung

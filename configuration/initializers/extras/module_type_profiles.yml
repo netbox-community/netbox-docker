@@ -1,0 +1,34 @@
+- name: CPU
+  attributes:
+  - cores
+  - speed
+  - architecture
+- name: Expansion card
+  attributes:
+  - bandwidth
+  - connector_type
+- name: Fan
+  attributes:
+  - rpm
+- name: GPU
+  attributes:
+  - gpu
+  - memory
+  - interface
+- name: Hard disk
+  attributes:
+  - size
+  - type
+  - speed
+- name: Memory
+  attributes:
+  - ecc
+  - size
+  - class
+  - data_rate
+- name: Power supply
+  attributes:
+  - wattage
+  - hot_swappable
+  - input_current
+  - input_voltage

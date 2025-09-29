@@ -1,0 +1,57 @@
+- name: Android
+  slug: android
+  description: Keinen Manufacturer zuweisen, da ansosten ungewollte Abhängigkeiten
+    entstehen!
+- name: C9120AXE-E
+  slug: c9120axe-e
+- name: C9200CX-12P-2X2G
+  slug: c9200cx-12p-2x2g
+  manufacturer: Cisco
+- name: C9300-48UXM, C9300-48UXM
+  slug: c9300-48uxm-c9300-48uxm
+  manufacturer: Cisco
+- name: C9300-48UXM, C9300-48UXM, C9300-48UXM, C9300-48UXM
+  slug: c9300-48uxm-c9300-48uxm-c9300-48uxm-c9300-48uxm
+  manufacturer: Cisco
+- name: C9300LM-24U-4Y
+  slug: c9300lm-24u-4y
+  manufacturer: Cisco
+- name: C9500-48Y4C
+  slug: c9500-48y4c
+  manufacturer: Cisco
+- name: C9800-CL-K9
+  slug: c9800-cl-k9
+  manufacturer: Cisco
+- name: CW9164I-E
+  slug: cw9164i-e
+- name: CW9166D1-E
+  slug: cw9166d1-e
+- name: IOS 10.2(4) Bios:version 05.47
+  slug: ios-10-2-4-bios-version-05-47
+  manufacturer: Cisco
+- name: IOS 17.9
+  slug: ios-17-9
+  manufacturer: Cisco
+- name: IOSXE
+  slug: iosxe
+  manufacturer: Cisco
+- name: LINUX
+  slug: linux
+  description: Keinen Manufacturer zuweisen, da ansosten ungewollte Abhängigkeiten
+    entstehen!
+- name: WINDOWS
+  slug: windows
+  description: Keinen Manufacturer zuweisen, da ansosten ungewollte Abhängigkeiten
+    entstehen!
+- name: WINDOWS_SERVER_2021
+  slug: windows_server_2021
+- name: ios
+  slug: ios
+  manufacturer: Cisco
+- name: macOS
+  slug: macos
+  description: Keinen Manufacturer zuweisen, da ansosten ungewollte Abhängigkeiten
+    entstehen!
+- name: nxos
+  slug: nxos
+  manufacturer: Cisco
