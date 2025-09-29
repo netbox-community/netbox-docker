@@ -6,7 +6,6 @@ netbox-lists
 netbox-inventory
 netbox-reorder-rack
 netboxlabs-diode-netbox-plugin
-slurpit_netbox
 
 # netbox-proxbox>=0.0.6b2
 # proxbox-api>=0.0.2
