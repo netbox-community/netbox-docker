@@ -1,11 +1,9 @@
 netbox-topology-views>=4.2.0,<5.0.0
 netbox-lifecycle>=1.1.0,<2.0.0
-netbox-plugin-prometheus-sd>=1.2.0
-netbox-qrcode>=0.0.17,<1.0.0
-netbox-floorplan-plugin==0.8.0
-netbox-proxbox>=0.0.6b2
+netbox-floorplan-plugin>=0.8.0
 pynetbox>=7.0.0
 netbox-lists
 netbox-inventory
-netbox-plugin-dns
 netbox-reorder-rack
+# netbox-proxbox>=0.0.6b2
+# proxbox-api>=0.0.2
