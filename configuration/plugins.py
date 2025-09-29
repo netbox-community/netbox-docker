@@ -5,7 +5,6 @@ PLUGINS = [
     "netbox_qrcode",
     "netbox_floorplan",
     "netbox_proxbox",
-    "netbox_otp",
     "netbox_lists",
     "netbox_inventory",
     "netbox_dns",
