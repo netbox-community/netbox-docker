@@ -10,4 +10,8 @@ configuration/ldap/*
 !configuration/ldap/ldap_config.py
 !configuration/logging.py
 !configuration/plugins.py
+!/configuration/initializers/
+/configuration/initializers/*
+!/configuration/initializers/extras/
+!/configuration/initializers/extras/**
 super-linter.log
