@@ -125,7 +125,7 @@ alt_hostname:
   on_objects:
   - dcim.models.Device
   ui_visibility: read-write
-  description: alternativer Hostname fÃ¼r Anydesk Abfrage
+  description: alternativer Hostname für Anydesk Abfrage
   weight: 100
   search_weight: 1000
   is_cloneable: false
