@@ -6,6 +6,7 @@ PLUGINS = [
     "netbox_inventory",
     "netbox_reorder_rack",
     "netbox_diode_plugin",
+    "netbox_initializers",
     # "netbox_proxbox",
 ]
 

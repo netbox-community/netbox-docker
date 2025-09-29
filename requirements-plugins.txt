@@ -2,6 +2,7 @@ netbox-topology-views>=4.2.0,<5.0.0
 netbox-lifecycle>=1.1.0,<2.0.0
 netbox-floorplan-plugin>=0.8.0
 pynetbox>=7.0.0
+netbox-initializers>=4.4.0
 netbox-lists
 netbox-inventory
 netbox-reorder-rack
