@@ -73,5 +73,10 @@
       }
     }
   },
-  "access_log": "/dev/stdout"
+  "access_log": "/dev/stdout",
+  "settings": {
+    "http": {
+      "max_body_size": 104857600
+    }
+  }
 }

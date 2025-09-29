@@ -3,4 +3,4 @@ dulwich==0.24.1
 python3-saml==1.16.0
 --no-binary lxml
 --no-binary xmlsec
-sentry-sdk[django]==2.35.2
+sentry-sdk[django]==2.39.0

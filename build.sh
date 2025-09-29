@@ -223,7 +223,7 @@ fi
 ###
 # Variables for labelling the docker image
 ###
-BUILD_DATE="$(date -u '+%Y-%m-%dT%H:%M+00:00')"
+BUILD_DATE="$(date -u '+%Y-%m-%dT%H:%M:%S+00:00')"
 
 if [ -d ".git" ] && [ -z "${SKIP_GIT}" ]; then
   GIT_REF="$(git rev-parse HEAD)"
