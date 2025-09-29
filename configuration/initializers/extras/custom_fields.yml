@@ -1,278 +1,258 @@
-- name: usage
+usage:
   type: text
-  object_types:
-  - ipam.prefix
-  - ipam.iprange
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
-  is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  filter_logic: loose
+  on_objects:
+  - ipam.models.Prefix
+  - ipam.models.IPRange
+  ui_visibility: read-write
   description: Netzbelegung
-- name: AnyDeskAdresse
-  type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
-  required: false
-  unique: false
+  weight: 0
+  search_weight: 0
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: CortexStatus
-  type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
-  required: false
   unique: false
+AnyDeskAdresse:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  unique: false
+CortexStatus:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
   description: installierte Cortex Version
-- name: DHCP_address
-  type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
   weight: 100
-  required: false
-  unique: false
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  unique: false
+DHCP_address:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
   description: Daten aus DHCP Server sync am DC
-- name: IPAddress
-  type: text
-  object_types:
-  - dcim.device
-  - virtualization.virtualmachine
-  search_weight: 1000
-  filter_logic: loose
   weight: 100
-  required: false
-  unique: false
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  unique: false
+IPAddress:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  - virtualization.models.VirtualMachine
+  ui_visibility: read-write
   description: Daten aus Cortex
-- name: IntuneDeviceID
-  type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
   weight: 100
-  required: false
-  unique: false
-  is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: LastLogon_usr
-  type: text
-  object_types:
-  - dcim.device
   search_weight: 1000
-  filter_logic: loose
-  weight: 100
-  required: false
-  unique: false
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: MacAddress
+  unique: false
+IntuneDeviceID:
   type: text
-  object_types:
-  - dcim.device
-  - ipam.ipaddress
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  unique: false
+LastLogon_usr:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
+  is_cloneable: false
+  unique: false
+MacAddress:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  - ipam.models.IPAddress
+  ui_visibility: read-write
   description: Daten aus Cortex
-- name: PrimaryUser
-  type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
   weight: 100
-  required: false
-  unique: false
-  is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: WifiMacaddress
-  type: text
-  object_types:
-  - dcim.device
-  - ipam.ipaddress
   search_weight: 1000
-  filter_logic: loose
-  weight: 100
-  required: false
-  unique: false
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  unique: false
+PrimaryUser:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
+  is_cloneable: false
+  unique: false
+WifiMacaddress:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  - ipam.models.IPAddress
+  ui_visibility: read-write
   description: Daten aus Intune
-- name: alt_hostname
-  type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
   weight: 100
-  required: false
-  unique: false
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  unique: false
+alt_hostname:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
   description: alternativer Hostname fÃ¼r Anydesk Abfrage
-- name: ccc_device_id
-  type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
   weight: 100
-  required: false
-  unique: false
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  unique: false
+ccc_device_id:
+  type: text
+  required: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
   description: Cisco Catalyst Center Device ID
-- name: cisco_catalyst_center
+  weight: 100
+  search_weight: 1000
+  is_cloneable: false
+  unique: false
+cisco_catalyst_center:
   type: select
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-  choice_set: dna01.balmung-medical.com
-- name: cluster_name
+  unique: false
+  choices:
+  - Ort
+  - Ort
+cluster_name:
   type: text
-  object_types:
-  - virtualization.virtualmachine
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - virtualization.models.VirtualMachine
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: cluster_node
+  unique: false
+cluster_node:
   type: text
-  object_types:
-  - virtualization.virtualmachine
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - virtualization.models.VirtualMachine
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: complianceState
+  unique: false
+complianceState:
   type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: datastore
+  unique: false
+datastore:
   type: text
-  object_types:
-  - virtualization.virtualmachine
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - virtualization.models.VirtualMachine
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: folder
+  unique: false
+folder:
   type: text
-  object_types:
-  - virtualization.virtualmachine
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - virtualization.models.VirtualMachine
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: freeStorageSpace
+  unique: false
+freeStorageSpace:
   type: text
-  object_types:
-  - dcim.device
-  - virtualization.virtualmachine
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  - virtualization.models.VirtualMachine
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: isEncrypted
+  unique: false
+isEncrypted:
   type: text
-  object_types:
-  - dcim.device
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - dcim.models.Device
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: usedMemoryMB
+  unique: false
+usedMemoryMB:
   type: text
-  object_types:
-  - virtualization.virtualmachine
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - virtualization.models.VirtualMachine
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
-- name: uuid
+  unique: false
+uuid:
   type: text
-  object_types:
-  - virtualization.virtualmachine
-  search_weight: 1000
-  filter_logic: loose
-  weight: 100
   required: false
-  unique: false
+  filter_logic: loose
+  on_objects:
+  - virtualization.models.VirtualMachine
+  ui_visibility: read-write
+  weight: 100
+  search_weight: 1000
   is_cloneable: false
-  ui_visible: read-write
-  ui_editable: read-write
+  unique: false
