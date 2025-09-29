@@ -48,6 +48,27 @@ netbox-reorder-rack
 # proxbox-api>=0.0.2
 ```
 
+### 2.3 `\configuration\plugin.py`
+Die Plugins werden hier hinterlegt und konfiguriert.
+```python
+PLUGINS = [
+    "netbox_inventory",
+    "netbox_diode_plugin",
+]
+
+PLUGINS_CONFIG = {
+    "netbox_inventory": {
+        "sync_serial_to_device": True,
+        "sync_asset_tag_to_device": True,
+    },
+    "netbox_diode_plugin": {
+        "diode_target_override": "grpc://<dein-diode-server:port>/diode",
+        "diode_username": "diode",
+        "netbox_to_diode_client_secret": "changeme",
+    },
+}
+```
+
 ## 3) Portainer Stack deploy
 
 ### 3.1 Admin User erstellen
