@@ -20,6 +20,9 @@ services:
     environment:
       DB_WAIT_TIMEOUT: "180"
       DB_WAIT_DEBUG: "1"
+      NETBOX_TO_DIODE_CLIENT_SECRET: ${NETBOX_TO_DIODE_CLIENT_SECRET}
+      DIODE_GRPC_TARGET: ${DIODE_GRPC_TARGET}
+      DIODE_USERNAME: ${DIODE_USERNAME}
 
   netbox-worker:
     restart: unless-stopped
