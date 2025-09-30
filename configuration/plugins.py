@@ -1,3 +1,5 @@
+import os
+
 PLUGINS = [
     "netbox_topology_views",
     "netbox_lifecycle",
@@ -16,8 +18,8 @@ PLUGINS_CONFIG = {
         "sync_asset_tag_to_device": True,
     },
     "netbox_diode_plugin": {
-        "diode_target_override": "grpc://<dein-diode-server:port>/diode",
-        "diode_username": "diode",
-        "netbox_to_diode_client_secret": "changeme",
+        "diode_target_override": os.getenv("DIODE_GRPC_TARGET"),
+        "diode_username": os.getenv("DIODE_USERNAME", "diode"),
+        "netbox_to_diode_client_secret": os.getenv("NETBOX_TO_DIODE_CLIENT_SECRET"),
     },
 }
