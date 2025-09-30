@@ -81,7 +81,11 @@ docker exec -it netbox-docker-netbox-1 \
   /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py createsuperuser
 ```
 
-### 3.2 Defaults initialisieren
+### 3.2 User erstellen
+
+Initial in Netbox anmelden, die user [diode] und [diode-to-netbox] mit SuperUser Status anlegen.
+
+### 3.3 Defaults initialisieren
 
 Der hinterlegte default value stack für netbox_initializers plugin
 
@@ -89,3 +93,4 @@ Der hinterlegte default value stack für netbox_initializers plugin
 ```bash
 docker exec -it netbox-docker-netbox-1   /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py   load_initializer_data --path /etc/netbox/config/initializers/extras
 ```
+
