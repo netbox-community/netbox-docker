@@ -11,6 +11,7 @@ services:
     ports:
       - "8000:8080"
     restart: unless-stopped
+    networks: [default, diode_net]
     healthcheck:
       # längere Werte für den local Build
       start_period: 180s
@@ -26,6 +27,7 @@ services:
 
   netbox-worker:
     restart: unless-stopped
+    networks: [default, diode_net]
     image: netbox-withplugins:local
     pull_policy: never
     logging:
@@ -39,6 +41,7 @@ services:
 
   netbox-housekeeping:
     restart: unless-stopped
+    networks: [default, diode_net]
     image: netbox-withplugins:local
     pull_policy: never
     environment:
