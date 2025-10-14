@@ -10,6 +10,8 @@ PLUGINS = [
     "netbox_diode_plugin",
     "netbox_initializers",
     # "netbox_proxbox",
+    "netbox_bgp",
+    "netbox_dns",
 ]
 
 # Hilfsvariable
@@ -28,4 +30,10 @@ PLUGINS_CONFIG = {
             "issuer": diode_target.replace("grpc://", "http://") + "/auth",
         },
     },
+    "netbox_bgp": {
+        "top_level_menu": True,
+    },
+    "netbox_dns": {
+        # Beispiele: IPAM-DNSsync o. Templates später konfigurierbar
+    }
 }
