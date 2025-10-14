@@ -89,6 +89,6 @@ services:
         condition: service_started
     restart: unless-stopped
 
-  networks:
-    diode_net:
-      external: true
+networks:
+  diode_net:
+    external: true

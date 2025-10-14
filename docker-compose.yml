@@ -86,10 +86,6 @@ services:
     volumes:
       - netbox-redis-cache-data:/data
 
-networks:
-  diode_net:
-    external: true
-
 volumes:
   netbox-media-files:
     driver: local
