@@ -91,4 +91,6 @@ services:
 
 networks:
   diode_net:
-    external: true
+    name: diode_net
+    driver: bridge # overlay bei swarm
+    attachable: true
