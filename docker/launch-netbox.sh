@@ -5,7 +5,7 @@ exec granian \
   --port "8080" \
   --interface "wsgi" \
   --no-ws \
-  --workers "${GRANIAN_WORKERS}" \
+  --workers "${GRANIAN_WORKERS:-4}" \
   --respawn-failed-workers \
   --backpressure "${GRANIAN_BACKPRESSURE}" \
   --loop "uvloop" \
