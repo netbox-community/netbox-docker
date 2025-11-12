@@ -5,8 +5,9 @@ exec granian \
   --port "8080" \
   --interface "wsgi" \
   --no-ws \
-  --workers "4" \
-  --backpressure "4" \
+  --workers "${GRANIAN_WORKERS}" \
+  --respawn-failed-workers \
+  --backpressure "${GRANIAN_BACKPRESSURE}" \
   --loop "uvloop" \
   --log \
   --log-level "info" \
@@ -15,4 +16,5 @@ exec granian \
   --static-path-route "/static" \
   --static-path-mount "/opt/netbox/netbox/static/" \
   --pid-file "/tmp/granian.pid" \
+  "${GRANIAN_EXTRA_ARGS[@]}" \
   "netbox.granian:application"
