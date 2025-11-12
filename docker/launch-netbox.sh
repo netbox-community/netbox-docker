@@ -7,7 +7,7 @@ exec granian \
   --no-ws \
   --workers "${GRANIAN_WORKERS:-4}" \
   --respawn-failed-workers \
-  --backpressure "${GRANIAN_BACKPRESSURE}" \
+  --backpressure "${GRANIAN_BACKPRESSURE:-${GRANIAN_WORKERS:-4}}" \
   --loop "uvloop" \
   --log \
   --log-level "info" \
