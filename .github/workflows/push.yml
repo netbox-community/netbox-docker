@@ -36,12 +36,13 @@ jobs:
           SUPPRESS_POSSUM: true
           LINTER_RULES_PATH: /
           VALIDATE_ALL_CODEBASE: false
+          VALIDATE_BIOME_FORMAT: false
           VALIDATE_CHECKOV: false
           VALIDATE_DOCKERFILE: false
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
           VALIDATE_GITLEAKS: false
           VALIDATE_JSCPD: false
           VALIDATE_TRIVY: false
-          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
           FILTER_REGEX_EXCLUDE: (.*/)?(LICENSE|configuration/.*)
           EDITORCONFIG_FILE_NAME: .editorconfig-checker.json
           DOCKERFILE_HADOLINT_FILE_NAME: .hadolint.yaml

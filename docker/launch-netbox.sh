@@ -36,7 +36,7 @@ load_configuration() {
       http://localhost/config
   )
   if [ "$RESP_CODE" != "200" ]; then
-    echo "⚠️ Could no load Unit configuration"
+    echo "⚠️ Could not load Unit configuration"
     kill "$(cat /opt/unit/unit.pid)"
     return 1
   fi

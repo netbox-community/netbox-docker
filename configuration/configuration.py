@@ -116,6 +116,11 @@ REDIS = {
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-SECRET_KEY
 SECRET_KEY = _read_secret('secret_key', environ.get('SECRET_KEY', ''))
 
+API_TOKEN_PEPPERS = {}
+if api_token_pepper := _read_secret('api_token_pepper_1', environ.get('API_TOKEN_PEPPER_1', '')):
+    API_TOKEN_PEPPERS.update({1: api_token_pepper})
+
+
 
 #########################
 #                       #
