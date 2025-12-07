@@ -62,7 +62,7 @@ DOCKERFILE  The name of Dockerfile to use.
 DOCKER_FROM The base image to use.
             ${_GREEN}Default:${_CLEAR} 'ubuntu:24.04'
 
-BUILDX_PLATFORMS
+BUILDX_PLATFORM
             Specifies the platform(s) to build the image for.
             ${_CYAN}Example:${_CLEAR} 'linux/amd64,linux/arm64'
             ${_GREEN}Default:${_CLEAR} 'linux/amd64'
@@ -223,7 +223,7 @@ fi
 ###
 # Variables for labelling the docker image
 ###
-BUILD_DATE="$(date -u '+%Y-%m-%dT%H:%M+00:00')"
+BUILD_DATE="$(date -u '+%Y-%m-%dT%H:%M:%S+00:00')"
 
 if [ -d ".git" ] && [ -z "${SKIP_GIT}" ]; then
   GIT_REF="$(git rev-parse HEAD)"

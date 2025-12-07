@@ -1,1 +1,0 @@
-deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] http://packages.nginx.org/unit/ubuntu/ noble unit

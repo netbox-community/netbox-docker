@@ -39,12 +39,9 @@ There is a more complete [_Getting Started_ guide on our wiki][wiki-getting-star
 ```bash
 git clone -b release https://github.com/netbox-community/netbox-docker.git
 cd netbox-docker
-tee docker-compose.override.yml <<EOF
-services:
-  netbox:
-    ports:
-      - 8000:8080
-EOF
+# Copy the example override file
+cp docker-compose.override.yml.example docker-compose.override.yml
+# Read and edit the file to your liking
 docker compose pull
 docker compose up
 ```
