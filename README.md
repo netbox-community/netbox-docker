@@ -13,6 +13,11 @@ and are pushed to [Docker Hub][netbox-dockerhub],
 [Quay.io][netbox-quayio] and [GitHub Container Registry][netbox-ghcr].
 _NetBox Docker_ is a project developed and maintained by the _NetBox_ community.
 
+## Onboarding para desenvolvimento
+
+Para subir o ambiente local, ver comandos Docker úteis e criar o usuário admin,
+consulte o guia: [docs/onboarding.md](docs/onboarding.md).
+
 Do you have any questions?
 Before opening an issue on GitHub,
 please join [our Slack][netbox-docker-slack]
