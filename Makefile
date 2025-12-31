@@ -1,4 +1,4 @@
-.PHONY: up down ps logs logs-netbox shell-netbox superuser restart-netbox
+.PHONY: up down ps logs logs-netbox shell-netbox superuser restart-netbox db-shell manage
 
 up:
 	 docker compose up -d
@@ -23,3 +23,9 @@ superuser:
 
 restart-netbox:
 	 docker compose restart netbox netbox-worker
+
+db-shell:
+	 docker compose exec postgres sh -lc 'psql -U "$$POSTGRES_USER" "$$POSTGRES_DB"'
+
+manage:
+	 docker compose exec netbox python /opt/netbox/netbox/manage.py $(cmd)
