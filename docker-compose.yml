@@ -24,8 +24,8 @@ services:
       - /share/Container/netbox/reports:/opt/netbox/netbox/reports:rw
       - /share/Container/netbox/scripts:/opt/netbox/netbox/scripts:rw
 
-  netbox-worker:
-    <<: *netbox
+  netbox-worker:  netbox-worker
+    image: docker.io/netboxcommunity/netbox:${VERSION-v4.4-3.4.1}
     depends_on:
       netbox:
         condition: service_healthy
