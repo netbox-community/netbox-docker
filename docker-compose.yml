@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   netbox: &netbox
     image: docker.io/netboxcommunity/netbox:${VERSION-v4.4-3.4.1}
@@ -12,11 +14,16 @@ services:
       start_period: 90s
       timeout: 3s
       interval: 15s
+    networks:
+      qnet-static-bond0-ae19be:
+        ipv4_address: 192.168.10.150
+      NetBoxNet: {}
     volumes:
-      - ./configuration:/etc/netbox/config:z,ro
-      - netbox-media-files:/opt/netbox/netbox/media:rw
-      - netbox-reports-files:/opt/netbox/netbox/reports:rw
-      - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
+      - /share/Container/netbox/configuration:/etc/netbox/config:ro
+      - /share/Container/netbox/media:/opt/netbox/netbox/media:rw
+      - /share/Container/netbox/reports:/opt/netbox/netbox/reports:rw
+      - /share/Container/netbox/scripts:/opt/netbox/netbox/scripts:rw
+
   netbox-worker:
     <<: *netbox
     depends_on:
@@ -26,62 +33,68 @@ services:
       - /opt/netbox/venv/bin/python
       - /opt/netbox/netbox/manage.py
       - rqworker
+    networks:
+      NetBoxNet: {}
     healthcheck:
       test: ps -aux | grep -v grep | grep -q rqworker || exit 1
       start_period: 20s
       timeout: 3s
       interval: 15s
 
-  # postgres
   postgres:
     image: docker.io/postgres:17-alpine
+    env_file: env/postgres.env
+    networks:
+      NetBoxNet:
+        ipv4_address: 172.31.30.10
     healthcheck:
       test: pg_isready -q -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER
       start_period: 20s
       timeout: 30s
       interval: 10s
       retries: 5
-    env_file: env/postgres.env
     volumes:
-      - netbox-postgres-data:/var/lib/postgresql/data
+      - /share/Container/netbox/postgres:/var/lib/postgresql/data
 
-  # redis
   redis:
     image: docker.io/valkey/valkey:8.1-alpine
+    env_file: env/redis.env
     command:
       - sh
-      - -c # this is to evaluate the $REDIS_PASSWORD from the env
-      - valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+      - -c
+      - valkey-server --appendonly yes --requirepass $$REDIS_PASSWORD
+    networks:
+      NetBoxNet:
+        ipv4_address: 172.31.30.11
     healthcheck: &redis-healthcheck
       test: '[ $$(valkey-cli --pass "$${REDIS_PASSWORD}" ping) = ''PONG'' ]'
       start_period: 5s
       timeout: 3s
       interval: 1s
       retries: 5
-    env_file: env/redis.env
     volumes:
-      - netbox-redis-data:/data
+      - /share/Container/netbox/redis:/data
+
   redis-cache:
     image: docker.io/valkey/valkey:8.1-alpine
+    env_file: env/redis-cache.env
     command:
       - sh
-      - -c # this is to evaluate the $REDIS_PASSWORD from the env
-      - valkey-server --requirepass $$REDIS_PASSWORD ## $$ because of docker-compose
+      - -c
+      - valkey-server --requirepass $$REDIS_PASSWORD
+    networks:
+      NetBoxNet:
+        ipv4_address: 172.31.30.12
     healthcheck: *redis-healthcheck
-    env_file: env/redis-cache.env
     volumes:
-      - netbox-redis-cache-data:/data
+      - /share/Container/netbox/redis-cache:/data
 
-volumes:
-  netbox-media-files:
-    driver: local
-  netbox-postgres-data:
-    driver: local
-  netbox-redis-cache-data:
-    driver: local
-  netbox-redis-data:
-    driver: local
-  netbox-reports-files:
-    driver: local
-  netbox-scripts-files:
-    driver: local
+networks:
+  qnet-static-bond0-ae19be:
+    external: true
+
+  NetBoxNet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.31.30.0/24
