@@ -4,15 +4,19 @@ services:
   netbox: &netbox
     image: docker.io/netboxcommunity/netbox:v4.4-3.4.1
     depends_on:
-      - postgres
-      - redis
-      - redis-cache
-    env_file: env/netbox.env
-    healthcheck:
-      test: curl -f http://localhost:8080/login/ || exit 1
-      start_period: 90s
-      timeout: 3s
-      interval: 15s
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+    redis-cache:
+      condition: service_healthy
+  env_file: env/netbox.env
+  healthcheck:
+    test: curl -fsS http://localhost:8080/login/ || exit 1
+    start_period: 300s
+    timeout: 5s
+    interval: 20s
+    retries: 10
     networks:
       Vlan1:
         ipv4_address: 172.31.240.60
