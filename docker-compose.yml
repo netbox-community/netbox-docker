@@ -15,8 +15,8 @@ services:
       timeout: 3s
       interval: 15s
     networks:
-      qnet-static-bond0-ae19be:
-        ipv4_address: 192.168.10.150
+      Vlan1:
+        ipv4_address: 172.31.240.60
       NetBoxNet: {}
     volumes:
       - /share/Container/netbox/configuration:/etc/netbox/config:ro
@@ -90,7 +90,7 @@ services:
       - /share/Container/netbox/redis-cache:/data
 
 networks:
-  qnet-static-bond0-ae19be:
+  Vlan1:
     external: true
 
   NetBoxNet:
