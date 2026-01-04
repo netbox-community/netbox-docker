@@ -19,7 +19,7 @@ services:
         ipv4_address: 172.31.240.60
       NetBoxNet: {}
     volumes:
-      - /share/Container/netbox/configuration:/etc/netbox/config:ro
+      - /share/Container/netbox/configuration:/etc/netbox/config:rw
       - /share/Container/netbox/media:/opt/netbox/netbox/media:rw
       - /share/Container/netbox/reports:/opt/netbox/netbox/reports:rw
       - /share/Container/netbox/scripts:/opt/netbox/netbox/scripts:rw
