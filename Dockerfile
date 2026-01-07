@@ -76,6 +76,7 @@ COPY docker/configuration.docker.py /opt/netbox/netbox/netbox/configuration.py
 COPY docker/ldap_config.docker.py /opt/netbox/netbox/netbox/ldap_config.py
 COPY docker/docker-entrypoint.sh /opt/netbox/docker-entrypoint.sh
 COPY docker/launch-netbox.sh /opt/netbox/launch-netbox.sh
+COPY docker/super_user.py /opt/netbox/super_user.py
 COPY configuration/ /etc/netbox/config/
 COPY docker/granian.py /opt/netbox/netbox/netbox/granian.py
 COPY VERSION /opt/netbox/VERSION

@@ -71,25 +71,9 @@ else
     SUPERUSER_API_TOKEN='0123456789abcdef0123456789abcdef01234567'
   fi
 
-  ./manage.py shell --interface python <<END
-from users.models import Token, User
-if not User.objects.filter(username='${SUPERUSER_NAME}'):
-    u = User.objects.create_superuser('${SUPERUSER_NAME}', '${SUPERUSER_EMAIL}', '${SUPERUSER_PASSWORD}')
-    Token.objects.create(user=u, key='${SUPERUSER_API_TOKEN}')
-END
+  ./manage.py shell --interface python < /opt/netbox/super_user.py
 
-  echo "💡 Superuser Username: ${SUPERUSER_NAME}, E-Mail: ${SUPERUSER_EMAIL}"
 fi
-
-./manage.py shell --interface python <<END
-from users.models import Token
-try:
-    old_default_token = Token.objects.get(key="0123456789abcdef0123456789abcdef01234567")
-    if old_default_token:
-        print("⚠️ Warning: You have the old default admin API token in your database. This token is widely known; please remove it. Log in as your superuser and check API Tokens in your user menu.")
-except Token.DoesNotExist:
-    pass
-END
 
 echo "✅ Initialisation is done."
 
