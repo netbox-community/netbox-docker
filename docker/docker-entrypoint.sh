@@ -54,25 +54,8 @@ fi
 if [ "$SKIP_SUPERUSER" == "true" ]; then
   echo "↩️ Skip creating the superuser"
 else
-  if [ -z ${SUPERUSER_NAME+x} ]; then
-    SUPERUSER_NAME='admin'
-  fi
-  if [ -z ${SUPERUSER_EMAIL+x} ]; then
-    SUPERUSER_EMAIL='admin@example.com'
-  fi
-  if [ -f "/run/secrets/superuser_password" ]; then
-    SUPERUSER_PASSWORD="$(</run/secrets/superuser_password)"
-  elif [ -z ${SUPERUSER_PASSWORD+x} ]; then
-    SUPERUSER_PASSWORD='admin'
-  fi
-  if [ -f "/run/secrets/superuser_api_token" ]; then
-    SUPERUSER_API_TOKEN="$(</run/secrets/superuser_api_token)"
-  elif [ -z ${SUPERUSER_API_TOKEN+x} ]; then
-    SUPERUSER_API_TOKEN='0123456789abcdef0123456789abcdef01234567'
-  fi
-
-  ./manage.py shell --interface python < /opt/netbox/super_user.py
-
+  ./manage.py shell --no-startup --no-imports --interface python \
+                    < /opt/netbox/super_user.py
 fi
 
 echo "✅ Initialisation is done."
