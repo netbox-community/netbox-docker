@@ -55,7 +55,7 @@ if [ "$SKIP_SUPERUSER" == "true" ]; then
   echo "↩️ Skip creating the superuser"
 else
   ./manage.py shell --no-startup --no-imports --interface python \
-  < /opt/netbox/super_user.py
+    < /opt/netbox/super_user.py
 fi
 
 echo "✅ Initialisation is done."
