@@ -4,4 +4,4 @@ extend-ignore = E203, W503
 per-file-ignores =
   configuration/*:E131,E251,E266,E302,E305,E501,E722
   startup_scripts/startup_script_utils/__init__.py:F401
-  docker/*:E266,E722
+  docker/*:E266,E722,E501
