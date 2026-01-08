@@ -16,10 +16,13 @@ def _read_secret(secret_name: str, default: str | None = None) -> str | None:
             return f.readline().strip()
 
 
-su_name = environ.get("SUPERUSER_NAME")
-su_email = environ.get("SUPERUSER_EMAIL")
-su_password = _read_secret("superuser_password", environ.get("SUPERUSER_PASSWORD"))
-su_api_token = _read_secret("superuser_api_token", environ.get("SUPERUSER_API_TOKEN"))
+su_name = environ.get("SUPERUSER_NAME", "admin")
+su_email = environ.get("SUPERUSER_EMAIL", "admin@example.com")
+su_password = _read_secret("superuser_password", environ.get("SUPERUSER_PASSWORD", "admin"))
+su_api_token = _read_secret(
+    "superuser_api_token",
+    environ.get("SUPERUSER_API_TOKEN", "0123456789abcdef0123456789abcdef01234567"),
+)
 
 if not User.objects.filter(username=su_name):
     u = User.objects.create_superuser(su_name, su_email, su_password)
