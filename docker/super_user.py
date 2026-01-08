@@ -1,7 +1,8 @@
 from os import environ
-from users.models import Token, User
-from users.choices import TokenVersionChoices
+
 from django.conf import settings
+from users.choices import TokenVersionChoices
+from users.models import Token, User
 
 
 # Read secret from file
