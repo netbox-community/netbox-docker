@@ -104,6 +104,9 @@ GH_ACTION   If defined, special 'echo' statements are enabled that set the
 
 CHECK_ONLY  Only checks if the build is needed and sets the GH Action output.
             ${_GREEN}Default:${_CLEAR} undefined
+            
+NO_CACHE    Disables Docker Build Cache.
+            ${_GREEN}Default:${_CLEAR} undefined
 
 ${_BOLD}Examples:${_CLEAR}
 
@@ -409,7 +412,9 @@ fi
 if [ -n "${NO_PROXY}" ]; then
   DOCKER_BUILD_ARGS+=(--build-arg "no_proxy=${NO_PROXY}")
 fi
-
+if [ -n "${NO_CACHE}" ]; then
+  DOCKER_BUILD_ARGS+=(--no-cache)
+fi
 DOCKER_BUILD_ARGS+=(--platform "${BUILDX_PLATFORM-linux/amd64}")
 if [ "${2}" == "--push" ]; then
   # output type=docker does not work with pushing
