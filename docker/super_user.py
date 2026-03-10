@@ -1,3 +1,4 @@
+import secrets
 from os import environ
 
 from django.conf import settings
@@ -21,7 +22,7 @@ su_email = environ.get("SUPERUSER_EMAIL", "admin@example.com")
 su_password = _read_secret("superuser_password", environ.get("SUPERUSER_PASSWORD", "admin"))
 su_api_token = _read_secret(
     "superuser_api_token",
-    environ.get("SUPERUSER_API_TOKEN", "0123456789abcdef0123456789abcdef01234567"),
+    environ.get("SUPERUSER_API_TOKEN", secrets.token_hex(20)),
 )
 
 if not User.objects.filter(username=su_name):
