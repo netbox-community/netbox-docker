@@ -1,4 +1,3 @@
-import secrets
 from os import environ
 
 from django.conf import settings
@@ -22,16 +21,17 @@ su_email = environ.get("SUPERUSER_EMAIL", "admin@example.com")
 su_password = _read_secret("superuser_password", environ.get("SUPERUSER_PASSWORD", "admin"))
 su_api_token = _read_secret(
     "superuser_api_token",
-    environ.get("SUPERUSER_API_TOKEN", secrets.token_hex(20)),
+    environ.get("SUPERUSER_API_TOKEN"),
 )
 
 if not User.objects.filter(username=su_name):
     u = User.objects.create_superuser(su_name, su_email, su_password)
-    msg = ""
-    if not settings.API_TOKEN_PEPPERS:
+    if not su_api_token:
+        print("⚠️ No API token will be created as SUPERUSER_API_TOKEN is not set")
+        print(f"💡 Superuser Username: {su_name}, E-Mail: {su_email}")
+    elif not settings.API_TOKEN_PEPPERS:
         print("⚠️ No API token will be created as API_TOKEN_PEPPERS is not set")
-        msg = f"💡 Superuser Username: {su_name}, E-Mail: {su_email}"
+        print(f"💡 Superuser Username: {su_name}, E-Mail: {su_email}")
     else:
         t = Token.objects.create(user=u, token=su_api_token, version=TokenVersionChoices.V2)
-        msg = f"💡 Superuser Username: {su_name}, E-Mail: {su_email}, API Token: {t} (use with '{t.get_auth_header_prefix()}<Your token>')"
-    print(msg)
+        print(f"💡 Superuser Username: {su_name}, E-Mail: {su_email}, API Token: {t}")
