@@ -15,6 +15,7 @@ def _read_secret(secret_name: str, default: str | None = None) -> str | None:
         with f:
             return f.readline().strip()
 
+
 su_name = environ.get("SUPERUSER_NAME", "admin")
 su_email = environ.get("SUPERUSER_EMAIL", "admin@example.com")
 su_password = _read_secret("superuser_password", environ.get("SUPERUSER_PASSWORD", "admin"))
