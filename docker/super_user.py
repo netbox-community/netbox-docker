@@ -41,5 +41,8 @@ if not User.objects.filter(username=su_name):
             t = Token.objects.create(user=u, token=su_api_token, version=TokenVersionChoices.V2, key=su_api_key)
         else:
             t = Token.objects.create(user=u, token=su_api_token, version=TokenVersionChoices.V2)
-        msg = f"💡 Superuser Username: {su_name}, E-Mail: {su_email}, API Token: use with '{t.get_auth_header_prefix()}<Your token>'"
+            msg = (
+                f"💡 Superuser Username: {su_name}, E-Mail: {su_email}, "
+                f"API Token: use with '{t.get_auth_header_prefix()}<Your token>'"
+            )
     print(msg)
