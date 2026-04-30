@@ -15,7 +15,7 @@ def _filename(f):
 
 
 def _import(module_name, path, loaded_configurations):
-    spec = importlib.util.spec_from_file_location("", path)
+    spec = importlib.util.spec_from_file_location('', path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     sys.modules[module_name] = module
@@ -28,9 +28,9 @@ def _import(module_name, path, loaded_configurations):
 def read_configurations(config_module, config_dir, main_config):
     loaded_configurations = []
 
-    main_config_path = abspath(f"{config_dir}/{main_config}.py")
+    main_config_path = abspath(f'{config_dir}/{main_config}.py')
     if isfile(main_config_path):
-        _import(f"{config_module}.{main_config}", main_config_path, loaded_configurations)
+        _import(f'{config_module}.{main_config}', main_config_path, loaded_configurations)
     else:
         print(f"⚠️ Main configuration '{main_config_path}' not found.")
 
@@ -39,19 +39,19 @@ def read_configurations(config_module, config_dir, main_config):
             if not f.is_file():
                 continue
 
-            if f.name.startswith("__"):
+            if f.name.startswith('__'):
                 continue
 
-            if not f.name.endswith(".py"):
+            if not f.name.endswith('.py'):
                 continue
 
-            if f.name == f"{main_config}.py":
+            if f.name == f'{main_config}.py':
                 continue
 
-            if f.name == f"{config_dir}.py":
+            if f.name == f'{config_dir}.py':
                 continue
 
-            module_name = f"{config_module}.{f.name[:-len('.py')]}".replace(".", "_")
+            module_name = f'{config_module}.{f.name[: -len(".py")]}'.replace('.', '_')
             _import(module_name, f.path, loaded_configurations)
 
     if len(loaded_configurations) == 0:
@@ -69,9 +69,9 @@ def read_configurations(config_module, config_dir, main_config):
 
 
 _loaded_configurations = read_configurations(
-    config_dir="/etc/netbox/config/",
-    config_module="netbox.configuration",
-    main_config="configuration",
+    config_dir='/etc/netbox/config/',
+    config_module='netbox.configuration',
+    main_config='configuration',
 )
 
 

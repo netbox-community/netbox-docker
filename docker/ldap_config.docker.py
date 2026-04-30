@@ -1,9 +1,9 @@
 from .configuration import read_configurations
 
 _loaded_configurations = read_configurations(
-    config_dir="/etc/netbox/config/ldap/",
-    config_module="netbox.configuration.ldap",
-    main_config="ldap_config",
+    config_dir='/etc/netbox/config/ldap/',
+    config_module='netbox.configuration.ldap',
+    main_config='ldap_config',
 )
 
 

@@ -5,9 +5,10 @@
 ####
 
 import re
+from collections.abc import Callable
 from os import environ
 from os.path import abspath, dirname, join
-from typing import Any, Callable, Tuple
+from typing import Any
 
 # For reference see https://docs.netbox.dev/en/stable/configuration/
 # Based on https://github.com/netbox-community/netbox/blob/develop/netbox/netbox/configuration_example.py
@@ -16,21 +17,23 @@ from typing import Any, Callable, Tuple
 # NetBox-Docker Helper functions
 ###
 
+
 # Read secret from file
 def _read_secret(secret_name: str, default: str | None = None) -> str | None:
     try:
-        f = open('/run/secrets/' + secret_name, 'r', encoding='utf-8')
-    except EnvironmentError:
-        return default
-    else:
-        with f:
+        with open('/run/secrets/' + secret_name, encoding='utf-8') as f:
             return f.readline().strip()
+    except OSError:
+        return default
+
 
 # If the `map_fn` isn't defined, then the value that is read from the environment (or the default value if not found) is returned.
 # If the `map_fn` is defined, then `map_fn` is invoked and the value (that was read from the environment or the default value if not found)
 # is passed to it as a parameter. The value returned from `map_fn` is then the return value of this function.
 # The `map_fn` is not invoked, if the value (that was read from the environment or the default value if not found) is None.
-def _environ_get_and_map(variable_name: str, default: str | None = None, map_fn: Callable[[str], Any | None] = None) -> Any | None:
+def _environ_get_and_map(
+    variable_name: str, default: str | None = None, map_fn: Callable[[str], Any | None] | None = None
+) -> Any | None:
     env_value = environ.get(variable_name, default)
 
     if env_value == None:
@@ -38,12 +41,13 @@ def _environ_get_and_map(variable_name: str, default: str | None = None, map_fn:
 
     if not map_fn:
         return env_value
-    
+
     return map_fn(env_value)
 
-_AS_BOOL = lambda value : value.lower() == 'true'
-_AS_INT = lambda value : int(value)
-_AS_LIST = lambda value : list(filter(None, value.split(' ')))
+
+_AS_BOOL = lambda value: value.lower() == 'true'
+_AS_INT = lambda value: int(value)
+_AS_LIST = lambda value: list(filter(None, value.split(' ')))
 
 _BASE_DIR = dirname(dirname(abspath(__file__)))
 
@@ -66,18 +70,18 @@ if '*' not in ALLOWED_HOSTS and 'localhost' not in ALLOWED_HOSTS:
 #   https://docs.djangoproject.com/en/stable/ref/settings/#databases
 DATABASES = {
     'default': {
-        'NAME': environ.get('DB_NAME', 'netbox'),       # Database name
-        'USER': environ.get('DB_USER', ''),             # PostgreSQL username
+        'NAME': environ.get('DB_NAME', 'netbox'),  # Database name
+        'USER': environ.get('DB_USER', ''),  # PostgreSQL username
         'PASSWORD': _read_secret('db_password', environ.get('DB_PASSWORD', '')),
-                                                        # PostgreSQL password
-        'HOST': environ.get('DB_HOST', 'localhost'),    # Database server
-        'PORT': environ.get('DB_PORT', ''),             # Database port (leave blank for default)
+        # PostgreSQL password
+        'HOST': environ.get('DB_HOST', 'localhost'),  # Database server
+        'PORT': environ.get('DB_PORT', ''),  # Database port (leave blank for default)
         'OPTIONS': {'sslmode': environ.get('DB_SSLMODE', 'prefer')},
-                                                        # Database connection SSLMODE
+        # Database connection SSLMODE
         'CONN_MAX_AGE': _environ_get_and_map('DB_CONN_MAX_AGE', '300', _AS_INT),
-                                                        # Max database connection age
+        # Max database connection age
         'DISABLE_SERVER_SIDE_CURSORS': _environ_get_and_map('DB_DISABLE_SERVER_SIDE_CURSORS', 'False', _AS_BOOL),
-                                                        # Disable the use of server-side cursors transaction pooling
+        # Disable the use of server-side cursors transaction pooling
     }
 }
 
@@ -88,7 +92,9 @@ REDIS = {
     'tasks': {
         'HOST': environ.get('REDIS_HOST', 'localhost'),
         'PORT': _environ_get_and_map('REDIS_PORT', 6379, _AS_INT),
-        'SENTINELS': [tuple(uri.split(':')) for uri in _environ_get_and_map('REDIS_SENTINELS', '', _AS_LIST) if uri != ''],
+        'SENTINELS': [
+            tuple(uri.split(':')) for uri in _environ_get_and_map('REDIS_SENTINELS', '', _AS_LIST) if uri != ''
+        ],
         'SENTINEL_SERVICE': environ.get('REDIS_SENTINEL_SERVICE', 'default'),
         'SENTINEL_TIMEOUT': _environ_get_and_map('REDIS_SENTINEL_TIMEOUT', 10, _AS_INT),
         'USERNAME': environ.get('REDIS_USERNAME', ''),
@@ -100,13 +106,21 @@ REDIS = {
     'caching': {
         'HOST': environ.get('REDIS_CACHE_HOST', environ.get('REDIS_HOST', 'localhost')),
         'PORT': _environ_get_and_map('REDIS_CACHE_PORT', environ.get('REDIS_PORT', '6379'), _AS_INT),
-        'SENTINELS': [tuple(uri.split(':')) for uri in _environ_get_and_map('REDIS_CACHE_SENTINELS', '', _AS_LIST) if uri != ''],
-        'SENTINEL_SERVICE': environ.get('REDIS_CACHE_SENTINEL_SERVICE', environ.get('REDIS_SENTINEL_SERVICE', 'default')),
+        'SENTINELS': [
+            tuple(uri.split(':')) for uri in _environ_get_and_map('REDIS_CACHE_SENTINELS', '', _AS_LIST) if uri != ''
+        ],
+        'SENTINEL_SERVICE': environ.get(
+            'REDIS_CACHE_SENTINEL_SERVICE', environ.get('REDIS_SENTINEL_SERVICE', 'default')
+        ),
         'USERNAME': environ.get('REDIS_CACHE_USERNAME', environ.get('REDIS_USERNAME', '')),
-        'PASSWORD': _read_secret('redis_cache_password', environ.get('REDIS_CACHE_PASSWORD', environ.get('REDIS_PASSWORD', ''))),
+        'PASSWORD': _read_secret(
+            'redis_cache_password', environ.get('REDIS_CACHE_PASSWORD', environ.get('REDIS_PASSWORD', ''))
+        ),
         'DATABASE': _environ_get_and_map('REDIS_CACHE_DATABASE', '1', _AS_INT),
         'SSL': _environ_get_and_map('REDIS_CACHE_SSL', environ.get('REDIS_SSL', 'False'), _AS_BOOL),
-        'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map('REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY', environ.get('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False'), _AS_BOOL),
+        'INSECURE_SKIP_TLS_VERIFY': _environ_get_and_map(
+            'REDIS_CACHE_INSECURE_SKIP_TLS_VERIFY', environ.get('REDIS_INSECURE_SKIP_TLS_VERIFY', 'False'), _AS_BOOL
+        ),
     },
 }
 
@@ -119,7 +133,6 @@ SECRET_KEY = _read_secret('secret_key', environ.get('SECRET_KEY', ''))
 API_TOKEN_PEPPERS = {}
 if api_token_pepper := _read_secret('api_token_pepper_1', environ.get('API_TOKEN_PEPPER_1', '')):
     API_TOKEN_PEPPERS.update({1: api_token_pepper})
-
 
 
 #########################
@@ -312,18 +325,22 @@ REMOTE_AUTH_STAFF_GROUPS = _environ_get_and_map('REMOTE_AUTH_STAFF_GROUPS', '', 
 REMOTE_AUTH_STAFF_USERS = _environ_get_and_map('REMOTE_AUTH_STAFF_USERS', '', _AS_LIST)
 # SSO Configuration
 SOCIAL_AUTH_OKTA_OPENIDCONNECT_KEY = environ.get('SOCIAL_AUTH_OKTA_OPENIDCONNECT_KEY')
-SOCIAL_AUTH_OKTA_OPENIDCONNECT_SECRET = _read_secret('okta_openidconnect_secret', environ.get('SOCIAL_AUTH_OKTA_OPENIDCONNECT_SECRET', ''))
+SOCIAL_AUTH_OKTA_OPENIDCONNECT_SECRET = _read_secret(
+    'okta_openidconnect_secret', environ.get('SOCIAL_AUTH_OKTA_OPENIDCONNECT_SECRET', '')
+)
 SOCIAL_AUTH_OKTA_OPENIDCONNECT_API_URL = environ.get('SOCIAL_AUTH_OKTA_OPENIDCONNECT_API_URL')
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = _read_secret('google_oauth2_secret', environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', ''))
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = _read_secret(
+    'google_oauth2_secret', environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', '')
+)
 
 # OIDC Configuration
 SOCIAL_AUTH_OIDC_OIDC_ENDPOINT = environ.get('SOCIAL_AUTH_OIDC_OIDC_ENDPOINT')
 SOCIAL_AUTH_OIDC_KEY = environ.get('SOCIAL_AUTH_OIDC_KEY')
 SOCIAL_AUTH_OIDC_SECRET = _read_secret('oidc_secret', environ.get('SOCIAL_AUTH_OIDC_SECRET', ''))
 SOCIAL_AUTH_OIDC_SCOPE = _environ_get_and_map('SOCIAL_AUTH_OIDC_SCOPE', '', _AS_LIST)
-LOGOUT_REDIRECT_URL = environ.get('LOGOUT_REDIRECT_URL','/')
-SOCIAL_AUTH_OIDC_JWT_ALGORITHMS = _environ_get_and_map('SOCIAL_AUTH_OIDC_JWT_ALGORITHMS', "RS256", _AS_LIST)
+LOGOUT_REDIRECT_URL = environ.get('LOGOUT_REDIRECT_URL', '/')
+SOCIAL_AUTH_OIDC_JWT_ALGORITHMS = _environ_get_and_map('SOCIAL_AUTH_OIDC_JWT_ALGORITHMS', 'RS256', _AS_LIST)
 
 # This repository is used to check whether there is a new release of NetBox available. Set to None to disable the
 # version check or use the URL below to check for release in the official NetBox repository.
