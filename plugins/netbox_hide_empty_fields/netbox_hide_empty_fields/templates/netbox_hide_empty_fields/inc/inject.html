@@ -1,0 +1,5 @@
+{% load static %}
+
+<script id="netbox-hef-prefs" type="application/json">{{ hef_preferences_json|safe }}</script>
+<link rel="stylesheet" href="{% static 'netbox_hide_empty_fields/hide-empty.css' %}">
+<script src="{% static 'netbox_hide_empty_fields/hide-empty.js' %}" defer></script>

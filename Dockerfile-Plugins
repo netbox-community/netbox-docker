@@ -1,0 +1,36 @@
+###############################################################################
+# Dockerfile-Plugins  (gerado por install-netbox-topology-views.sh em 20260514-184602)
+#
+# IMPORTANTE: NetBox 4.3+ removeu o binario `pip` do PATH; o gerenciador
+# correto e `uv pip`. Refs:
+#   https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
+#   https://github.com/netbox-community/netbox-docker/issues/1453
+#
+# Plugins instalados nesta imagem:
+#   - netbox_hide_empty_fields (codigo local em /plugins, se presente)
+#   - netbox-topology-views (PyPI)
+###############################################################################
+
+FROM netboxcommunity/netbox:latest
+
+# Codigo dos plugins locais
+COPY plugins /plugins
+COPY plugin_requirements.txt /opt/netbox/
+
+# Instala plugin local (se houver) e os pacotes do PyPI.
+RUN /usr/local/bin/uv pip install --no-cache /plugins/netbox_hide_empty_fields \
+ && /usr/local/bin/uv pip install --no-cache -r /opt/netbox/plugin_requirements.txt
+
+# === netbox-topology-views: pasta dos icones de device ===
+# O plugin serve as imagens a partir deste diretorio. Sem isso, os icones
+# quebram. Doc: https://github.com/netbox-community/netbox-topology-views
+RUN mkdir -p /opt/netbox/netbox/static/netbox_topology_views/img
+
+# Configuracao do NetBox + registro dos plugins
+COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/plugins.py /etc/netbox/config/plugins.py
+
+# Coleta arquivos estaticos (CSS/JS/imagens) de TODOS os plugins.
+# A flag --no-input evita prompt; SECRET_KEY dummy e usado apenas no build.
+RUN DEBUG="true" SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" \
+    /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input

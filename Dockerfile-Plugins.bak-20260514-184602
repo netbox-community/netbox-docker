@@ -1,0 +1,31 @@
+###############################################################################
+# Dockerfile-Plugins
+#
+# Build customizado do NetBox que instala o plugin "netbox-hide-empty-fields".
+#
+# IMPORTANTE: a partir do NetBox 4.3+, a imagem netboxcommunity/netbox NAO traz
+# o binario `pip` no PATH. O gerenciador usado e o `uv` (em /usr/local/bin/uv).
+# Esse e o motivo do erro "/bin/sh: 1: pip: not found".
+#
+# Referencias oficiais:
+#   - https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
+#   - https://github.com/netbox-community/netbox-docker/issues/1453
+###############################################################################
+
+FROM netboxcommunity/netbox:latest
+
+COPY plugins /plugins
+COPY plugin_requirements.txt /opt/netbox/
+
+# Instala o plugin local e quaisquer dependencias adicionais do PyPI.
+# `uv pip` honra automaticamente o virtualenv em /opt/netbox/venv.
+RUN /usr/local/bin/uv pip install --no-cache /plugins/netbox_hide_empty_fields \
+ && /usr/local/bin/uv pip install --no-cache -r /opt/netbox/plugin_requirements.txt
+
+# Registra o plugin no NetBox.
+COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/plugins.py /etc/netbox/config/plugins.py
+
+# Coleta os arquivos estaticos do plugin (JS/CSS).
+RUN DEBUG="true" SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" \
+    /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input

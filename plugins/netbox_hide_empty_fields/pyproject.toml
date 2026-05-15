@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netbox-hide-empty-fields"
+version = "0.1.0"
+description = "Plugin NetBox 4.x para cada usuario ocultar campos vazios ou especificos nas views DCIM."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Rafitec" }
+]
+classifiers = [
+    "Framework :: Django",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://example.com/netbox-hide-empty-fields"
+
+[tool.setuptools.packages.find]
+include = ["netbox_hide_empty_fields*"]
+
+[tool.setuptools.package-data]
+netbox_hide_empty_fields = [
+    "templates/**/*.html",
+    "static/**/*.js",
+    "static/**/*.css",
+]

@@ -1,0 +1,6 @@
+FROM netboxcommunity/netbox:latest
+
+COPY plugin_requirements.txt /plugin_requirements.txt
+COPY plugins /plugins
+
+RUN pip install -r /plugin_requirements.txt

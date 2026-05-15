@@ -1,0 +1,76 @@
+/* netbox-hide-empty-fields */
+
+tr.hef-hidden {
+    display: none !important;
+}
+
+.card.hef-card-empty {
+    opacity: 0.35;
+}
+
+body.hef-edit-mode tr.hef-hidden {
+    display: table-row !important;
+    opacity: 0.4;
+}
+
+.hef-hide-btn {
+    border: none;
+    background: #dc3545;
+    color: white;
+    margin-left: 0.5rem;
+    border-radius: 0.25rem;
+    padding: 0 0.4rem;
+    font-size: 0.85rem;
+    line-height: 1.1;
+    cursor: pointer;
+}
+.hef-hide-btn:hover {
+    background: #b02a37;
+}
+
+#hef-collected-panel {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    width: 320px;
+    background: #1f2937;
+    color: #f9fafb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 99999;
+    font-family: inherit;
+    padding: 0.5rem;
+}
+#hef-collected-panel .hef-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 0.5rem;
+}
+#hef-collected-panel .hef-panel-close {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1;
+}
+#hef-collected-panel textarea {
+    width: 100%;
+    min-height: 160px;
+    background: #111827;
+    color: #f9fafb;
+    border: 1px solid #374151;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8rem;
+    resize: vertical;
+}
+#hef-collected-panel .hef-panel-footer {
+    margin-top: 0.5rem;
+    opacity: 0.85;
+}

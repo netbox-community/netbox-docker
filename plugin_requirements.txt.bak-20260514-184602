@@ -1,0 +1,7 @@
+# Lista de plugins adicionais do PyPI a instalar.
+# O plugin local (netbox_hide_empty_fields) ja e instalado direto do diretorio
+# /plugins no Dockerfile-Plugins, entao nao precisa estar listado aqui.
+#
+# Exemplo:
+# netbox-topology-views
+# netbox-acls

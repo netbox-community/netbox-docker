@@ -1,0 +1,61 @@
+{% extends 'base/layout.html' %}
+{% load helpers %}
+
+{% block title %}Hide Empty Fields - Preferencias{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col col-md-8 mx-auto">
+    <div class="card">
+      <h2 class="card-header">Hide Empty Fields</h2>
+      <div class="card-body">
+        <p class="text-muted">
+          Estas preferencias sao individuais do seu usuario.
+          Outros usuarios nao serao afetados.
+        </p>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3 form-check form-switch">
+            {{ form.hide_empty }}
+            <label class="form-check-label" for="{{ form.hide_empty.id_for_label }}">
+              {{ form.hide_empty.label }}
+            </label>
+            <div class="form-text">{{ form.hide_empty.help_text }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.hidden_fields.id_for_label }}">
+              {{ form.hidden_fields.label }}
+            </label>
+            {{ form.hidden_fields }}
+            <div class="form-text">{{ form.hidden_fields.help_text }}</div>
+          </div>
+
+          <div class="text-end">
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Salvar preferencias</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <h5 class="card-header">Dica</h5>
+      <div class="card-body">
+        <p>
+          Em qualquer pagina de detalhe DCIM (ex.: <code>/dcim/devices/1/</code>),
+          aperte <kbd>Shift</kbd>+<kbd>H</kbd> para entrar no <strong>modo edicao</strong>:
+          aparecera um botao <code>[x]</code> ao lado do nome de cada campo.
+          Clique para adicionar o campo a sua lista de campos ocultos.
+        </p>
+        <p class="mb-0">
+          Os campos sao identificados pelo <strong>texto exato do label</strong>,
+          porque o NetBox pode estar em diferentes idiomas.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
