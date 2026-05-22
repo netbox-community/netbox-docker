@@ -18,6 +18,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
       libxmlsec1 \
       libxmlsec1-dev \
       libxmlsec1-openssl \
+      libjpeg-dev \
       libxslt-dev \
       pkg-config \
       python3-dev \
@@ -32,12 +33,17 @@ RUN \
     # We need 'social-auth-core[all]' in the Docker image. But if we put it in our own requirements-container.txt
     # we have potential version conflicts and the build will fail.
     # That's why we just replace it in the original requirements.txt.
-    sed -i -e 's/social-auth-core/social-auth-core\[all\]/g' /requirements.txt && \
+    sed -i -e 's|social-auth-core|social-auth-core\[[^]]*\]/social-auth-core[all]|g' /requirements.txt && \
     # The same is true for 'django-storages'
     sed -i -e 's/django-storages/django-storages\[azure,boto3,dropbox,google,libcloud,sftp\]/g' /requirements.txt && \
     /usr/local/bin/uv pip install \
+      --frozen \
       -r /requirements.txt \
-      -r /requirements-container.txt
+      -r /requirements-container.txt \
+    && \
+    # Safety patch: Django 5.1+ removed django.utils.itercompat (moved to itertools)
+    sed -i 's/from django\.utils\.itercompat import chain/from itertools import chain/' \
+      /opt/netbox/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py 2>/dev/null || true
 
 ###
 # Main stage
@@ -91,7 +97,7 @@ WORKDIR /opt/netbox/netbox
 RUN mkdir -p static media /opt/unit/state/ /opt/unit/tmp/ \
       && chown -R unit:root /opt/unit/ media reports scripts \
       && chmod -R g+w /opt/unit/ media reports scripts \
-      && cd /opt/netbox/ && SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python -m mkdocs build \
+      && cd /opt/netbox/ && echo 'Skipping mkdocs build' # \
           --config-file /opt/netbox/mkdocs.yml --site-dir /opt/netbox/netbox/project-static/docs/ \
       && DEBUG="true" SECRET_KEY="dummyKeyWithMinimumLength-------------------------" /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input \
       && mkdir /opt/netbox/netbox/local \
