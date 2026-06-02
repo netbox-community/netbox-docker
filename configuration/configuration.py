@@ -157,6 +157,11 @@ if 'BANNER_TOP' in environ:
 if 'BANNER_BOTTOM' in environ:
     BANNER_BOTTOM = environ.get('BANNER_BOTTOM', None)
 
+# Change the maintenance banner text when MAINTENANCE_MODE is enabled.
+# This allows you to provide custom instructions to users when the system is in maintenance mode.
+if 'BANNER_MAINTENANCE' in environ:
+    BANNER_MAINTENANCE = environ.get('BANNER_MAINTENANCE', None)
+
 # Text to include on the login page above the login form. HTML is allowed.
 if 'BANNER_LOGIN' in environ:
     BANNER_LOGIN = environ.get('BANNER_LOGIN', None)
