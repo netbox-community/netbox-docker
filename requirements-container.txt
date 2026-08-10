@@ -4,4 +4,4 @@ granian[uvloop]==2.8.1
 python3-saml==1.16.0
 --no-binary lxml
 --no-binary xmlsec
-sentry-sdk[django]==2.66.1
+sentry-sdk[django]==2.67.1
