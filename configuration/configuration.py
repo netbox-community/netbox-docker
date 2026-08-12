@@ -170,6 +170,10 @@ if 'BANNER_LOGIN' in environ:
 if 'CHANGELOG_RETENTION' in environ:
     CHANGELOG_RETENTION = _environ_get_and_map('CHANGELOG_RETENTION', None, _AS_INT)
 
+# When pruning retain each non-deleted object's original create change record and its most recent update change record. (Default: False)
+if 'CHANGELOG_RETAIN_CREATE_LAST_UPDATE' in environ:
+    CHANGELOG_RETAIN_CREATE_LAST_UPDATE = _environ_get_and_map('CHANGELOG_RETAIN_CREATE_LAST_UPDATE', 'False', _AS_BOOL)
+
 # Maximum number of days to retain job results (scripts and reports). Set to 0 to retain job results in the database indefinitely. (Default: 90)
 if 'JOB_RETENTION' in environ:
     JOB_RETENTION = _environ_get_and_map('JOB_RETENTION', None, _AS_INT)
