@@ -147,16 +147,16 @@ git_merge() {
     echo_nok "The branch '${1}' could not be merged."
     exit 2
   fi
-  echo_ok "The branch '${2}' was merged."
+  echo_ok "The branch '${1}' was merged."
 }
 
-git_merge() {
+git_rebase() {
   echomoji ⏩ "»" "Rebasing onto '${1}'…"
   if ! git rebase "${1}"; then
     echo_nok "Could not rebase onto '${1}'."
     exit 2
   fi
-  echo_ok "Rebased onto '${2}'."
+  echo_ok "Rebased onto '${1}'."
 }
 
 ###
