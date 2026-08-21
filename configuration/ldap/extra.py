@@ -1,7 +1,7 @@
 ####
 ## This file contains extra configuration options that can't be configured
 ## directly through environment variables.
-## All vairables set here overwrite any existing found in ldap_config.py
+## All variables set here overwrite any existing found in ldap_config.py
 ####
 
 # # This Python script inherits all the imports from ldap_config.py

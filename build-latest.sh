@@ -45,7 +45,7 @@ ORIGINAL_GITHUB_REPO="netbox-community/netbox"
 GITHUB_REPO="${GITHUB_REPO-$ORIGINAL_GITHUB_REPO}"
 URL_RELEASES="https://api.github.com/repos/${GITHUB_REPO}/releases"
 
-# Composing the JQ commans to extract the most recent version number
+# Composing the JQ commands to extract the most recent version number
 JQ_LATEST="group_by(.prerelease) | .[] | sort_by(.published_at) | reverse | .[0] | select(.prerelease==${PRERELEASE-false}) | .tag_name"
 
 CURL="curl"

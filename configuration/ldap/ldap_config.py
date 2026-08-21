@@ -70,7 +70,7 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
 )
 
 # This search ought to return all groups to which the user belongs. django_auth_ldap uses this to determine group
-# heirarchy.
+# hierarchy.
 
 AUTH_LDAP_GROUP_SEARCH_BASEDN = environ.get('AUTH_LDAP_GROUP_SEARCH_BASEDN', '')
 AUTH_LDAP_GROUP_SEARCH_CLASS = environ.get('AUTH_LDAP_GROUP_SEARCH_CLASS', 'group')

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Runs on every start of the NetBox Docker container
 
-# Stop when an error occures
+# Stop when an error occurs
 set -e
 
 # Allows NetBox to be run as non-root users
