@@ -31,7 +31,7 @@ check_clean_repo() {
   if [ ${?} ] && [ -n "$changes" ]; then
     echo_nok "There are git changes pending:"
     echo "$changes"
-    echo_hint "Please clean the repository before continueing: git stash --include-untracked"
+    echo_hint "Please clean the repository before continuing: git stash --include-untracked"
     exit 1
   fi
   echo_ok "Repository has no pending changes."
@@ -77,7 +77,7 @@ check_latest() {
   remote_head_commit=$(git rev-parse FETCH_HEAD 2>/dev/null)
   if [ "${local_head_commit}" != "${remote_head_commit}" ]; then
     echo_nok "HEAD is at '${local_head_commit}', but FETCH_HEAD is at '${remote_head_commit}'."
-    echo_hint "Please ensure that you have pushed and pulled all the latest chanegs: git pull --prune --rebase origin; git push origin"
+    echo_hint "Please ensure that you have pushed and pulled all the latest changes: git pull --prune --rebase origin; git push origin"
     exit 1
   fi
   echo_ok "HEAD and FETCH_HEAD both point to '${local_head_commit}'."
@@ -147,16 +147,16 @@ git_merge() {
     echo_nok "The branch '${1}' could not be merged."
     exit 2
   fi
-  echo_ok "The branch '${2}' was merged."
+  echo_ok "The branch '${1}' was merged."
 }
 
-git_merge() {
+git_rebase() {
   echomoji ⏩ "»" "Rebasing onto '${1}'…"
   if ! git rebase "${1}"; then
     echo_nok "Could not rebase onto '${1}'."
     exit 2
   fi
-  echo_ok "Rebased onto '${2}'."
+  echo_ok "Rebased onto '${1}'."
 }
 
 ###
