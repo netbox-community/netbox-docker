@@ -13,7 +13,7 @@ services:
     volumes:
       - ./test-configuration/test_config.py:/etc/netbox/config/test_config.py:z,ro
     healthcheck:
-      test: curl -f http://localhost:8080/login/ || exit 1
+      test: /opt/netbox/health.sh
       start_period: ${NETBOX_START_PERIOD-120s}
       timeout: 3s
       interval: 15s
