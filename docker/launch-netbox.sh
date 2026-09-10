@@ -1,13 +1,13 @@
 #!/bin/bash
 
+export GRANIAN_PORT=${GRANIAN_PORT:-8080}
+export GRANIAN_WORKERS=${GRANIAN_WORKERS:-4}
+
 exec granian \
   --host "::" \
-  --port "8080" \
   --interface "wsgi" \
   --no-ws \
-  --workers "${GRANIAN_WORKERS:-4}" \
   --respawn-failed-workers \
-  --backpressure "${GRANIAN_BACKPRESSURE:-${GRANIAN_WORKERS:-4}}" \
   --loop "uvloop" \
   --log \
   --log-level "info" \

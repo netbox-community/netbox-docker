@@ -1,6 +1,6 @@
 services:
   netbox: &netbox
-    image: docker.io/netboxcommunity/netbox:${VERSION-v4.7-5.1.0}
+    image: docker.io/netboxcommunity/netbox:${VERSION-v4.7-5.1.1}
     depends_on:
       - postgres
       - redis
@@ -8,7 +8,7 @@ services:
     env_file: env/netbox.env
     user: "netbox:root"
     healthcheck:
-      test: curl -f http://localhost:8080/login/ || exit 1
+      test: /opt/netbox/health.sh
       start_period: 90s
       timeout: 3s
       interval: 15s
