@@ -56,6 +56,20 @@ To create the first admin user run this command:
 docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
 ```
 
+### GitHub Codespaces
+
+If Docker is running inside a Codespace and containers cannot reach one another,
+configure the Codespace `postStartCommand` to run the forwarding fix on startup:
+
+```json
+{
+  "postStartCommand": "sudo -n /workspaces/netbox-docker/scripts/ensure-docker-forwarding.sh"
+}
+```
+
+The command is needed when the Codespace uses separate legacy iptables and nftables
+rules. It changes only the legacy `FORWARD` policy and does not remove Docker data.
+
 If you need to restart Netbox from an empty database often,
 you can also set the `SUPERUSER_*` variables in your `docker-compose.override.yml`.
 

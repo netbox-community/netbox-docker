@@ -1,0 +1,4 @@
+{
+  "name": "netbox-docker",
+  "postStartCommand": "sudo -n /workspaces/netbox-docker/scripts/ensure-docker-forwarding.sh"
+}
