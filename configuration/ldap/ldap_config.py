@@ -31,6 +31,15 @@ AUTH_LDAP_CONNECTION_OPTIONS = {
     ldap.OPT_REFERRALS: 0
 }
 
+# Optionally set LDAP operation and network timeouts (in seconds).
+AUTH_LDAP_OPT_TIMEOUT = environ.get('AUTH_LDAP_OPT_TIMEOUT', None)
+if AUTH_LDAP_OPT_TIMEOUT is not None:
+    AUTH_LDAP_CONNECTION_OPTIONS[ldap.OPT_TIMEOUT] = float(AUTH_LDAP_OPT_TIMEOUT)
+
+AUTH_LDAP_OPT_NETWORK_TIMEOUT = environ.get('AUTH_LDAP_OPT_NETWORK_TIMEOUT', None)
+if AUTH_LDAP_OPT_NETWORK_TIMEOUT is not None:
+    AUTH_LDAP_CONNECTION_OPTIONS[ldap.OPT_NETWORK_TIMEOUT] = float(AUTH_LDAP_OPT_NETWORK_TIMEOUT)
+
 AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = environ.get('AUTH_LDAP_BIND_AS_AUTHENTICATING_USER', 'False').lower() == 'true'
 
 # Set the DN and password for the NetBox service account if needed.
