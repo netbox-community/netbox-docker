@@ -36,7 +36,7 @@ jobs:
           # list of changed files within `super-linter`
           fetch-depth: 0
       - name: Lint Code Base
-        uses: super-linter/super-linter@v8
+        uses: super-linter/super-linter@v9
         env:
           DEFAULT_BRANCH: develop
           DOCKERFILE_HADOLINT_FILE_NAME: .hadolint.yaml
