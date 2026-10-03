@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   lint:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     name: Checks syntax of our code
     permissions:
       # contents permission to clone the repository
