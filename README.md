@@ -61,6 +61,15 @@ you can also set the `SUPERUSER_*` variables in your `docker-compose.override.ym
 
 [wiki-getting-started]: https://github.com/netbox-community/netbox-docker/wiki/Getting-Started
 
+## Deploying with Easypanel
+
+[Easypanel](https://easypanel.io) is a self-hosted Docker deployment platform, and NetBox has a one-click deployment template there:
+
+[![Deploy on Easypanel][easypanel-btn]][easypanel-deploy]
+
+[easypanel-btn]: https://easypanel.io/img/deploy-on-easypanel-40.svg
+[easypanel-deploy]: https://easypanel.io/templates/netbox
+
 ## Container Image Tags
 
 New container images are built and published automatically every ~24h.
