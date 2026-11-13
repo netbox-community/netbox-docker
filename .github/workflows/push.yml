@@ -75,8 +75,8 @@ jobs:
           - ./build.sh feature
           - ./build.sh main
         os:
-          - ubuntu-24.04
-          - ubuntu-24.04-arm
+          - ubuntu-26.04
+          - ubuntu-26.04-arm
       fail-fast: false
     env:
       GH_ACTION: enable
@@ -93,12 +93,12 @@ jobs:
         uses: docker/setup-buildx-action@v4
       - id: arm-install-skopeo
         name: Install 'skopeo' on ARM64
-        if: matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.os == 'ubuntu-26.04-arm'
         run: |
           sudo apt-get install -y skopeo
       - id: arm-buildx-platform
         name: Set BUILDX_PLATFORM to ARM64
-        if: matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.os == 'ubuntu-26.04-arm'
         run: |
           echo "BUILDX_PLATFORM=linux/arm64" >>"${GITHUB_ENV}"
       - id: docker-build
@@ -108,7 +108,7 @@ jobs:
           BUILDX_BUILDER_NAME: ${{ steps.buildx-setup.outputs.name }}
       - id: arm-time-limit
         name: Set Netbox container start_period higher on ARM64
-        if: matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.os == 'ubuntu-26.04-arm'
         run: |
           echo "NETBOX_START_PERIOD=240s" >>"${GITHUB_ENV}"
       - id: docker-test
