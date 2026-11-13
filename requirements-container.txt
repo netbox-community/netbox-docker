@@ -1,7 +1,7 @@
-django-auth-ldap==5.3.0
-dulwich==1.2.14
-granian[uvloop]==2.8.2
+django-auth-ldap==5.4.0
+dulwich==1.2.21
+granian[uvloop]==2.8.8
 python3-saml==1.16.0
 --no-binary lxml
 --no-binary xmlsec
-sentry-sdk[django]==2.69.1
+sentry-sdk[django]==2.75.0

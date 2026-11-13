@@ -52,7 +52,7 @@ test_setup() {
 test_netbox_unit_tests() {
   gh_echo "::group:: Netbox unit tests"
   echo "⏱ Running NetBox Unit Tests"
-  $doco run --rm netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py test
+  $doco run --rm netbox /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py test --parallel --timing
   gh_echo "::endgroup::"
 }
 

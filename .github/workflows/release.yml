@@ -23,7 +23,7 @@ jobs:
         platform:
           - linux/amd64,linux/arm64
       fail-fast: false
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     name: Builds new NetBox Docker Images
     env:
       GH_ACTION: enable
