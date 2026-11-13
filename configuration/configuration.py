@@ -77,7 +77,10 @@ DATABASES = {
         'HOST': environ.get('DB_HOST', 'localhost'),  # Database server
         'PORT': environ.get('DB_PORT', ''),  # Database port (leave blank for default)
         'OPTIONS': {
-            'sslmode': environ.get('DB_SSLMODE', 'prefer'),  # Database connection SSLMODE
+            'sslmode': environ.get('DB_SSLMODE', 'prefer'),     # See: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNECT-SSLMODE
+            'sslrootcert': environ.get('DB_SSLROOTCERT', None), # See: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNECT-SSLROOTCERT
+            'sslcert': environ.get('DB_SSLCERT', None),         # See: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNECT-SSLCERT
+            'sslkey':  environ.get('DB_SSLKEY',  None),         # See: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNECT-SSLKEY
             'pool': _environ_get_and_map('DB_POOL', 'True', _AS_BOOL),
         },
         'CONN_MAX_AGE': _environ_get_and_map('DB_CONN_MAX_AGE', '0', _AS_INT),
