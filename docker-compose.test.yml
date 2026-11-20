@@ -30,7 +30,7 @@ services:
       interval: 15s
 
   postgres:
-    image: docker.io/postgres:18-alpine
+    image: docker.io/postgres:19-alpine
     env_file: env/postgres.env
     healthcheck:
       test: pg_isready -q -t 2 -d $$POSTGRES_DB -U $$POSTGRES_USER ## $$ because of docker-compose
