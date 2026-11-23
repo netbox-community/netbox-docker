@@ -47,7 +47,7 @@ services:
 
   # redis
   redis:
-    image: docker.io/valkey/valkey:9.1-alpine
+    image: docker.io/valkey/valkey:9.2-alpine
     command:
       - sh
       - -c # this is to evaluate the $REDIS_PASSWORD from the env
@@ -62,7 +62,7 @@ services:
     volumes:
       - netbox-redis-data:/data
   redis-cache:
-    image: docker.io/valkey/valkey:9.1-alpine
+    image: docker.io/valkey/valkey:9.2-alpine
     command:
       - sh
       - -c # this is to evaluate the $REDIS_PASSWORD from the env
